@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block body %}
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">Bonjour Mr: {{ request.user.username }}</h3>
+                    <div class="row mb-3">
+                        <div class="col-lg-8">
+                            
+                            <div class="row">
+                                <div class="col-lg-12 offset-lg-3">
+                                    <div class="card shadow mb-3">
+                                        <div class="card-header py-3">
+                                            <p class="text-primary m-0 font-weight-bold">Liste Inventaires&nbsp;</p>
+                                        </div>
+                                        <div class="card-body">
+                                            <form action="{% url 'GA_UEP:ajouter_inv'%}" method="POST">
+                                                {% csrf_token %}
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <div class="form-group"><strong>Réference</strong></label>
+                                                            <input class="form-control" type="text" placeholder="" name="réf_inv"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <div class="form-group"><strong>Nombre de Bac</strong><br></label>
+                                                            <input class="form-control" type="text" placeholder="" name="nbr_bac_inv"></div>
+                                                    </div>
+                                                </div>
+                                            <input class="btn btn-primary btn-sm" name="ajouter_inv" type="submit" value="Ajouter">
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="card shadow"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
+                            <table class="table my-0" id="dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>Statut</th>
+                                        <th>Réference</th>
+                                        <th>Nombre de Bac</th>
+                                        <th>Zone de KIT</th>
+                                        <th>Moniteur</th>
+                                        <th>heure</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                    <tr></tr>
+                                    <tr></tr>
+                                    <tr></tr>
+                                    <tr></tr>
+                                    <tr></tr>
+                                    <!-- loop here -->
+                                    <tr> <!-- loop here -->
+                                        <td><button class="btn btn-primary" type="button"></button></td>
+                                        <td>{{réf_inv}}</td>
+                                        <td>{{nbr_bac}}</td>
+                                        <td>KH1</td>
+                                        <td>Fahd</td>
+                                        <td>9:00:03</td>
+                                        <td>02/04/2021</td>
+                                        <td><button class="btn btn-primary" type="button" style="background: rgb(252,2,2);">Supprimer</button></td>
+                                    </tr>
+                                    
+                                    
+                                    
+                                    <tr></tr>
+                                    <tr></tr>
+                                    <tr></tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr></tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                </div>
+            </div>
+{% endblock %}

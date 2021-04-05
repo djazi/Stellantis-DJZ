@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Log In - Stellantis</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css'%}">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="{% static 'fonts/fontawesome-all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/fontawesome5-overrides.min.css'%}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+
+<body class="bg-gradient-primary" style="background: rgb(6,14,40);">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-9 col-lg-12 col-xl-10">
+                <div class="card shadow-lg o-hidden border-0 my-5">
+                    <div class="card-body p-0">
+                        <div class="row">
+                            <div class="col">
+                                <h1>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<strong>STELLANTIS&nbsp;</strong>DJZ&nbsp;</h1>
+                            </div>
+                            <div class="col-lg-6 offset-lg-3">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h4 class="text-dark mb-4">Bonjour&nbsp;</h4>
+                                    </div>
+                                    {% if message %}
+                                    <div>
+                                    <h1 style="color: red;">{{ message }}</h1>
+                                    </div>
+                                    {% endif %}
+                                    <form action="{% url 'GA_UEP:login' %}" method="POST" class="user">
+                                        {% csrf_token %}
+                                        <div class="form-group"><input class="form-control form-control-user" type="text" id="exampleInputusername" aria-describedby="emailHelp" placeholder="Enter Votre ID" name="username"></div>
+                                        <div class="form-group"><input class="form-control form-control-user" type="password" id="exampleInputPassword" placeholder="Mot de Passe" name="password"></div>
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                            </div>
+                                        </div><input class="btn btn-primary btn-block text-white btn-user" type="submit" value="Login">
+                                        <hr>
+                                        <hr>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+</div>
+<script src=" {% static 'js/jquery.min.js'%}"></script>
+<script src="{% static 'bootstrap/js/bootstrap.min.js'%}"></script>
+<script src="{% static 'js/chart.min.js'%}"></script>
+<script src="{% static 'js/bs-init.js'%}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+<script src="{% static 'js/theme.js'%}"></script>
+<script src="{% static 'js/script.js'%}"></script>
+<!--  ajax 
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script src='https://code.jquery.com/jquery-3.2.1.min.js'></script>
+    -->
+</body>
+
+</html>
