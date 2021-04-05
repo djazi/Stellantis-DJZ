@@ -1,11 +1,11 @@
 from django.contrib import admin
-from . models import Map,Person,Group,Membership,Inventaire
+from . models import Person,Group,Membership,Inventaire,Map
 # Register your models here.
 
 
 class MapAdmin(admin.ModelAdmin):
-    list_display = ("Map_Réference", "Map_Zone_Kit",
-                    "condiQ", "Designation_Produit", "Train", "nbr_Réf_Famille","Point_De_consom")
+    list_display = ("Map_Réference", "Map_PDC",
+                    "condiQ", "ligne", "condi", "UA_Appro", "UcTourRef", "Designation_Produit", "Train", "CVM")
 
 
 class GroupAdmin(admin.ModelAdmin):

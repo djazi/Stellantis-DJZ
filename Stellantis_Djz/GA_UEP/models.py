@@ -1,18 +1,21 @@
 from django.db import models
-from django.db.models.fields import IntegerField, TimeField
+from django.db.models.fields import FloatField, IntegerField, TimeField
 
 # Create your models here.
 
 
 class Map(models.Model):
-    Map_Réference = models.CharField(max_length=50)
-    Map_Zone_Kit = models.CharField(max_length=50)
-    condiQ = models.IntegerField()
-    Designation_Produit = models.CharField(max_length=128)
-    Train = models.CharField(max_length=50)
-    nbr_Réf_Famille = models.IntegerField()
-    Point_De_consom = models.CharField(max_length=50)
-
+    Map_Réference = models.CharField(max_length=50,null=True,blank=True)
+    Map_PDC = models.CharField(max_length=50, null=True, blank=True)
+    condiQ = models.CharField(max_length=50, null=True, blank=True)
+    ligne = models.CharField(max_length=50, null=True, blank=True)
+    condi = models.CharField(max_length=50, null=True, blank=True)
+    UA_Appro = models.CharField(max_length=50, null=True, blank=True)
+    UcTourRef = models.CharField(max_length=50,null=True, blank=True)
+    Designation_Produit = models.CharField(
+        max_length=128, null=True, blank=True)
+    Train = models.CharField(max_length=50, null=True, blank=True)
+    CVM = models.CharField(max_length=50, null=True, blank=True)
 
 class Person(models.Model):
     name = models.CharField(max_length=50)
