@@ -23,7 +23,7 @@ class MembershipAdmin(admin.ModelAdmin):
 
 class InventaireAdmin(admin.ModelAdmin):
     list_display = ("Reference", "Nombre_De_Bac",
-                    "Zone_De_Kit", "SM_Csc", "Moniteur", "Date", "heure")
+                    "Zone_De_Kit", "SM_Csc", "Date", "heure")
 
 
 admin.site.register(Map, MapAdmin)

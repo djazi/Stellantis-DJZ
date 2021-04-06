@@ -37,14 +37,12 @@ class Membership(models.Model):
     Moniteur = models.CharField(max_length=50)
         
 class Inventaire(models.Model):
-    Reference = models.CharField(max_length=50)
+    Reference = models.CharField(max_length=50, null=True, blank=True)
     Nombre_De_Bac = models.IntegerField()
-    Zone_De_Kit = models.CharField(max_length=50)
-    Moniteur = models.CharField(max_length=50)
-    SM_Csc = models.CharField(max_length=50)
-
-    Date = models.DateField()
-    heure= models.TimeField()
+    Zone_De_Kit = models.CharField(max_length=50, null=True, blank=True)
+    SM_Csc = models.CharField(max_length=50, null=True, blank=True)
+    Date = models.CharField(max_length=50, null=True, blank=True)
+    heure = models.CharField(max_length=50, null=True, blank=True)
     
 
 

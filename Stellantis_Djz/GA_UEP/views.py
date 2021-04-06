@@ -26,7 +26,7 @@ def get_réf(request):
     results = []
     for pl in réfs:
       réfs_json = {}
-      réfs_json = pl.Map_Réference + "," + pl.Map_PDC
+      réfs_json = pl.Map_Réference
       results.append(réfs_json)
     data = json.dumps(results)
   else:
@@ -36,16 +36,35 @@ def get_réf(request):
 
 #function pour un inventaire ----------------------------------------------------------------------------
 def ajouter_inv(request):
-    
-    if request.method == 'POST' and 'ajouter_inv' in request.POST:
-        réf_inv = request.POST["réf_inv"]
-        nbr_bac = request.POST["nbr_bac_inv"]
+
+    try:
         
-        return render(request, 'BordKit.html', {"réf_inv":réf_inv, 
-        "nbr_bac": nbr_bac, "d1": d1, "n1": n1,
+        while True:
+            if request.method == 'POST' and 'ajouter_inv' in request.POST:
+                réf_inv = request.POST["réf_inv"]
+                nbr_bac = request.POST["nbr_bac_inv"]
+                filt1 = Map.objects.filter(Map_Réference=réf_inv)
+                for i in filt1:
+                    zkit = i.Map_PDC
+                    cvm = i.CVM
+                if cvm is None:
+                    cvm= "--"
+                k = Inventaire(Reference=réf_inv,
+                            Nombre_De_Bac=nbr_bac, Zone_De_Kit=zkit,
+                            SM_Csc=cvm, Date=d1, heure= n1)
+                k.save()
+                return render(request, 'BordKit.html', {"réf_inv":réf_inv, 
+                                                        "nbr_bac": nbr_bac, "d1": d1, "n1": n1, "zkit": zkit,
+                                                        "cvm": cvm})
+    except ValueError:
+        message = "error"
+        return render(request, 'BordKit.html', {"message": message })
                                                 
 
-        })
+                                                
+                                                
+
+        
 
       
 
@@ -66,7 +85,7 @@ def index(request):
 
 def login_view(request):
     if request.method == "POST":
-        global username
+        global username,user
         username = request.POST["username"]
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)

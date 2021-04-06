@@ -7,7 +7,7 @@
                     
                     <div class="row mb-3">
                         <div class="col-lg-8">
-                            
+                            <h3 style="color: red;">{{message}}</h3>
                             <div class="row">
                                 <div class="col-lg-12 offset-lg-3">
                                     <div class="card shadow mb-3">
@@ -53,7 +53,6 @@
                                         <th>Nombre de Bac</th>
                                         <th>Zone de KIT</th>
                                         <th>SM CSC</th>
-                                        <th>Moniteur</th>
                                         <th>heure</th>
                                         <th>Date</th>
                                     </tr>
@@ -66,16 +65,22 @@
                                     <tr></tr>
                                     <tr></tr>
                                     <!-- loop here -->
+                                    
+                                      
+                                        
+                                    
                                     <tr> <!-- loop here -->
                                         <td><button class="btn btn-primary" type="button"></button></td>
+                                        
                                         <td>{{réf_inv}}</td>
                                         <td>{{nbr_bac}}</td>
-                                        <td>z_Kit</td>
-                                        <td> sm_csc</td>
-                                        <td>moniteur</td>
+                                        <td>{{zkit}}</td>
+                                        <td> {{cvm}}</td>
                                         <td>{{n1}}</td>
                                         <td>{{d1}}</td>
+
                                         <td><button class="btn btn-primary" type="button" style="background: rgb(252,2,2);">Supprimer</button></td>
+                                        
                                     </tr>
                                     
                                     
