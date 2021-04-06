@@ -41,6 +41,8 @@ class Inventaire(models.Model):
     Nombre_De_Bac = models.IntegerField()
     Zone_De_Kit = models.CharField(max_length=50)
     Moniteur = models.CharField(max_length=50)
+    SM_Csc = models.CharField(max_length=50)
+
     Date = models.DateField()
     heure= models.TimeField()
     

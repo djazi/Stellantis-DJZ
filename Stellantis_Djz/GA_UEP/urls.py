@@ -6,7 +6,9 @@ urlpatterns = [
     path("login", views.login_view, name="login"),
     path("logout", views.logout_view, name="logout"),
     path("ajouter_inv",views.ajouter_inv,name='ajouter_inv' ),
+    path ("api/get_réf/", views.get_réf, name='get_réf'),
 
+    
     
 
     
