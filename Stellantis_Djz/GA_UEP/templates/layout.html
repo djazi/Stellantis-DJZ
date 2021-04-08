@@ -37,7 +37,7 @@
                     <li class="nav-item">
 
                     </li>
-                    <li class="nav-item"><a class="nav-link " href="{% url 'GA_UEP:Bord Kit'%}"><i
+                    <li class="nav-item"><a class="nav-link " href="{% url 'GA_UEP:crud_ajax'%}"><i
                                 class="fas fa-table"></i>&nbsp;Bord KIT</a>
                         <a class="nav-link " href="{% url 'GA_UEP:CrossDock'%}"><i class="fas fa-table"></i>&nbsp;Cross DOCK</a>
                         <a class="nav-link " href="{% url 'GA_UEP:MagDebord'%}"><i class="fas fa-table"></i>&nbsp;Mag Débord</a>
@@ -89,7 +89,8 @@
 <script src="{% static 'js/jQY.js'%}"></script>
 <script src="{% static 'js/jQf.js'%}"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-
+{% block javascript %}
+{% endblock javascript %}
 
 <!--
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>

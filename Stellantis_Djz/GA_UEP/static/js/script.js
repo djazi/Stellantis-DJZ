@@ -1,3 +1,4 @@
+
 $(function () {
     $("#réf").autocomplete({
         source: "/api/get_réf/",
@@ -10,5 +11,12 @@ $(function () {
 });
 
 function AutoCompleteSelectHandler(event, ui) {
-    var selectedObj = ui.item;
+    var selectedObj = ui.item; 
 }
+
+
+
+
+
+
+

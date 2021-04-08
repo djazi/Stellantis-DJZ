@@ -1,5 +1,6 @@
+from typing import List
 from django.contrib.auth import authenticate, login, logout
-from . models import *
+from . models import Inventaire, Map, Membership,Person,Group
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, Http404, request, HttpResponse
 from django.urls import reverse
 from django.shortcuts import render
@@ -7,10 +8,13 @@ from django.db.models import Count
 from django.core import serializers
 from django.http.response import HttpResponse, JsonResponse
 from datetime import date, datetime
+from django.http import  JsonResponse
 from django.contrib import messages
 import json
+from django.views.generic import TemplateView, ListView,View
+#----------------------------------------------------
 
-# Create your views here.
+# Create your views here.----------------------------------------
 
 # data we use ------------------------------------------------------------------------------------
 today = date.today()
@@ -34,8 +38,8 @@ def get_réf(request):
   mimetype = 'application/json'
   return HttpResponse(data, mimetype)
 
-#function pour un inventaire ----------------------------------------------------------------------------
-def ajouter_inv(request):
+#function pour ajouter un inventaire ----------------------------------------------------------------------------
+"""def ajouter_inv(request):
 
     try:
         
@@ -58,21 +62,64 @@ def ajouter_inv(request):
                                                         "cvm": cvm})
     except ValueError:
         message = "error"
-        return render(request, 'BordKit.html', {"message": message })
+        return render(request, 'BordKit.html', {"message": message }) Reference
+Nombre_De_Bac"""
                                                 
-
-                                                
-                                                
-
-        
-
-      
+#crud view with ajax -----------------------------------------------------------------------
 
 
+class CrudView(TemplateView):
+    template_name = 'BordKit.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['invs'] = Inventaire.objects.all()
+        return context
+
+"""def create(request):
+    if request.method =='POST':
+        réf_inv = request.POST.get('Reference')
+        nbr_bac_inv = request.POST.get('Nombre_De_Bac')
+        new = Inventaire(Reference=réf_inv, Nombre_De_Bac=nbr_bac_inv)
+        new.save()
+    return render(request,"Bordkit.html")"""
+
+class CreateCrudInv(View):
+    def get(self,request):
+        réf_inv = request.GET.get('Reference', None)
+        nbr_bac_inv = request.GET.get('Nombre_De_Bac', None)
+        filt1 = Map.objects.filter(Map_Réference=réf_inv)
+        for i in filt1:
+            zkit = i.Map_PDC
+            cvm = i.CVM        
+        obj = Inventaire.objects.create(
+            Reference = réf_inv,
+            Nombre_De_Bac = nbr_bac_inv,
+            Zone_De_Kit= zkit,
+            SM_Csc=cvm,
+            Date=d1,
+            heure=n1,
+            )
+        inv = {'id': obj.id, 'Reference': obj.Reference,
+                'Nombre_De_Bac': obj.Nombre_De_Bac ,
+                'Zone_De_Kit': obj.Zone_De_Kit,
+                'SM_Csc':obj.SM_Csc,
+                'Date': obj.Date,
+                'heure': obj.heure,
+                }
+        data = {
+                'inv':inv
+            }
+        return JsonResponse(data)
 
 
-
-
+class DeleteCrudInv(View):
+    def get(self, request):
+        id1 = request.GET.get('id', None)
+        Inventaire.objects.get(id=id1).delete()
+        data = {
+            'deleted': True
+        }
+        return JsonResponse(data)
 
 #login functions-------------------------------------------------------------------------------
 
@@ -80,7 +127,7 @@ def index(request):
     if not request.user.is_authenticated:
         return render(request, 'login.html')
         #return HttpResponseRedirect(reverse("login"))
-    return render(request, 'BordKit.html')
+    return render(request, 'Dashboard.html')
     
 
 def login_view(request):
@@ -92,7 +139,7 @@ def login_view(request):
         if user is not None:
             login(request, user)
             #return HttpResponseRedirect(reverse("index"))
-            return render(request, 'BordKit.html')
+            return render(request, 'Dashboard.html')
         else:
             return render(request, 'login.html', {
                 "message": "NOM ou Mot de pass est invalide."

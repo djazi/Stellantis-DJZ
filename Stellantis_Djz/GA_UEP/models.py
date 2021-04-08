@@ -38,7 +38,7 @@ class Membership(models.Model):
         
 class Inventaire(models.Model):
     Reference = models.CharField(max_length=50, null=True, blank=True)
-    Nombre_De_Bac = models.IntegerField()
+    Nombre_De_Bac = models.CharField(max_length=50, null=True, blank=True)
     Zone_De_Kit = models.CharField(max_length=50, null=True, blank=True)
     SM_Csc = models.CharField(max_length=50, null=True, blank=True)
     Date = models.CharField(max_length=50, null=True, blank=True)

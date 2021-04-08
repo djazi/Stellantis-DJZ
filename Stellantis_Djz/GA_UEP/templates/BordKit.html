@@ -3,8 +3,9 @@
 
 {% block body %}
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-4">Bonjour Mr: {{ request.user.username }}</h3>
-                    
+                    <h3 class="text-dark mb-4" style="text-align:left;float:left;"  >Bonjour </h3>
+                    <h3 id="TraName" style="text-align:right;float:right;" >{{ request.user.username }}</h3>
+                    <hr style="clear:both;" />
                     <div class="row mb-3">
                         <div class="col-lg-8">
                             <h3 style="color: red;">{{message}}</h3>
@@ -15,24 +16,24 @@
                                             <p class="text-primary m-0 font-weight-bold">Liste Inventaires&nbsp;</p>
                                         </div>
                                         <div class="card-body">
-                                            <form action="{% url 'GA_UEP:ajouter_inv'%}" method="POST">
-                                                {% csrf_token %}
+                                            <form id="addinv" action="">
+                                                
                                                 <div class="form-row">
                                                     <div class="col">
                                                        
                                                         <div class="form-group"><strong>Réference</strong></label>
                                                             
-                                                            <input class="form-control" type="text" id="réf" placeholder="" name="réf_inv"></div>
+                                                            <input class="form-control" type="text" id="réf" placeholder="" name="Reference"></div>
                                                             
                                                         </div>
                                                 </div>
                                                 <div class="form-row">
                                                     <div class="col">
                                                         <div class="form-group"><strong>Nombre de Bac</strong><br></label>
-                                                            <input class="form-control" type="text" placeholder="" name="nbr_bac_inv"></div>
+                                                            <input class="form-control" id="nbinv" type="text" placeholder="" name="Nombre_De_Bac"></div>
                                                     </div>
                                                 </div>
-                                            <input class="btn btn-primary btn-sm" name="ajouter_inv" type="submit" value="Ajouter">
+                                            <button class="btn btn-primary btn-sm" id="create" name="ajouter_inv" type="submit">Ajouter</button>
                                             </form>
                                         </div>
                                     </div>
@@ -43,9 +44,10 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-body">
+                    <div id="result" class="card-body">
+                        
                         <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
-                            <table class="table my-0" id="dataTable">
+                            <table  class="table my-0" id="InvTable">
                                 <thead>
                                     <tr>
                                         <th>Statut</th>
@@ -56,45 +58,122 @@
                                         <th>heure</th>
                                         <th>Date</th>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    <tr></tr>
-                                    <tr></tr>
-                                    <tr></tr>
-                                    <tr></tr>
-                                    <tr></tr>
-                                    <tr></tr>
-                                    <!-- loop here -->
-                                    
-                                      
-                                        
-                                    
-                                    <tr> <!-- loop here -->
+                                </thead>                              
+                                    {% if invs %}
+                                    {% for inv in invs %}
+                                    <tr id="inv-{{inv.id}}">
                                         <td><button class="btn btn-primary" type="button"></button></td>
-                                        
-                                        <td>{{réf_inv}}</td>
-                                        <td>{{nbr_bac}}</td>
-                                        <td>{{zkit}}</td>
-                                        <td> {{cvm}}</td>
-                                        <td>{{n1}}</td>
-                                        <td>{{d1}}</td>
+                                        <td class="réf invData" name="Reference">{{inv.Reference}}</td>
+                                        <td class="nbrbac invData" name="Nombre_De_Bac">{{inv.Nombre_De_Bac}}</td>
 
-                                        <td><button class="btn btn-primary" type="button" style="background: rgb(252,2,2);">Supprimer</button></td>
+                                        <td class="zkit invData" id="zkit" name="Zone_De_Kit">{{inv.Zone_De_Kit}}</td>
+                                        <td class="smcsc invData" id="smcsc" name="SM_Csc">{{inv.SM_Csc}}</td>
+                                        <td class="date invData" id="date" name="Date">{{inv.Date}}</td>
+                                        <td class="heure invData" id="heure" name="heure">{{inv.heure}}</td>
+                                        
+                                        <td><button class="btn btn-primary" onClick="deleteUser({{inv.id}})" style="background: rgb(252,2,2);">Supprimer</button></td>
                                         
                                     </tr>
-                                    
-                                    
-                                    
-                                    <tr></tr>
-                                    <tr></tr>
-                                    <tr></tr>
-                                </tbody>
-                                <tfoot>
-                                    <tr></tr>
-                                </tfoot>
+                                    {% endfor %}
+                                    {%  else %}
+                                        <h2 style="color: red;"> NO Data </h2>
+                                    {% endif %}
+    
                             </table>
                         </div>
+                        
                 </div>
             </div>
-            
+          
 {% endblock %}
+{% block javascript %}
+<script>
+    $("form#addinv").submit(function () {
+            var réf_inv_input = $('input[name="Reference"]').val().trim();
+            var nbr_bac_input = $('input[name="Nombre_De_Bac"]').val().trim();
+
+            var zkit_input = $('#zkit').val().trim();
+            var smcsc_input = $('#smcsc').val().trim();
+            var date_input = $('#date').val().trim();
+            var heure_input = $('#heure').val().trim();
+
+            if (réf_inv_input && nbr_bac_input) {
+
+                $.ajax({
+
+                    //source: "ajax/crud/create",
+                    url: '{% url "GA_UEP:create" %}',
+                    data: {
+                        'Reference': réf_inv_input,
+                        'Nombre_De_Bac': nbr_bac_input,
+                        'Zone_De_Kit': zkit_input,
+                        'SM_Csc': smcsc_input,
+                        'Date': date_input,
+                        'heure': heure_input,
+                    },
+
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.inv) {
+                            appendToInvTable(data.inv)
+                            var name_input = $('#TraName').text();
+                            alert(name_input);
+
+
+
+                        }
+
+                    }
+                });
+
+
+            } else {
+                alert("All fields must have a valide value.");
+            }
+            $("form#addinv").trigger("reset");
+            return false;
+        });
+
+    // Delete row
+function deleteUser(id) {
+        var action = confirm("Are you sure you want to delete this user?");
+        if (action != false) {
+            $.ajax({
+                url: '{% url "GA_UEP:delete" %}',
+                data: {
+                    'id': id,
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.deleted) {
+                        $("#InvTable #inv-" + id).remove();
+                    }
+                }
+            });
+        }
+    }
+
+
+//add row
+function appendToInvTable(inv) {
+    $("#InvTable > tbody:last-child").append(`
+    <tr id="inv-${inv.id}">
+      <td><button class="btn btn-primary" type="button"></button></td>
+      <td class="réf invData" name="Reference">${inv.Reference}</td>
+      '<td class="nbrbac invData" name="Nombre_De_Bac">${inv.Nombre_De_Bac}</td>
+
+      '<td class="zkit invData" id="zkit" name="Zone_De_Kit">${inv.Zone_De_Kit}</td>
+       '<td class="smcsc invData" id="smcsc" name="SM_Csc">${inv.SM_Csc}</td>
+        '<td class="date invData" id="date" name="Date">${inv.Date}</td>
+        '<td class="heure invData" id="heure" name="heure">${inv.heure}</td>
+
+        '<td><button class="btn btn-primary" type="button" onClick="deleteUser(${inv.id})" style="background: rgb(252,2,2);">Supprimer</button></td>
+
+    </tr>
+    `);
+    
+        }
+
+    
+</script>
+{% endblock javascript %}
