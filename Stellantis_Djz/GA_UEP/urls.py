@@ -12,7 +12,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("login", views.login_view, name="login"),
     path("logout", views.logout_view, name="logout"),
-    #path("ajouter_inv",views.ajouter_inv,name='ajouter_inv' ),
+    #path("ajouter_inv",views.ajouter_inv,name='ajouter_inv'),
     path ("api/get_réf/", views.get_réf, name='get_réf'),
 
     path("crud/", CrudView.as_view(), name='crud_ajax'),

@@ -71,40 +71,53 @@ Nombre_De_Bac"""
 class CrudView(TemplateView):
     template_name = 'BordKit.html'
     def get_context_data(self, **kwargs):
+        c = Inventaire.objects.filter(Date=d1, name=username).count()
+        if c == 0:
+            k = Inventaire(Reference="--",
+                           Nombre_De_Bac="--", Zone_De_Kit="--",
+                           SM_Csc="--", Date=today.strftime("%d/%m/%Y"), heure=now.strftime("%H:%M:%S"), name=username)
+            k.save()
         context = super().get_context_data(**kwargs)
-        context['invs'] = Inventaire.objects.all()
-        return context
+        context['invs'] = Inventaire.objects.filter(Date=today.strftime("%d/%m/%Y"), name=username)
 
-"""def create(request):
-    if request.method =='POST':
-        réf_inv = request.POST.get('Reference')
-        nbr_bac_inv = request.POST.get('Nombre_De_Bac')
-        new = Inventaire(Reference=réf_inv, Nombre_De_Bac=nbr_bac_inv)
-        new.save()
-    return render(request,"Bordkit.html")"""
+        return context
 
 class CreateCrudInv(View):
     def get(self,request):
+        
         réf_inv = request.GET.get('Reference', None)
         nbr_bac_inv = request.GET.get('Nombre_De_Bac', None)
+
+        nm_input = request.GET.get('name', None)
+
+        dc = request.GET.get('Date', None)
+        hc = request.GET.get('heure', None)
+
+        filt2 = Inventaire.objects.filter(name=nm_input)
+        for j in filt2:
+            nm = j.name
+       
         filt1 = Map.objects.filter(Map_Réference=réf_inv)
         for i in filt1:
             zkit = i.Map_PDC
-            cvm = i.CVM        
+            cvm = i.CVM   
+        
         obj = Inventaire.objects.create(
             Reference = réf_inv,
             Nombre_De_Bac = nbr_bac_inv,
             Zone_De_Kit= zkit,
             SM_Csc=cvm,
-            Date=d1,
-            heure=n1,
-            )
+            Date=dc,
+            heure=hc,
+            name=nm,)
+        
         inv = {'id': obj.id, 'Reference': obj.Reference,
-                'Nombre_De_Bac': obj.Nombre_De_Bac ,
+                'Nombre_De_Bac': obj.Nombre_De_Bac,
                 'Zone_De_Kit': obj.Zone_De_Kit,
                 'SM_Csc':obj.SM_Csc,
                 'Date': obj.Date,
                 'heure': obj.heure,
+                'name': obj.name
                 }
         data = {
                 'inv':inv
@@ -120,6 +133,8 @@ class DeleteCrudInv(View):
             'deleted': True
         }
         return JsonResponse(data)
+
+
 
 #login functions-------------------------------------------------------------------------------
 

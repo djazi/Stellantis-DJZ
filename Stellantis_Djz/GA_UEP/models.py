@@ -43,6 +43,7 @@ class Inventaire(models.Model):
     SM_Csc = models.CharField(max_length=50, null=True, blank=True)
     Date = models.CharField(max_length=50, null=True, blank=True)
     heure = models.CharField(max_length=50, null=True, blank=True)
+    name = models.CharField(max_length=50, null=True, blank=True)
     
 
 
