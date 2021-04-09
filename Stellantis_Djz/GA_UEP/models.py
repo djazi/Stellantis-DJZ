@@ -44,6 +44,7 @@ class Inventaire(models.Model):
     Date = models.CharField(max_length=50, null=True, blank=True)
     heure = models.CharField(max_length=50, null=True, blank=True)
     name = models.CharField(max_length=50, null=True, blank=True)
+    statut = models.CharField(max_length=50,null=True,blank=True)
     
 
 

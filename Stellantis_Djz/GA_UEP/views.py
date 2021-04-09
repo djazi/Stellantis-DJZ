@@ -44,14 +44,13 @@ def get_réf(request):
 class CrudView(TemplateView):
     template_name = 'BordKit.html'
     def get_context_data(self, **kwargs):
-        person =username
+        person = username
         c = Inventaire.objects.filter(Date=d1, name=person).count()
         if c == 0:
             k = Inventaire(Reference="--",
                            Nombre_De_Bac="--", Zone_De_Kit="--",
                            SM_Csc="--", Date=today.strftime("%d/%m/%Y"), heure=now.strftime("%H:%M:%S"), name=person)
             k.save()
-
         context = super().get_context_data(**kwargs)
         context['invs'] = Inventaire.objects.filter(
             Date=today.strftime("%d/%m/%Y"), name=person)
@@ -149,7 +148,6 @@ def login_view(request):
         global username,user
         username = request.POST["username"]
         password = request.POST["password"]
-        
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)

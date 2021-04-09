@@ -4,8 +4,8 @@ from . models import Person,Group,Membership,Inventaire,Map
 
 
 class MapAdmin(admin.ModelAdmin):
-    list_display = ("Map_Réference", "Map_PDC",
-                    "condiQ", "ligne", "condi", "UA_Appro", "UcTourRef", "Designation_Produit", "Train", "CVM")
+    list_display = ("Map_Réference", "Designation_Produit", "Map_PDC", "condi",
+                    "condiQ", "ligne",  "UA_Appro", "UcTourRef", "Designation_Produit", "Train", "CVM")
 
 
 class GroupAdmin(admin.ModelAdmin):
@@ -23,7 +23,7 @@ class MembershipAdmin(admin.ModelAdmin):
 
 class InventaireAdmin(admin.ModelAdmin):
     list_display = ("Reference", "Nombre_De_Bac",
-                    "Zone_De_Kit", "SM_Csc", "Date", "heure", "name")
+                    "Zone_De_Kit", "SM_Csc", "Date", "heure", "name", "statut")
 
 
 admin.site.register(Map, MapAdmin)
