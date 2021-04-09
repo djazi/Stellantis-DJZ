@@ -22,7 +22,7 @@ now = datetime.now()
 map_all = Map.objects.all() # all columns from Map
 d1 = today.strftime("%d/%m/%Y") # la date 
 n1 = now.strftime("%H:%M:%S")# l'heure
-#autocomplete --------------------------------------------------------------------------------------
+#autocomplete  bordkit --------------------------------------------------------------------------------------
 def get_réf(request):
   if request.is_ajax():
     q = request.GET.get('term', '')
@@ -38,53 +38,29 @@ def get_réf(request):
   mimetype = 'application/json'
   return HttpResponse(data, mimetype)
 
-#function pour ajouter un inventaire ----------------------------------------------------------------------------
-"""def ajouter_inv(request):
 
-    try:
-        
-        while True:
-            if request.method == 'POST' and 'ajouter_inv' in request.POST:
-                réf_inv = request.POST["réf_inv"]
-                nbr_bac = request.POST["nbr_bac_inv"]
-                filt1 = Map.objects.filter(Map_Réference=réf_inv)
-                for i in filt1:
-                    zkit = i.Map_PDC
-                    cvm = i.CVM
-                if cvm is None:
-                    cvm= "--"
-                k = Inventaire(Reference=réf_inv,
-                            Nombre_De_Bac=nbr_bac, Zone_De_Kit=zkit,
-                            SM_Csc=cvm, Date=d1, heure= n1)
-                k.save()
-                return render(request, 'BordKit.html', {"réf_inv":réf_inv, 
-                                                        "nbr_bac": nbr_bac, "d1": d1, "n1": n1, "zkit": zkit,
-                                                        "cvm": cvm})
-    except ValueError:
-        message = "error"
-        return render(request, 'BordKit.html', {"message": message }) Reference
-Nombre_De_Bac"""
                                                 
-#crud view with ajax -----------------------------------------------------------------------
-
-
+#crud  pour Borkit page view with ajax -----------------------------------------------------------------------
 class CrudView(TemplateView):
     template_name = 'BordKit.html'
     def get_context_data(self, **kwargs):
-        c = Inventaire.objects.filter(Date=d1, name=username).count()
+        person =username
+        c = Inventaire.objects.filter(Date=d1, name=person).count()
         if c == 0:
             k = Inventaire(Reference="--",
                            Nombre_De_Bac="--", Zone_De_Kit="--",
-                           SM_Csc="--", Date=today.strftime("%d/%m/%Y"), heure=now.strftime("%H:%M:%S"), name=username)
+                           SM_Csc="--", Date=today.strftime("%d/%m/%Y"), heure=now.strftime("%H:%M:%S"), name=person)
             k.save()
+
         context = super().get_context_data(**kwargs)
-        context['invs'] = Inventaire.objects.filter(Date=today.strftime("%d/%m/%Y"), name=username)
+        context['invs'] = Inventaire.objects.filter(
+            Date=today.strftime("%d/%m/%Y"), name=person)
 
         return context
 
 class CreateCrudInv(View):
     def get(self,request):
-        
+    
         réf_inv = request.GET.get('Reference', None)
         nbr_bac_inv = request.GET.get('Nombre_De_Bac', None)
 
@@ -135,6 +111,29 @@ class DeleteCrudInv(View):
         return JsonResponse(data)
 
 
+# crud view pour le crossDock 
+class CrudCrossDock(TemplateView):
+    template_name = 'CrossDock.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['alertes'] = Inventaire.objects.all()
+        return context
+
+
+class CreateCrudAler(View):
+    pass
+
+
+
+
+
+
+
+
+
+
+
+
 
 #login functions-------------------------------------------------------------------------------
 
@@ -142,7 +141,7 @@ def index(request):
     if not request.user.is_authenticated:
         return render(request, 'login.html')
         #return HttpResponseRedirect(reverse("login"))
-    return render(request, 'Dashboard.html')
+    return render(request, 'login.html')
     
 
 def login_view(request):
@@ -150,6 +149,7 @@ def login_view(request):
         global username,user
         username = request.POST["username"]
         password = request.POST["password"]
+        
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)

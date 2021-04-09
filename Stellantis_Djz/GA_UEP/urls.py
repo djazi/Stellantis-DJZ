@@ -16,8 +16,9 @@ urlpatterns = [
     path ("api/get_réf/", views.get_réf, name='get_réf'),
 
     path("crud/", CrudView.as_view(), name='crud_ajax'),
-    #path("create", create, name="create"),
-    
+    path("crossdock/", CrudCrossDock.as_view() ,name='cross_dock' ),
+
+    path("create/CD", CreateCrudAler.as_view(), name = "create_CD" ),
     path("create/", CreateCrudInv.as_view(), name='create'),
     path('delete/', DeleteCrudInv.as_view(), name='delete'),
 
@@ -26,7 +27,7 @@ urlpatterns = [
 
     
     path("MagDebord", views.MagDebord, name="MagDebord"),
-    path("CrossDock", views.CrossDock, name="CrossDock"),
+    #path("CrossDock", views.CrossDock, name="CrossDock"),
     path("Dashboard", views.Dashboard, name="Dashboard"),
     path("Error", views.Error, name="Error"),
 

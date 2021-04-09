@@ -98,12 +98,21 @@
 <script>
     $("form#addinv").submit(function () {
         var today = new Date();
+       
+        var d = new Date();
+
+        var today = new Date();
         var dd = today.getDate();
         var mm = today.getMonth() + 1;
         var yyyy = today.getFullYear();
-        today = dd + '/' + mm + '/' + yyyy;
-        var d = new Date();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
 
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        today = dd + '/' + mm + '/' + yyyy;
 
 
             var réf_inv_input = $('input[name="Reference"]').val().trim();
@@ -114,6 +123,7 @@
             var zkit_input = $('#zkit').val().trim();
             var smcsc_input = $('#smcsc').val().trim();
             var date_input = today;
+            
             var heure_input = d.toLocaleTimeString('it-IT');
 
             if (réf_inv_input && nbr_bac_input) {
@@ -126,6 +136,7 @@
                         'Reference': réf_inv_input,
                         'Nombre_De_Bac': nbr_bac_input,
                         'name':nam_input,
+                        'username': nam_input,
 
                         'Zone_De_Kit': zkit_input,
                         'SM_Csc': smcsc_input,

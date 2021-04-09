@@ -3,7 +3,56 @@
 
 {% block body %}
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-1">Blank Page</h3>
+                        <div class="card">
+                            <div id="result" class="card-body">
+                        
+                                <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
+                                    <table class="table my-0" id="InvTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Statut</th>
+                                                <th>Réference</th>
+                                                <th>Nombre de Bac</th>
+                                                <th>Zone de KIT</th>
+                                                <th>SM CSC</th>
+                                                <th>heure</th>
+                                                <th>Date</th>
+                                                <th>NOM</th>
+                                            </tr>
+                                        </thead>
+                                        {% if alertes %}
+                                        {% for alert in alertes %}
+                                        <tr id="inv-{{inv.id}}">
+                                            <td><button class="btn btn-primary" type="button"></button></td>
+                                            <td class="réf invData" name="Reference">{{alert.Reference}}</td>
+                                            <td class="nbrbac invData" name="Nombre_De_Bac">{{alert.Nombre_De_Bac}}</td>
+                        
+                                            <td class="zkit invData" id="zkit" name="Zone_De_Kit">{{alert.Zone_De_Kit}}</td>
+                                            <td class="smcsc invData" id="smcsc" name="SM_Csc">{{alert.SM_Csc}}</td>
+                                            <td class="date invData" id="date" name="Date">{{alert.Date}}</td>
+                                            <td class="heure invData" id="heure" name="heure">{{alert.heure}}</td>
+                                            <td class="name invData" id="name" name="name">{{alert.name}}</td>
+                        
+                        
+                                            <!--<td><button class="btn btn-primary" onClick="deleteUser({{inv.id}})" style="background: rgb(252,2,2);">Supprimer</button></td> -->
+                        
+                                        </tr>
+                                        {% endfor %}
+                                        {% else %}
+                                        <h2 style="color: red;"> NO Data </h2>
+                                        {% endif %}
+                        
+                                    </table>
+                                </div>
+                        
+                            </div>
+                        </div>
                 </div>
             </div>
 {% endblock %}
+
+{% block javascript %}
+<script>
+
+</script>
+{% endblock javascript %}
