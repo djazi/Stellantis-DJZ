@@ -1,7 +1,9 @@
 from django.db import models
-from django.db.models.fields import FloatField, IntegerField, TimeField
+from django.db.models.fields import CharField, FloatField, IntegerField, TimeField
 
 # Create your models here.
+
+
 
 
 class Map(models.Model):

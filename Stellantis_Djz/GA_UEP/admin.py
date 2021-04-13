@@ -5,15 +5,17 @@ from . models import Person,Group,Membership,Inventaire,Map
 
 class MapAdmin(admin.ModelAdmin):
     list_display = ("Map_Réference", "Designation_Produit", "Map_PDC", "condi",
-                    "condiQ", "ligne",  "UA_Appro", "UcTourRef", "Designation_Produit", "Train", "CVM")
+                    "condiQ", "ligne",  "UA_Appro", "UcTourRef",  "Train", "CVM")
 
 
 class GroupAdmin(admin.ModelAdmin):
     list_display = ("RU","unite")
 
 
+
+
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ("name","matricule")
+    list_display = ("name", "matricule")
 
 
 class MembershipAdmin(admin.ModelAdmin):

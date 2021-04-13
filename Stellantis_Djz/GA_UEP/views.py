@@ -1,6 +1,6 @@
 from typing import List
 from django.contrib.auth import authenticate, login, logout
-from . models import Inventaire, Map, Membership,Person,Group
+from . models import Inventaire, Map, Membership, Person, Group
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, Http404, request, HttpResponse
 from django.urls import reverse
 from django.shortcuts import render
@@ -8,10 +8,11 @@ from django.db.models import Count
 from django.core import serializers
 from django.http.response import HttpResponse, JsonResponse
 from datetime import date, datetime
-from django.http import  JsonResponse
+from django.http import JsonResponse
 from django.contrib import messages
 import json
-from django.views.generic import TemplateView, ListView,View
+from django.views.generic import TemplateView, ListView, View
+from django.contrib.sessions.models import Session
 #----------------------------------------------------
 
 # Create your views here.----------------------------------------
@@ -44,7 +45,7 @@ def get_réf(request):
 class CrudView(TemplateView):
     template_name = 'BordKit.html'
     def get_context_data(self, **kwargs):
-        person = username
+        person = self.request.user.username 
         c = Inventaire.objects.filter(Date=d1, name=person).count()
         if c == 0:
             k = Inventaire(Reference="--",
@@ -59,7 +60,7 @@ class CrudView(TemplateView):
 
 class CreateCrudInv(View):
     def get(self,request):
-    
+        global nm_input
         réf_inv = request.GET.get('Reference', None)
         nbr_bac_inv = request.GET.get('Nombre_De_Bac', None)
 
@@ -110,7 +111,7 @@ class DeleteCrudInv(View):
         return JsonResponse(data)
 
 
-# crud view pour le crossDock 
+# crud view pour le crossDock -----------------------------------------------------------------------------
 class CrudCrossDock(TemplateView):
     template_name = 'CrossDock.html'
     def get_context_data(self, **kwargs):
@@ -135,19 +136,20 @@ class CreateCrudAler(View):
 
 
 #login functions-------------------------------------------------------------------------------
-
 def index(request):
     if not request.user.is_authenticated:
         return render(request, 'login.html')
         #return HttpResponseRedirect(reverse("login"))
     return render(request, 'login.html')
-    
+
 
 def login_view(request):
     if request.method == "POST":
-        global username,user
+        global username
         username = request.POST["username"]
         password = request.POST["password"]
+        
+        
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
@@ -167,7 +169,15 @@ def logout_view(request):
         "message": "Merci pour Votre Travail ."
     })
 
-#bord KIt function
+
+
+
+
+
+
+
+
+#bord KIt function-----------------------------------------------------------------------------------
 def Bord_Kit(request):
     return render(request, 'BordKit.html')
 #Cross Dock function

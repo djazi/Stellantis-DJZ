@@ -18,7 +18,7 @@
 
 
 
-    
+
 </head>
 
 <body id="page-top">
@@ -37,11 +37,11 @@
                     <li class="nav-item">
 
                     </li>
-                    <li class="nav-item"><a class="nav-link " href="{% url 'GA_UEP:crud_ajax'%}"><i
-                                class="fas fa-table"></i>&nbsp;Bord KIT</a>
+                    <li class="nav-item"><a class="nav-link " href="{% url 'GA_UEP:crud_ajax'%}"><i class="fas fa-table"></i>&nbsp;Bord KIT</a>
                         <a class="nav-link " href="{% url 'GA_UEP:cross_dock'%}"><i class="fas fa-table"></i>&nbsp;Cross DOCK</a>
                         <a class="nav-link " href="{% url 'GA_UEP:MagDebord'%}"><i class="fas fa-table"></i>&nbsp;Mag Débord</a>
                         <a class="nav-link " href="{% url 'GA_UEP:logout' %}"><i class="fas fa-close"></i>&nbsp;Log out</a>
+                            
                     </li>
                     <li class="nav-item"></li>
                     <li class="nav-item"></li>
@@ -62,37 +62,44 @@
                                 <div class="input-group-append"><button class="btn btn-primary py-0" type="button"><i
                                             class="fas fa-search"></i></button></div>
                             </div>
+                            
                         </form>
+                        <div>
+                            
+                            <h3 id="supername" style="text-align:right;float:right;" name="supername">{{ request.user.username }}</h3>
+                            
+                        </div>
                     </div>
                 </nav>
 
                 {% block body %}
-                
-                
+
+
                 {% endblock %}
 
-<footer class="bg-white sticky-footer">
-    <div class="container my-auto">
-        <div class="text-center my-auto copyright"><span>Copyright © DJZ 2021</span></div>
-    </div>
-</footer>
-</div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
-</div>
-<script src=" {% static 'js/jquery.min.js'%}"></script>
-<script src="{% static 'bootstrap/js/bootstrap.min.js'%}"></script>
-<script src="{% static 'js/chart.min.js'%}"></script>
-<script src="{% static 'js/bs-init.js'%}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
-<script src="{% static 'js/theme.js'%}"></script>
-<script src="{% static 'js/script.js'%}"></script> 
-<script src="{% static 'js/jQ.js'%}"></script>
-<script src="{% static 'js/jQY.js'%}"></script>
-<script src="{% static 'js/jQf.js'%}"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-{% block javascript %}
-{% endblock javascript %}
+                <footer class="bg-white sticky-footer">
+                    <div class="container my-auto">
+                        <div class="text-center my-auto copyright"><span>Copyright © DJZ 2021</span></div>
+                    </div>
+                </footer>
+            </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+        </div>
+        <script src=" {% static 'js/jquery.min.js'%}"></script>
+        <script src="{% static 'bootstrap/js/bootstrap.min.js'%}"></script>
+        <script src="{% static 'js/chart.min.js'%}"></script>
+        <script src="{% static 'js/bs-init.js'%}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+        <script src="{% static 'js/theme.js'%}"></script>
+        <script src="{% static 'js/script.js'%}"></script>
+        <script src="{% static 'js/jQ.js'%}"></script>
+        <script src="{% static 'js/jQY.js'%}"></script>
+        <script src="{% static 'js/jQf.js'%}"></script>
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+        {% block javascript %}
+        {% endblock javascript %}
 
-<!--
+        <!--
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
  -->
