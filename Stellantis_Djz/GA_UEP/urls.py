@@ -18,7 +18,7 @@ urlpatterns = [
     path("crud/", CrudView.as_view(), name='crud_ajax'),
     path("crossdock/", CrudCrossDock.as_view(), name='cross_dock'),
 
-    path("create/CD", CreateCrudAler.as_view(), name="create_CD"),
+    path("update/CD", UpdateAler.as_view(), name="update_CD"),
     path("create/", CreateCrudInv.as_view(), name='create'),
     path('delete/', DeleteCrudInv.as_view(), name='delete'),
 

@@ -1,6 +1,6 @@
 from typing import List
 from django.contrib.auth import authenticate, login, logout
-from . models import Inventaire, Map, Membership, Person, Group
+from . models import Alertes, Inventaire, Map, Membership
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, Http404, request, HttpResponse
 from django.urls import reverse
 from django.shortcuts import render
@@ -76,7 +76,13 @@ class CreateCrudInv(View):
         filt1 = Map.objects.filter(Map_Réference=réf_inv)
         for i in filt1:
             zkit = i.Map_PDC
-            cvm = i.CVM   
+            cvm = i.CVM  
+            condi = i.condi
+            uc = i.condiQ
+
+        #add data to alertes
+        
+       
         
         obj = Inventaire.objects.create(
             Reference = réf_inv,
@@ -86,7 +92,6 @@ class CreateCrudInv(View):
             Date=dc,
             heure=hc,
             name=nm,)
-        
         inv = {'id': obj.id, 'Reference': obj.Reference,
                 'Nombre_De_Bac': obj.Nombre_De_Bac,
                 'Zone_De_Kit': obj.Zone_De_Kit,
@@ -98,6 +103,22 @@ class CreateCrudInv(View):
         data = {
                 'inv':inv
             }
+        # convert inventair to alerte
+        filt3 = Membership.objects.filter(person=nm_input)
+        for j in filt3:
+            moniteur = j.Moniteur
+        al = Alertes(
+            Reference=réf_inv,
+            Nombre_De_Bac=nbr_bac_inv,
+            Zone_De_Kit=zkit,
+            SM_Csc=cvm,
+            Code_condi=condi,
+            QTe_Uc=uc,
+            Date=dc,
+            heure=hc,
+            Moniteur= moniteur)
+        al.save()
+        
         return JsonResponse(data)
 
 
@@ -114,14 +135,48 @@ class DeleteCrudInv(View):
 # crud view pour le crossDock -----------------------------------------------------------------------------
 class CrudCrossDock(TemplateView):
     template_name = 'CrossDock.html'
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs):   
         context = super().get_context_data(**kwargs)
-        context['alertes'] = Inventaire.objects.all()
+        context['alertes'] = Alertes.objects.all()
         return context
 
 
-class CreateCrudAler(View):
-    pass
+
+
+class UpdateAler(View):
+    def get(self, request):
+        id1 = request.GET.get('id', None)
+        st = request.GET.get('statut', None)
+        deb = request.GET.get('Au_Débord', None)
+        antic = request.GET.get('Anticipation', None)
+        cmnt = request.GET.get('Commenataire', None)
+
+        shif = request.GET.get('Shifts', None)
+                               
+        grp = request.GET.get('Groupes', None)
+
+        obj = Alertes.objects.get(id=id1)
+        obj.statut = st
+        obj.Au_Débord = deb
+        obj.Anticipation = antic
+        obj.Commenataire = cmnt
+        
+        obj.Shifts = shif
+        obj.Groupes = grp
+
+        obj.save()
+
+        alt = {'id': obj.id, 'statut': obj.statut,
+               'Au_Débord': obj.Au_Débord, 'Anticipation': obj.Anticipation, 
+               'Commenataire': obj.Commenataire, 'Shifts': obj.Shifts,
+               'Groupes': obj.Groupes}
+
+        data = {
+            'alt': alt
+        }
+        return JsonResponse(data)
+
+
 
 
 

@@ -2,6 +2,121 @@
 {% load static %}
 
 {% block body %}
+<!-- KPI of CrossDock ------------------------------------------------------------------------------------------------------------------->
+<div class="container-fluid">
+
+    
+        <div class="d-sm-flex justify-content-between align-items-center mb-4">
+            <h3 class="text-dark mb-0">Cross Dock</h3>
+        <!-- <a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="#"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a> -->
+
+        
+        <select name="shifts" id="shifts" class="selectS" onchange="" >
+            
+            <option data-Sh="SHIFTS" value="SHIFTS">SHIFTS</option>
+            <option data-Sh="MATIN" value="MATIN">MATIN</option>
+            <option data-Sh="SOIR" value="SOIR">SOIR</option>
+            <option data-Sh="NUIT" value="NUIT">NUIT</option>
+           
+        </select>
+        
+        <select name="groupes" id="groupes" class="selectG" onchange="">
+            <option data-Gr="" value="GROUPES">GROUPES</option>
+            <option data-Gr="A" value="A">A</option>
+            <option data-Gr="B" value="B">B</option>
+            <option data-Gr="C" value="C">C</option>
+        </select>
+
+        
+    
+
+        </div>
+    
+
+
+
+
+<div class="row">
+    
+    <div class="col-md-6 col-xl-3 mb-4">
+        <div class="card shadow border-left-success py-2">
+            <div class="card-body">
+                <div class="row align-items-center no-gutters">
+                    <div class="col mr-2">
+                        <div class="text-uppercase text-success font-weight-bold text-xs mb-1"><span>Activité Au Débord</span></div> 
+                                
+                        <div class="text-dark font-weight-bold h5 mb-0"><span>12</span></div>
+                        <div class="text-dark font-weight-bold h5 mb-0"><span style="color:chartreuse;">12</span></div>
+                    </div>
+                    <div class="col-auto"><i class="fas fa-store fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3 mb-4">
+        <div class="card shadow border-left-info py-2">
+            <div class="card-body">
+                <div class="row align-items-center no-gutters">
+                    <div class="col mr-2">
+                        <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span>Activité Au Cross Dock</span></div>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-auto">
+                                <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>5</span></div>
+                                <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span style="color: lawngreen;">5</span></div>
+                            </div>
+                            <div class="col">
+                               
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-auto"><i class="fas fa-compress fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3 mb-4">
+        <div class="card shadow border-left-warning py-2">
+            <div class="card-body">
+                <div class="row align-items-center no-gutters">
+                    <div class="col mr-2">
+                        <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span>Alertes</span></div>
+                               
+                        <div class="text-dark font-weight-bold h5 mb-0"><span>18</span></div>
+                        <div class="text-dark font-weight-bold h5 mb-0"><span style="color: red;">18</span></div>
+                    </div>
+                    <div class="col-auto"><i class="fas fa-hand-stop-o fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3 mb-4">
+        <div class="card shadow border-left-info py-2">
+            <div class="card-body">
+                <div class="row align-items-center no-gutters">
+                    <div class="col mr-2">
+                        <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span>Anticipations</span></div>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-auto">
+                                <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>5</span></div>
+                                <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span style="color: fuchsia;">5</span></div>
+                            </div>
+                            <div class="col">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-auto"><i class="fas fa-clipboard-list fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+<!-- end of KPI of CrossDock ------------------------------------------------------------------------------------------------------------------->
                 <div class="container-fluid">
                         <div class="card">
                             <div id="result" class="card-body">
@@ -10,28 +125,40 @@
                                     <table class="table my-0" id="InvTable">
                                         <thead>
                                             <tr>
+                                                
                                                 <th>Statut</th>
                                                 <th>Réference</th>
                                                 <th>Nombre de Bac</th>
                                                 <th>Zone de KIT</th>
                                                 <th>SM CSC</th>
-                                                <th>heure</th>
+                                                <th>Code Condi</th>
+                                                <th>Qte UC</th>
                                                 <th>Date</th>
-                                                <th>NOM</th>
+                                                <th>heure</th>
+                                                <th>Moniteur</th>
+                                                <th>HFA</th>
                                             </tr>
                                         </thead>
                                         {% if alertes %}
                                         {% for alert in alertes %}
-                                        <tr id="inv-{{inv.id}}">
-                                            <td><button class="btn btn-primary" type="button"></button></td>
+                                        <tr id="alert-{{alert.id}}">
+                                            <td><button class="btn btn-info form-control" id="btn1" onClick="editUser({{alert.id}})" data-toggle="modal" data-target="#myModal" ></button></td>
+                                                    
                                             <td class="réf invData" name="Reference">{{alert.Reference}}</td>
-                                            <td class="nbrbac invData" name="Nombre_De_Bac">{{alert.Nombre_De_Bac}}</td>
-                        
+                                            <td class="nbrbac invData" name="Nombre_De_Bac">{{alert.Nombre_De_Bac}}</td>                                            
                                             <td class="zkit invData" id="zkit" name="Zone_De_Kit">{{alert.Zone_De_Kit}}</td>
                                             <td class="smcsc invData" id="smcsc" name="SM_Csc">{{alert.SM_Csc}}</td>
+
+                                            <td class="smcsc invData" id="smcsc" name="code_condi">{{alert.Code_condi}}</td>
+                                            <td class="smcsc invData" id="smcsc" name="qte UC">{{alert.QTe_Uc}}</td>
+
+
                                             <td class="date invData" id="date" name="Date">{{alert.Date}}</td>
                                             <td class="heure invData" id="heure" name="heure">{{alert.heure}}</td>
-                                            <td class="name invData" id="name" name="name">{{alert.name}}</td>
+                                            <td class="moniteur invData" id="moniteur" name="moniteur">{{alert.Moniteur}}</td>
+                                            <td class="moniteur invData" id="HFA" name="HFA">--</td>
+                                                    
+
                         
                         
                                             <!--<td><button class="btn btn-primary" onClick="deleteUser({{inv.id}})" style="background: rgb(252,2,2);">Supprimer</button></td> -->
@@ -44,15 +171,164 @@
                         
                                     </table>
                                 </div>
+
                         
                             </div>
                         </div>
                 </div>
             </div>
+<!-- modals ----------------------------------------------------------------------------------------------------------->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">Alertes</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    
+                        
+                        
+                        </div>
+                        <form id="updateAlertes" action="">
+                            
+                            <div class="modal-body">
+                                <input class="form-control" id="form-id" type="hidden" name="formId" />
+                                <label for="statut">Statut: </label>
+
+                                <select name="formStatut" id="form-statut" class="custom-select custom-select-sm" onchange="change1()" >
+                                    <optgroup label="">
+                                        
+                                        <option value=""></option>
+                                        
+                                        <option value="Livré">Livré</option>
+                                        <option value="Sortie Train">Sortie Train</option>
+                                        <option value="FLC">FLC</option>
+                                    </optgroup>
+                                </select>
+                                <!--<input class="form-control" id="form-name" type="text" name="formName"/>-->
+
+                                <label for="magdebord">Mag Débord:</label>
+                                <select name="formdebord" id="form-debord" class="custom-select custom-select-sm" onchange="change2()" >
+                                    <optgroup label="">
+                                        
+                                        
+                                        <option value=""></option>
+                                        
+                                        <option value="Au Débord">Au Débord</option>
+                                        <option value="NON Trouvé">NON Trouvé</option>
+                                        <option value="Livré">Livré</option>
+                                        <option value="Anomalie">Anomalie</option>
+                                    </optgroup>
+                                </select>
+
+                                <label for="anticipation">Anticipation: </label>
+                                <select name="formAnticipation" id="form-anticipation" class="custom-select custom-select-sm" onchange="change3()" >
+                                    <optgroup label="">
+                                        
+                                        <option value=""></option>
+                                        
+                                        <option value="Par Tranche">Par Tranche</option>
+                                        <option value="Par Remorque">Par Remorque</option>
+                                    </optgroup>
+                                </select>
+
+                                <label for="comment">Commentaire:</label>
+                                
+                                <input class="form-control" id="form-comment" type="text" name="formComment"   />
+                                
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Sauvegarder</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                            
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+<!-- end of modals ------------------------------------------------------------------------------------------------------>
 {% endblock %}
 
 {% block javascript %}
 <script>
 
+    // Create Django Ajax Call
+    $("form#updateAlertes").submit(function () {
+        // 
+        var shiftinp = document.getElementById("shifts").value;
+        var grpinp = document.getElementById("groupes").value;
+
+        var idInput = $('input[name="formId"]').val().trim();
+        var Statutinp = document.getElementById("form-statut").value;
+        var debordInput = document.getElementById("form-debord").value;
+        var anticipationInput = document.getElementById("form-anticipation").value;
+        var commenataireInput = $('input[name="formComment"]').val().trim();
+
+        if (Statutinp || debordInput || anticipationInput || commenataireInput) {
+            // Create Ajax Call
+            $.ajax({
+                url: '{% url "GA_UEP:update_CD" %}',
+                data: {
+                    'id': idInput,
+                    'statut': Statutinp, 
+                    'Au_Débord': debordInput,
+                    'Anticipation': anticipationInput,
+                    'Commenataire': commenataireInput,
+                    'Shifts': shiftinp,
+                    'Groupes': grpinp,
+                },
+                dataType: 'json',
+                success: function (data) {
+                    alert(Statutinp);
+                    }
+                
+            });
+
+        } else {
+            alert("All fields must have a valid value.");
+        }
+        $('form#updateAlertes').trigger("reset");
+        $('#myModal').modal('hide');
+        return false;
+    });
+    
+function editUser(id) {
+        if (id) {
+            tr_id = "#alert-" + id;
+            $('#form-id').val(id);
+            
+        }
+    }
+
+    function change1() {
+        if (document.getElementById("form-statut").value==="Livré"|| "Sortie Train" ){
+
+        document.getElementById('btn1').style.backgroundColor = 'lawngreen';
+        }
+        if (document.getElementById("form-statut").value === "FLC"){
+            document.getElementById('btn1').style.backgroundColor = 'red';
+        }
+
+    
+        
+    }
+//kepp the selected option slect shifts and groupes-----------------------------------------------------------------
+
+    $('#groupes,#shifts').change(function (event) {
+            var selectedcategory = $("#groupes").children("option:selected").val();
+            var selectedcategory2 = $("#shifts").children("option:selected").val();
+            localStorage.setItem("itemName", selectedcategory);
+            localStorage.setItem("itemName2", selectedcategory2);
+        });
+
+        $('#groupes').find('option[value=' + localStorage.getItem('itemName') + ']').attr('selected', 'selected');
+        $('#shifts').find('option[value=' + localStorage.getItem('itemName2') + ']').attr('selected', 'selected');
+//fin kepp the selected option slect shifts and groupes-----------------------------------------------------------------
+
+    
+
+
+   
 </script>
+
 {% endblock javascript %}

@@ -19,23 +19,14 @@ class Map(models.Model):
     Train = models.CharField(max_length=50, null=True, blank=True)
     CVM = models.CharField(max_length=50, null=True, blank=True)
 
-class Person(models.Model):
-    name = models.CharField(max_length=50)
-    matricule = models.CharField(max_length=50)
-    def __str__(self):
-        return self.name
 
-class Group(models.Model):
-    RU = models.CharField(max_length=50)
-    unite = models.CharField(max_length=50)
-    members = models.ManyToManyField(Person, through='Membership')
-    def __str__(self):
-        return self.RU
+
+
 
 
 class Membership(models.Model):
-    person = models.ForeignKey(Person, on_delete=models.CASCADE)
-    Ru = models.ForeignKey(Group, on_delete=models.CASCADE)
+    person = models.CharField(max_length=50)
+    Ru = models.CharField(max_length=50)
     Moniteur = models.CharField(max_length=50)
         
 class Inventaire(models.Model):
@@ -49,6 +40,23 @@ class Inventaire(models.Model):
     statut = models.CharField(max_length=50,null=True,blank=True)
     
 
-
+class Alertes(models.Model):
+    Reference = models.CharField(max_length=50, null=True, blank=True)
+    Nombre_De_Bac = models.CharField(max_length=50, null=True, blank=True)
+    Zone_De_Kit = models.CharField(max_length=50, null=True, blank=True)
+    SM_Csc = models.CharField(max_length=50, null=True, blank=True)
+    Code_condi = models.CharField(max_length=50, null=True, blank=True)
+    QTe_Uc = models.CharField(max_length=50, null=True, blank=True)
+    Date = models.CharField(max_length=50, null=True, blank=True)
+    heure = models.CharField(max_length=50, null=True, blank=True)
+    Moniteur = models.CharField(max_length=50, null=True, blank=True)
+    statut = models.CharField(max_length=50, null=True, blank=True)
+    Anticipation = models.CharField(max_length=50, null=True, blank=True)
+    Au_Débord = models.CharField(max_length=50, null=True, blank=True)
+    Commenataire = models.CharField(max_length=50, null=True, blank=True)
+    HFA = models.CharField(max_length=50, null=True, blank=True)
+    Shifts = models.CharField(max_length=50, null=True, blank=True)
+    Groupes= models.CharField(max_length=50, null=True, blank=True)
+    
 
     
