@@ -147,8 +147,7 @@ class UpdateAler(View):
     def get(self, request):
         id1 = request.GET.get('id', None)
         st = request.GET.get('statut', None)
-        deb = request.GET.get('Au_Débord', None)
-        antic = request.GET.get('Anticipation', None)
+        
         cmnt = request.GET.get('Commenataire', None)
 
         shif = request.GET.get('Shifts', None)
@@ -157,8 +156,7 @@ class UpdateAler(View):
 
         obj = Alertes.objects.get(id=id1)
         obj.statut = st
-        obj.Au_Débord = deb
-        obj.Anticipation = antic
+        
         obj.Commenataire = cmnt
         
         obj.Shifts = shif
@@ -166,8 +164,7 @@ class UpdateAler(View):
 
         obj.save()
 
-        alt = {'id': obj.id, 'statut': obj.statut,
-               'Au_Débord': obj.Au_Débord, 'Anticipation': obj.Anticipation, 
+        alt = {'id': obj.id, 'statut': obj.statut, 
                'Commenataire': obj.Commenataire, 'Shifts': obj.Shifts,
                'Groupes': obj.Groupes}
 

@@ -51,8 +51,6 @@ class Alertes(models.Model):
     heure = models.CharField(max_length=50, null=True, blank=True)
     Moniteur = models.CharField(max_length=50, null=True, blank=True)
     statut = models.CharField(max_length=50, null=True, blank=True)
-    Anticipation = models.CharField(max_length=50, null=True, blank=True)
-    Au_Débord = models.CharField(max_length=50, null=True, blank=True)
     Commenataire = models.CharField(max_length=50, null=True, blank=True)
     HFA = models.CharField(max_length=50, null=True, blank=True)
     Shifts = models.CharField(max_length=50, null=True, blank=True)

@@ -25,7 +25,6 @@ class AlertesAdmin(admin.ModelAdmin):
                     "Zone_De_Kit", 
                     "SM_Csc", "Code_condi", "QTe_Uc",
                     "Date", "heure", "Moniteur", "statut",
-                    "Anticipation", "Au_Débord",
                     "Commenataire", "HFA", "Shifts",
                     "Groupes")
 
