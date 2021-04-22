@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block body %}
-<!-- KPI of CrossDock ------------------------------------------------------------------------------------------------------------------->
+<!-- KPI of crossdock ------------------------------------------------------------------------------------------------------------------->
 <div class="container-fluid">
 
     
@@ -37,16 +37,39 @@
 
 
 <div class="row">
+    <div class="col-md-6 col-xl-3 mb-4">
+        <div class="card shadow border-left-info py-2">
+            <div class="card-body">
+                <div class="row align-items-center no-gutters">
+                    <div class="col mr-2">
+                        <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span> <h6>A_Au CrossDock</h6> </span></div>
+                                
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-auto">
+                                <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>Non Traitée:{{T_A_NT}}</span></div>
+                                <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span
+                                        style="color: lawngreen;">Train: {{Train}}</span></div>
+                            </div>
+                            <div class="col">
+    
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-auto"><i class="fas fa-compress fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <div class="col-md-6 col-xl-3 mb-4">
         <div class="card shadow border-left-success py-2">
             <div class="card-body">
                 <div class="row align-items-center no-gutters">
                     <div class="col mr-2">
-                        <div class="text-uppercase text-success font-weight-bold text-xs mb-1"><span>Activité Au Débord</span></div> 
+                        <div class="text-uppercase text-success font-weight-bold text-xs mb-1  "><span> <h6>A_Au Débord</h6> </span></div> 
                                 
-                        <div class="text-dark font-weight-bold h5 mb-0"><span>12</span></div>
-                        <div class="text-dark font-weight-bold h5 mb-0"><span style="color:chartreuse;">12</span></div>
+                        <div class="text-dark font-weight-bold h5 mb-0"><span>AU Débord: {{Adebord}}</span></div>
+                        <div class="text-dark font-weight-bold h5 mb-0"><span style="color:chartreuse;">Livré: {{Livré}}</span></div>
                     </div>
                     <div class="col-auto"><i class="fas fa-store fa-2x text-gray-300"></i></div>
                 </div>
@@ -59,52 +82,15 @@
             <div class="card-body">
                 <div class="row align-items-center no-gutters">
                     <div class="col mr-2">
-                        <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span>Activité Au Cross Dock</span></div>
+                        <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span> <h6>Anticipations</h6> </span></div>
                         <div class="row no-gutters align-items-center">
                             <div class="col-auto">
-                                <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>5</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span style="color: lawngreen;">5</span></div>
+                                <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>A_Tranche: {{AT}}</span></div>
+                                <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span style="color: fuchsia;">A_Remorque: {{AR}}</span>
+                                </div>
                             </div>
                             <div class="col">
-                               
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-auto"><i class="fas fa-compress fa-2x text-gray-300"></i></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6 col-xl-3 mb-4">
-        <div class="card shadow border-left-warning py-2">
-            <div class="card-body">
-                <div class="row align-items-center no-gutters">
-                    <div class="col mr-2">
-                        <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span>Alertes</span></div>
-                               
-                        <div class="text-dark font-weight-bold h5 mb-0"><span>18</span></div>
-                        <div class="text-dark font-weight-bold h5 mb-0"><span style="color: red;">18</span></div>
-                    </div>
-                    <div class="col-auto"><i class="fas fa-hand-stop-o fa-2x text-gray-300"></i></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6 col-xl-3 mb-4">
-        <div class="card shadow border-left-info py-2">
-            <div class="card-body">
-                <div class="row align-items-center no-gutters">
-                    <div class="col mr-2">
-                        <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span>Anticipations</span></div>
-                        <div class="row no-gutters align-items-center">
-                            <div class="col-auto">
-                                <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>5</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span style="color: fuchsia;">5</span></div>
-                            </div>
-                            <div class="col">
-                                
+    
                             </div>
                         </div>
                     </div>
@@ -113,6 +99,26 @@
             </div>
         </div>
     </div>
+
+    
+
+    <div class="col-md-6 col-xl-3 mb-4">
+        <div class="card shadow border-left-warning py-2">
+            <div class="card-body">
+                <div class="row align-items-center no-gutters">
+                    <div class="col mr-2">
+                        <div class="text-uppercase text-warning font-weight-bold text-xs  mb-1"><span><h6>Alertes</h6></span></div>
+                               
+                        <div class="text-dark font-weight-bold h5 mb-0"><span>Totale Alertes: {{TA}}</span></div>
+                        <div class="text-dark font-weight-bold h5 mb-0"><span style="color: red;">FLC:{{FLC}}</span></div>
+                    </div>
+                    <div class="col-auto"><i class="fas fa-hand-stop-o fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
 
 </div>
 </div>
@@ -144,10 +150,10 @@
                                           
                                         <tr id="alert-{{alert.id}}">
                                             
-                                            <td><button class="btn btn-info form-control ms-vb2" id="btn1" onClick="editUser({{alert.id}})" data-toggle="modal" data-target="#myModal" >{{alert.statut}}</button></td>
+                                            <td class="ms-vb2"><button class="btn btn-info form-control ms-vb2" id="btn1" onClick="editUser({{alert.id}})" data-toggle="modal" data-target="#myModal" >{{alert.statut}}</button></td>
                                                     
-                                            <td class="réf invData ms-vb2" name="Reference">{{alert.Reference}}</td>
-                                            <td class="nbrbac invData ms-vb2" name="Nombre_De_Bac">{{alert.Nombre_De_Bac}}</td>                                            
+                                            <td class="réf invData ms-vb2"  id="réfi" name="Reference">{{alert.Reference}}</td>
+                                            <td class="nbrbac invData ms-vb2" id="nbci" name="Nombre_De_Bac">{{alert.Nombre_De_Bac}}</td>                                            
                                             <td class="zkit invData ms-vb2" id="zkit" name="Zone_De_Kit">{{alert.Zone_De_Kit}}</td>
                                             <td class="smcsc invData ms-vb2" id="smcsc" name="SM_Csc">{{alert.SM_Csc}}</td>
 
@@ -158,7 +164,7 @@
                                             <td class="date invData ms-vb2 " id="date" name="Date">{{alert.Date}}</td>
                                             <td class="heure invData ms-vb2 " id="heure" name="heure">{{alert.heure}}</td>
                                             <td class="moniteur invData ms-vb2 " id="moniteur" name="moniteur">{{alert.Moniteur}}</td>
-                                            <td class="moniteur invData ms-vb2 " id="HFA" name="HFA">--</td>
+                                            <td class="moniteur invData ms-vb2 " id="HFA" name="HFA">{{alert.HFA}}</td>
                                                     
 
                         
@@ -206,8 +212,11 @@
                                         <option value="A_Tranche">Anticipation par Tranche</option>
                                         <option value="A_Remorque">Anticipation par Remorque</option>
                                         <option value="FLC">FLC</option>
+                                        <!--
                                         <option value="Livré">Livré</option>
                                         <option value="Non_T">NON Trouvé</option>
+                                        <option value="A_Débord">Au Débord</option>
+                                        -->
                                         
                                         
                                     </optgroup>
@@ -238,15 +247,18 @@
 
     // Create Django Ajax Call
     $("form#updateAlertes").submit(function () {
-        // 
+
+
         var shiftinp = document.getElementById("shifts").value;
         var grpinp = document.getElementById("groupes").value;
-
         var idInput = $('input[name="formId"]').val().trim();
         var Statutinp = document.getElementById("form-statut").value;
         var commenataireInput = $('input[name="formComment"]').val().trim();
 
-        if (Statutinp || debordInput || anticipationInput || commenataireInput) {
+
+        //var hfa = d.toLocaleTimeString('it-IT');
+        
+        if (Statutinp  || commenataireInput) {
             // Create Ajax Call
             $.ajax({
                 url: '{% url "GA_UEP:update_CD" %}',
@@ -256,14 +268,14 @@
                     'Commenataire': commenataireInput,
                     'Shifts': shiftinp,
                     'Groupes': grpinp,
+
+                    
                 },
                 dataType: 'json',
                 success: function (data) {
-                    alert(Statutinp);
+                    alert("L'Alerte est traitée ");
                     }
-                
             });
-
         } else {
             alert("All fields must have a valid value.");
         }
@@ -294,14 +306,25 @@ function editUser(id) {
         $('#shifts').find('option[value=' + localStorage.getItem('itemName2') + ']').attr('selected', 'selected');
 //fin kepp the selected option slect shifts and groupes-----------------------------------------------------------------
 
-    $(document).ready(function () {
+   $(document).ready(function () {
         $('td.ms-vb2').each(function (index) {
-            if ($(this).text() == 'Livré') {
-
-                $("#btn1").css("background-color", "lawngreen");
+             var c = $(this).find('#btn1').text() 
+            if (c === 'Livré'|| c=== 'Train') {
+                $(this).find('#btn1').css("background-color", "lawngreen");
+            }
+            if (c === 'Non_T'|| c=== 'Alerte' || c==='A_Débord') {
+                $(this).find('#btn1').css("background-color", "darkorange");
+            }
+            if (c === 'A_Remorque'|| c=== 'A_Tranche') {
+                $(this).find('#btn1').css("background-color", "fuchsia");
+            }
+            if (c === 'FLC') {
+                $(this).find('#btn1').css("background-color", "red");
             }
         });
     });
+
+
 
 
 </script>

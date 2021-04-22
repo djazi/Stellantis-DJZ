@@ -13,6 +13,9 @@ from django.contrib import messages
 import json
 from django.views.generic import TemplateView, ListView, View
 from django.contrib.sessions.models import Session
+
+
+
 #----------------------------------------------------
 
 # Create your views here.----------------------------------------
@@ -54,13 +57,13 @@ class CrudView(TemplateView):
             k.save()
         context = super().get_context_data(**kwargs)
         context['invs'] = Inventaire.objects.filter(
-            Date=today.strftime("%d/%m/%Y"), name=person)
+            Date=today.strftime("%d/%m/%Y"), name=person).order_by('-heure')
 
         return context
 
 class CreateCrudInv(View):
     def get(self,request):
-        global nm_input
+        global nm_input,hc
         réf_inv = request.GET.get('Reference', None)
         nbr_bac_inv = request.GET.get('Nombre_De_Bac', None)
 
@@ -135,51 +138,133 @@ class DeleteCrudInv(View):
 # crud view pour le crossDock -----------------------------------------------------------------------------
 class CrudCrossDock(TemplateView):
     template_name = 'CrossDock.html'
+    
     def get_context_data(self, **kwargs):   
         context = super().get_context_data(**kwargs)
-        context['alertes'] = Alertes.objects.all()
+        context['alertes'] = Alertes.objects.filter(
+            Date=today.strftime("%d/%m/%Y")).order_by('-heure')
+
+        context['T_A_NT'] = Alertes.objects.filter(
+            statut__in=('FLC', 'Alerte', 'Non_T', 'A_Débord')).count()   
+
+        context['Train'] = Alertes.objects.filter(statut='Train').count()
+
+        context['Adebord'] = Alertes.objects.filter(
+            statut__in=('A_Débord', 'Alerte')).count()
+
+        context['Livré'] = Alertes.objects.filter(statut='Livré').count()
+
+        context['AT'] = Alertes.objects.filter(statut='A_Tranche').count()
+        context['AR'] = Alertes.objects.filter(statut='A_Remorque').count()
+
+        context['TA'] = Alertes.objects.filter(Date=d1).count()
+        context['FLC'] = Alertes.objects.filter(statut='FLC').count()
+            
+
+        
         return context
-
-
-
-
 class UpdateAler(View):
     def get(self, request):
         id1 = request.GET.get('id', None)
         st = request.GET.get('statut', None)
-        
         cmnt = request.GET.get('Commenataire', None)
-
         shif = request.GET.get('Shifts', None)
-                               
         grp = request.GET.get('Groupes', None)
 
+        
+        #h = now.strftime("%H:%M:%S")
+        
         obj = Alertes.objects.get(id=id1)
         obj.statut = st
-        
         obj.Commenataire = cmnt
-        
         obj.Shifts = shif
         obj.Groupes = grp
-
+        if(st == "Livré" or st == "Train" or st == "A_Tranche" or st == "A_Remorque"):
+            obj.HFA = datetime.now().strftime("%H:%M:%S")
+        else:
+            obj.HFA = '....'
         obj.save()
+
+        
 
         alt = {'id': obj.id, 'statut': obj.statut, 
                'Commenataire': obj.Commenataire, 'Shifts': obj.Shifts,
-               'Groupes': obj.Groupes}
-
+               'Groupes': obj.Groupes,'HFA':obj.HFA}
         data = {
             'alt': alt
         }
         return JsonResponse(data)
 
 
+# crud view pour le Magdebord -----------------------------------------------------------------------------
+
+class CrudMagDebord(TemplateView):
+    template_name = 'MagDebord.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['alertesD'] = Alertes.objects.filter(
+            Date=today.strftime("%d/%m/%Y"), statut__in=('Alerte','A_Débord')).order_by('-heure')
+        return context
 
 
+class UpdateAlerDB(View):
+    def get(self, request):
+        id1 = request.GET.get('id', None)
+        st = request.GET.get('statut', None)
+        cmnt = request.GET.get('Commenataire', None)
+        #h = now.strftime("%H:%M:%S")
+        obj = Alertes.objects.get(id=id1)
+        obj.statut = st
+        obj.Commenataire = cmnt
+        if(st == "Livré" or st == "Train" or st == "A_Tranche" or st == "A_Remorque"):
+            obj.HFA = datetime.now().strftime("%H:%M:%S")
+        else:
+            obj.HFA = '....'
+        obj.save()
+        alt = {'id': obj.id, 'statut': obj.statut,
+               'Commenataire': obj.Commenataire,
+                'HFA': obj.HFA}
+        data = {
+            'alt': alt
+        }
+        return JsonResponse(data)
 
 
+# crud view pour le FLC -----------------------------------------------------------------------------
 
 
+class CrudFLC(TemplateView):
+    template_name = 'FLC.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['alertesF'] = Alertes.objects.filter(
+            Date=today.strftime("%d/%m/%Y"), statut='FLC').order_by('-heure')
+        return context
+
+
+class UpdateAlerFLC(View):
+    def get(self, request):
+        id1 = request.GET.get('id', None)
+        st = request.GET.get('statut', None)
+        cmnt = request.GET.get('Commenataire', None)
+        #h = now.strftime("%H:%M:%S")
+        obj = Alertes.objects.get(id=id1)
+        obj.statut = st
+        obj.Commenataire = cmnt
+        if(st == "Livré" or st == "Train" or st == "A_Tranche" or st == "A_Remorque"):
+            obj.HFA = datetime.now().strftime("%H:%M:%S")
+        else:
+            obj.HFA = '....'
+        obj.save()
+        alt = {'id': obj.id, 'statut': obj.statut,
+               'Commenataire': obj.Commenataire,
+               'HFA': obj.HFA}
+        data = {
+            'alt': alt
+        }
+        return JsonResponse(data)
 
 
 
