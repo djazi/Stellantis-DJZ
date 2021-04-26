@@ -17,6 +17,8 @@ urlpatterns = [
 
     path("crud/", CrudView.as_view(), name='crud_ajax'),
     path("crossdock/", CrudCrossDock.as_view(), name='cross_dock'),
+
+    path("crossdock/historique", HistoCrossDock.as_view(), name='cross_dock_Historique'),
     path("Magdebord/", CrudMagDebord.as_view(), name='Mag_debord'),
     path("FLC/", CrudFLC.as_view(), name='FLC_A'),
     

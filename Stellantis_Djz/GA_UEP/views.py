@@ -13,6 +13,7 @@ from django.contrib import messages
 import json
 from django.views.generic import TemplateView, ListView, View
 from django.contrib.sessions.models import Session
+from django.db.models import Q
 
 
 
@@ -136,32 +137,35 @@ class DeleteCrudInv(View):
 
 
 # crud view pour le crossDock -----------------------------------------------------------------------------
+
 class CrudCrossDock(TemplateView):
     template_name = 'CrossDock.html'
-    
     def get_context_data(self, **kwargs):   
         context = super().get_context_data(**kwargs)
         context['alertes'] = Alertes.objects.filter(
-            Date=today.strftime("%d/%m/%Y")).order_by('-heure')
+            Q(Date=datetime.now().strftime("%d/%m/%Y"), ) | Q(HFA='....')).order_by('-heure')
+        
+        context['T_A_NT'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
+        statut__in=('FLC', 'Alerte', 'Non_T', 'A_Débord')).count()
 
-        context['T_A_NT'] = Alertes.objects.filter(
-            statut__in=('FLC', 'Alerte', 'Non_T', 'A_Débord')).count()   
-
-        context['Train'] = Alertes.objects.filter(statut='Train').count()
+        context['Train'] = Alertes.objects.filter(
+            statut='Train', Date=datetime.now().strftime("%d/%m/%Y")).count()
 
         context['Adebord'] = Alertes.objects.filter(
-            statut__in=('A_Débord', 'Alerte')).count()
+            statut__in=('A_Débord', 'Alerte'), Date=datetime.now().strftime("%d/%m/%Y")).count()
 
-        context['Livré'] = Alertes.objects.filter(statut='Livré').count()
+        context['Livré'] = Alertes.objects.filter(
+            statut='Livré', Date=datetime.now().strftime("%d/%m/%Y")).count()
 
-        context['AT'] = Alertes.objects.filter(statut='A_Tranche').count()
-        context['AR'] = Alertes.objects.filter(statut='A_Remorque').count()
+        context['AT'] = Alertes.objects.filter(
+            statut='A_Tranche', Date=datetime.now().strftime("%d/%m/%Y")).count()
+        context['AR'] = Alertes.objects.filter(
+            statut='A_Remorque', Date=datetime.now().strftime("%d/%m/%Y")).count()
 
         context['TA'] = Alertes.objects.filter(Date=d1).count()
-        context['FLC'] = Alertes.objects.filter(statut='FLC').count()
+        context['FLC'] = Alertes.objects.filter(
+            statut='FLC', Date=datetime.now().strftime("%d/%m/%Y")).count()
             
-
-        
         return context
 class UpdateAler(View):
     def get(self, request):
@@ -195,16 +199,25 @@ class UpdateAler(View):
         }
         return JsonResponse(data)
 
+# crud view pour Cross Dock Historique 
+class HistoCrossDock(TemplateView):
+    template_name = 'CDhistorique.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['alertes'] = Alertes.objects.filter(
+            Q(Date=datetime.now().strftime("%d/%m/%Y"), ) | Q(HFA='....')).order_by('-heure')
+        return context
+
 
 # crud view pour le Magdebord -----------------------------------------------------------------------------
-
 class CrudMagDebord(TemplateView):
     template_name = 'MagDebord.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['alertesD'] = Alertes.objects.filter(
-            Date=today.strftime("%d/%m/%Y"), statut__in=('Alerte','A_Débord')).order_by('-heure')
+            Q(Date=today.strftime("%d/%m/%Y")) | Q(statut__in=('Alerte', 'A_Débord'))).order_by('-heure')
         return context
 
 
@@ -240,10 +253,10 @@ class CrudFLC(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['alertesF'] = Alertes.objects.filter(
-            Date=today.strftime("%d/%m/%Y"), statut='FLC').order_by('-heure')
+            Q(Date=today.strftime("%d/%m/%Y")) | Q(statut='FLC')).order_by('-heure')
         return context
 
-
+#Q(Date=datetime.now().strftime("%d/%m/%Y"), ) | Q(HFA='....')).order_by('-heure')
 class UpdateAlerFLC(View):
     def get(self, request):
         id1 = request.GET.get('id', None)

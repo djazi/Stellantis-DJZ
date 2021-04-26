@@ -5,10 +5,8 @@
 <!-- KPI of crossdock ------------------------------------------------------------------------------------------------------------------->
 <div class="container-fluid">
 
-    
-        <div class="d-sm-flex justify-content-between align-items-center mb-4">
+    <div class="d-sm-flex justify-content-between align-items-center mb-4">
             <h3 class="text-dark mb-0">Cross Dock</h3>
-        <!-- <a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="#"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a> -->
 
         
         <select name="shifts" id="shifts" class="selectS" onchange="" >
@@ -26,11 +24,15 @@
             <option data-Gr="B" value="B">B</option>
             <option data-Gr="C" value="C">C</option>
         </select>
+    <!-- <a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="#"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a> -->
+    <a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="{% url 'GA_UEP:cross_dock_Historique' %}"><i class="fas fa-book-open fa-sm text-white-50"></i>&nbsp;Historique</a>
+                        
+
 
         
     
 
-        </div>
+    </div>
     
 
 
@@ -120,10 +122,13 @@
 
     
 
+    
+    </div>
 </div>
-</div>
+
+    
 <!-- end of KPI of CrossDock ------------------------------------------------------------------------------------------------------------------->
-                <div class="container-fluid">
+                <div class="container-fluid" >
                         <div class="card">
                             <div id="result" class="card-body">
                         
@@ -185,7 +190,7 @@
                         </div>
                 </div>
             </div>
-<!-- modals ----------------------------------------------------------------------------------------------------------->
+<!-- modals pour changer le statut  ----------------------------------------------------------------------------------------------------------->
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -200,6 +205,12 @@
                             
                             <div class="modal-body">
                                 <input class="form-control" id="form-id" type="hidden" name="formId" />
+                            
+                                <div>
+                                    <h5 id="grpr" style=" text-align:right;float:right; color: rgb(0, 193, 252);"></h5>
+                                    <h5 id="shfr" style=" color: rgb(0, 193, 252);"></h5>
+                                   
+                                </div>
                                 <label for="statut">Statut: </label>
 
                                 <select name="formStatut" id="form-statut" class="custom-select custom-select-sm" onchange="change1()" >
@@ -239,7 +250,7 @@
                     </div>
                 </div>
             </div>
-<!-- end of modals ------------------------------------------------------------------------------------------------------>
+<!-- end of modals pour changer le statut  ------------------------------------------------------------------------------------------------------>
 {% endblock %}
 
 {% block javascript %}
@@ -247,7 +258,8 @@
 
     // Create Django Ajax Call
     $("form#updateAlertes").submit(function () {
-
+         
+        
 
         var shiftinp = document.getElementById("shifts").value;
         var grpinp = document.getElementById("groupes").value;
@@ -273,7 +285,7 @@
                 },
                 dataType: 'json',
                 success: function (data) {
-                    alert("L'Alerte est traitée ");
+                    alert("L'Alerte est traitée");
                     }
             });
         } else {
@@ -283,8 +295,15 @@
         $('#myModal').modal('hide');
         return false;
     });
+
+    
     
 function editUser(id) {
+    var grp = $("#groupes").children("option:selected").val();
+    var shf = $("#shifts").children("option:selected").val();
+    $('#shfr').text(shf);
+    $('#grpr').text(grp);
+        
         if (id) {
             tr_id = "#alert-" + id;
             $('#form-id').val(id);
@@ -323,7 +342,6 @@ function editUser(id) {
             }
         });
     });
-
 
 
 

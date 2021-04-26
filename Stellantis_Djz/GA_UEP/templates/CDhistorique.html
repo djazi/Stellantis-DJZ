@@ -1,0 +1,219 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block body %}
+<style>
+    .form-inline .form-group  {
+  margin-right:20px;
+  
+}
+    .form-control {
+  margin-right:10px;
+  
+}
+</style>
+<!-- KPI of crossdock Historique ------------------------------------------------------------------------------------------------------------------->
+<div class="container-fluid">
+    
+
+    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-dark mb-0">Historique Cross Dock</h3>
+    <form class="form-inline ">
+        <div class="form-group mb-2">    
+        <input placeholder="Réference" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+        <input placeholder="Date" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+            <label class="form-check-label" for="inlineCheckbox1">Exporter</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+            <label class="form-check-label" for="inlineCheckbox2">Imprimer</label>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Confirmer</button>
+    </form>
+
+        
+
+
+
+    </div>
+    
+
+
+
+
+
+    <div class="row">
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card shadow border-left-info py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span>
+                                    <h6>A_Au CrossDock</h6>
+                                </span></div>
+
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>Non
+                                            Traitée:</span></div>
+                                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span
+                                            style="color: lawngreen;">Train: </span></div>
+                                </div>
+                                <div class="col">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto"><i class="fas fa-compress fa-2x text-gray-300"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card shadow border-left-success py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-uppercase text-success font-weight-bold text-xs mb-1  "><span>
+                                    <h6>A_Au Débord</h6>
+                                </span></div>
+
+                            <div class="text-dark font-weight-bold h5 mb-0"><span>AU Débord: </span></div>
+                            <div class="text-dark font-weight-bold h5 mb-0"><span style="color:chartreuse;">Livré:  </span></div>
+                        </div>
+                        <div class="col-auto"><i class="fas fa-store fa-2x text-gray-300"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card shadow border-left-info py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span>
+                                    <h6>Anticipations</h6>
+                                </span></div>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>A_Tranche: </span>
+                                    </div>
+                                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span
+                                            style="color: fuchsia;">A_Remorque: </span>
+                                    </div>
+                                </div>
+                                <div class="col">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto"><i class="fas fa-clipboard-list fa-2x text-gray-300"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card shadow border-left-warning py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-uppercase text-warning font-weight-bold text-xs  mb-1"><span>
+                                    <h6>Alertes</h6>
+                                </span></div>
+
+                            <div class="text-dark font-weight-bold h5 mb-0"><span>Totale Alertes:</span></div>
+                            <div class="text-dark font-weight-bold h5 mb-0"><span style="color: red;">FLC:</span>
+                            </div>
+                        </div>
+                        <div class="col-auto"><i class="fas fa-hand-stop-o fa-2x text-gray-300"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+</div>
+
+
+<!-- end of KPI of CrossDock  Historique ------------------------------------------------------------------------------------------------------------------->
+<div class="container-fluid">
+    <div class="card">
+        <div id="result" class="card-body">
+
+            <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
+                <table class="table my-0" id="InvTable">
+                    <thead>
+                        <tr>
+
+                            <th>Statut</th>
+                            <th>Réference</th>
+                            <th>Nombre de Bac</th>
+                            <th>Zone de KIT</th>
+                            <th>SM CSC</th>
+                            <th>Code Condi</th>
+                            <th>Qte UC</th>
+                            <th>Date</th>
+                            <th>heure</th>
+                            <th>Moniteur</th>
+                            <th>HFA</th>
+                        </tr>
+                    </thead>
+                   
+                    <tr id="">
+
+                        <td class="ms-vb2"><button class="btn btn-info form-control ms-vb2" id="btn1"></button></td>
+
+                        <td class="réf invData ms-vb2" id="réfi" name="Reference"></td>
+                        <td class="nbrbac invData ms-vb2" id="nbci" name="Nombre_De_Bac"></td>
+                        <td class="zkit invData ms-vb2" id="zkit" name="Zone_De_Kit"></td>
+                        <td class="smcsc invData ms-vb2" id="smcsc" name="SM_Csc"></td>
+
+                        <td class="smcsc invData ms-vb2 " id="smcsc" name="code_condi"></td>
+                        <td class="smcsc invData ms-vb2 " id="smcsc" name="qte UC"></td>
+
+
+                        <td class="date invData ms-vb2 " id="date" name="Date"></td>
+                        <td class="heure invData ms-vb2 " id="heure" name="heure"></td>
+                        <td class="moniteur invData ms-vb2 " id="moniteur" name="moniteur"></td>
+                        <td class="moniteur invData ms-vb2 " id="HFA" name="HFA"></td>
+
+
+
+
+                        <!--<td><button class="btn btn-primary" onClick="deleteUser({{inv.id}})" style="background: rgb(252,2,2);">Supprimer</button></td> -->
+
+                    </tr>
+                    
+
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+   
+
+
+
+
+</script>
+
+{% endblock javascript %}
