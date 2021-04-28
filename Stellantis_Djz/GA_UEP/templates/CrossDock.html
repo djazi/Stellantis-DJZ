@@ -9,7 +9,7 @@
             <h3 class="text-dark mb-0">Cross Dock</h3>
 
         
-        <select name="shifts" id="shifts" class="selectS" onchange="" >
+        <select name="shifts" id="shifts" class="selectS" style="border-radius:5px;" onchange="" >
             
             <option data-Sh="SHIFTS" value="SHIFTS">SHIFTS</option>
             <option data-Sh="MATIN" value="MATIN">MATIN</option>
@@ -18,14 +18,14 @@
            
         </select>
         
-        <select name="groupes" id="groupes" class="selectG" onchange="">
+        <select name="groupes" id="groupes" class="selectG" style="border-radius:5px;" onchange="">
             <option data-Gr="" value="GROUPES">GROUPES</option>
             <option data-Gr="A" value="A">A</option>
             <option data-Gr="B" value="B">B</option>
             <option data-Gr="C" value="C">C</option>
         </select>
     <!-- <a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="#"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a> -->
-    <a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="{% url 'GA_UEP:cross_dock_Historique' %}"><i class="fas fa-book-open fa-sm text-white-50"></i>&nbsp;Historique</a>
+    <a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="{% url 'GA_UEP:cross_dock_HSearch' %}"><i class="fas fa-book-open fa-sm text-white-50"></i>&nbsp;Historique</a>
                         
 
 
@@ -111,7 +111,7 @@
                     <div class="col mr-2">
                         <div class="text-uppercase text-warning font-weight-bold text-xs  mb-1"><span><h6>Alertes</h6></span></div>
                                
-                        <div class="text-dark font-weight-bold h5 mb-0"><span>Totale Alertes: {{TA}}</span></div>
+                        <div class="text-dark font-weight-bold h5 mb-0"><span>Alertes: {{TA}}</span></div>
                         <div class="text-dark font-weight-bold h5 mb-0"><span style="color: red;">FLC:{{FLC}}</span></div>
                     </div>
                     <div class="col-auto"><i class="fas fa-hand-stop-o fa-2x text-gray-300"></i></div>
@@ -179,7 +179,7 @@
                                         </tr>
                                         {% endfor %}
                                         {% else %}
-                                        <h2 style="color: red;"> NO Data </h2>
+                                        <h3 style="color: crimson; text-align: center; "> Aucune Alertes Trouvé </h3>
                                         {% endif %}
                         
                                     </table>
@@ -289,7 +289,7 @@
                     }
             });
         } else {
-            alert("All fields must have a valid value.");
+            alert("Tous Les champs doivent avoir une valeur Valide.");
         }
         $('form#updateAlertes').trigger("reset");
         $('#myModal').modal('hide');
@@ -342,6 +342,7 @@ function editUser(id) {
             }
         });
     });
+
 
 
 

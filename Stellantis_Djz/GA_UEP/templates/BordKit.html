@@ -73,7 +73,7 @@
                 {% if invs %}
                 {% for inv in invs %}
                 <tr id="inv-{{inv.id}}">
-                    <td><button class="btn btn-primary" type="button"></button></td>
+                    <td class="ms-vb2"><button id="btn1" class="btn btn-primary" type="button" value="{{inv.statut}}" ></button></td>
                     <td class="réf invData" name="Reference">{{inv.Reference}}</td>
                     <td class="nbrbac invData" name="Nombre_De_Bac">{{inv.Nombre_De_Bac}}</td>
 
@@ -103,9 +103,7 @@
 <script>
     $("form#addinv").submit(function () {
         var today = new Date();
-
         var d = new Date();
-
         var today = new Date();
         var dd = today.getDate();
         var mm = today.getMonth() + 1;
@@ -113,13 +111,10 @@
         if (dd < 10) {
             dd = '0' + dd;
         }
-
         if (mm < 10) {
             mm = '0' + mm;
         }
         today = dd + '/' + mm + '/' + yyyy;
-
-
         var réf_inv_input = $('input[name="Reference"]').val().trim();
         var nbr_bac_input = $('input[name="Nombre_De_Bac"]').val().trim();
 
@@ -132,9 +127,7 @@
         var heure_input = d.toLocaleTimeString('it-IT');
 
         if (réf_inv_input && nbr_bac_input) {
-
             $.ajax({
-
                 //source: "ajax/crud/create",
                 url: '{% url "GA_UEP:create" %}',
                 data: {
@@ -148,18 +141,13 @@
                     'Date': date_input,
                     'heure': heure_input,
                 },
-
                 dataType: 'json',
                 success: function (data) {
                     if (data.inv) {
                         appendToInvTable(data.inv)
-
                     }
-
                 }
             });
-
-
         } else {
             alert("All fields must have a valide value.");
         }
@@ -171,7 +159,7 @@
     function appendToInvTable(inv) {
         $("#InvTable > tbody:last-child").append(`
     <tr id="inv-${inv.id}">
-      <td><button class="btn btn-primary" type="button"></button></td>
+      <td class="ms-vb2" ><button class="btn btn-primary" type="button" value="{{inv.statut}}"></button></td>
       <td class="réf invData" name="Reference">${inv.Reference}</td>
       '<td class="nbrbac invData" name="Nombre_De_Bac">${inv.Nombre_De_Bac}</td>
 
@@ -179,11 +167,7 @@
        '<td class="smcsc invData" id="smcsc" name="SM_Csc">${inv.SM_Csc}</td>
         '<td class="date invData" id="date" name="Date">${inv.Date}</td>
         '<td class="heure invData" id="heure" name="heure">${inv.heure}</td>
-        '<td class="name invData" id="name" name="name">${inv.name}</td>
-        
-        
-
-
+        '<td class="name invData" id="name" name="name">${inv.name}</td>   
     </tr>
     `);
 
@@ -208,6 +192,22 @@
             });
         }
     }
+
+$(document).ready(function () {
+        $('td.ms-vb2').each(function (index) {
+            var c = $(this).find('#btn1').val()
+            if (c === 'Livré' || c === 'Train' || c === 'A_Remorque' || c === 'A_Tranche') {
+                $(this).find('#btn1').css("background-color", "lawngreen");
+            }
+            if (c === 'Non_T' || c === 'Alerte' || c === 'A_Débord') {
+                $(this).find('#btn1').css("background-color", "darkorange");
+            }
+            
+            if (c === 'FLC') {
+                $(this).find('#btn1').css("background-color", "red");
+            }
+        });
+});
 
 
 

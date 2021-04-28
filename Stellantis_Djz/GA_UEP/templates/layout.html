@@ -42,10 +42,10 @@
 
                     </li>
                     <li class="nav-item"><a class="nav-link " href="{% url 'GA_UEP:crud_ajax'%}"><i class="fas fa-table"></i>&nbsp;Bord KIT</a>
-                        <a class="nav-link " href="{% url 'GA_UEP:cross_dock'%}"><i class="fas fa-table"></i>&nbsp;Cross DOCK</a>
-                        <a class="nav-link " href="{% url 'GA_UEP:Mag_debord'%}"><i class="fas fa-table"></i>&nbsp;Mag Débord</a>
+                        <a class="nav-link " href="{% url 'GA_UEP:cross_dock'%}"><i class="fas fa-compress"></i>&nbsp;Cross DOCK</a>
+                        <a class="nav-link " href="{% url 'GA_UEP:Mag_debord'%}"><i class="fas fa-store"></i>&nbsp;Mag Débord</a>
 
-                        <a class="nav-link " href="{% url 'GA_UEP:FLC_A'%}"><i class="fas fa-table"></i>&nbsp;FLC</a>
+                        <a class="nav-link " href="{% url 'GA_UEP:FLC_A'%}"><i class="fas fa-hand-stop-o"></i>&nbsp;FLC</a>
                         <a class="nav-link " href="{% url 'GA_UEP:logout' %}"><i class="fas fa-close"></i>&nbsp;Log out</a>
                             
                     </li>
@@ -100,6 +100,11 @@
         <script src="{% static 'js/jQ.js'%}"></script>
         <script src="{% static 'js/jQY.js'%}"></script>
         <script src="{% static 'js/jQf.js'%}"></script>
+        <script src="{% static 'js/exportexcel.js'%}"></script>
+        
+        
+
+        
         <link rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
         {% block javascript %}

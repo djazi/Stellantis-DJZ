@@ -69,7 +69,7 @@
                     </tr>
                     {% endfor %}
                     {% else %}
-                    <h2 style="color: red;"> NO Data </h2>
+                    <h3 style="color: crimson; text-align: center; "> Aucune Alertes Trouvé </h3>
                     {% endif %}
 
                 </table>
@@ -171,7 +171,7 @@
                 }
             });
         } else {
-            alert("All fields must have a valid value.");
+            alert("Tous Les champs doivent avoir une valeur Valide.");
         }
         $('form#updateAlertes').trigger("reset");
         $('#myModal').modal('hide');

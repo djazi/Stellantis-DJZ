@@ -11,40 +11,45 @@
   margin-right:10px;
   
 }
+.stg {
+  margin-right:140px;
+  
+  
+}
+#nbci {
+    text-align: center;
+
+}
+    
 </style>
-<!-- KPI of crossdock Historique ------------------------------------------------------------------------------------------------------------------->
+<!-- KPI of crossdock Historique  ------------------------------------------------------------------------------------------------------------------->
 <div class="container-fluid">
     
 
     <div class="d-sm-flex justify-content-between align-items-center mb-4">
         <h3 class="text-dark mb-0">Historique Cross Dock</h3>
-    <form class="form-inline ">
+    <form class="form-inline" method="POST" action="" >
+        {% csrf_token %}
         <div class="form-group mb-2">    
-        <input placeholder="Réference" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
-        <input placeholder="Date" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+        <input placeholder="Réference" name="Hréf" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+        <input placeholder="Date" type="text" name="Hdate" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
         </div>
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-            <label class="form-check-label" for="inlineCheckbox1">Exporter</label>
+            <input class="form-check-input" type="checkbox" id="exporter" onclick="exporterr()" value="option1">
+            <label class="form-check-label" for="exporter">Exporter</label>
         </div>
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-            <label class="form-check-label" for="inlineCheckbox2">Imprimer</label>
+            <input class="form-check-input" type="checkbox" id="imprimer" onclick="print()" value="option2" >
+            <label class="form-check-label" for="imprimer">Imprimer</label>
         </div>
-        <button type="submit" class="btn btn-primary mb-2">Confirmer</button>
+        <input type="submit" name="confirmer" class="btn btn-primary mb-2" value= "Chercher" onclick="exporter()" >  
     </form>
-
-        
-
-
-
     </div>
-    
-
-
-
-
-
+    {% if msg %}
+    <h6 style="color: crimson; text-align: center;">{{msg}} </h6>
+    {% endif %}
+  
+    {% if HKpi   %}
     <div class="row">
         <div class="col-md-6 col-xl-3 mb-4">
             <div class="card shadow border-left-info py-2">
@@ -58,9 +63,9 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col-auto">
                                     <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>Non
-                                            Traitée:</span></div>
+                                            Traitée: {{HKpi.T_A_NT  }}</span></div>
                                     <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span
-                                            style="color: lawngreen;">Train: </span></div>
+                                            style="color: lawngreen;">Train: {{HKpi.Train}} </span></div>
                                 </div>
                                 <div class="col">
 
@@ -72,7 +77,6 @@
                 </div>
             </div>
         </div>
-
         <div class="col-md-6 col-xl-3 mb-4">
             <div class="card shadow border-left-success py-2">
                 <div class="card-body">
@@ -82,15 +86,14 @@
                                     <h6>A_Au Débord</h6>
                                 </span></div>
 
-                            <div class="text-dark font-weight-bold h5 mb-0"><span>AU Débord: </span></div>
-                            <div class="text-dark font-weight-bold h5 mb-0"><span style="color:chartreuse;">Livré:  </span></div>
+                            <div class="text-dark font-weight-bold h5 mb-0"><span>AU Débord:{{HKpi.Adebord}} </span></div>
+                            <div class="text-dark font-weight-bold h5 mb-0"><span style="color:chartreuse;">Livré:{{HKpi.Livré}}  </span></div>
                         </div>
                         <div class="col-auto"><i class="fas fa-store fa-2x text-gray-300"></i></div>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="col-md-6 col-xl-3 mb-4">
             <div class="card shadow border-left-info py-2">
                 <div class="card-body">
@@ -101,10 +104,10 @@
                                 </span></div>
                             <div class="row no-gutters align-items-center">
                                 <div class="col-auto">
-                                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>A_Tranche: </span>
+                                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>A_Tranche:{{HKpi.AT}} </span>
                                     </div>
                                     <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span
-                                            style="color: fuchsia;">A_Remorque: </span>
+                                            style="color: fuchsia;">A_Remorque: {{HKpi.AR}} </span>
                                     </div>
                                 </div>
                                 <div class="col">
@@ -117,9 +120,6 @@
                 </div>
             </div>
         </div>
-
-
-
         <div class="col-md-6 col-xl-3 mb-4">
             <div class="card shadow border-left-warning py-2">
                 <div class="card-body">
@@ -129,8 +129,8 @@
                                     <h6>Alertes</h6>
                                 </span></div>
 
-                            <div class="text-dark font-weight-bold h5 mb-0"><span>Totale Alertes:</span></div>
-                            <div class="text-dark font-weight-bold h5 mb-0"><span style="color: red;">FLC:</span>
+                            <div class="text-dark font-weight-bold h5 mb-0"><span>Alertes: {{HKpi.TA}}</span></div>
+                            <div class="text-dark font-weight-bold h5 mb-0"><span style="color: red;">FLC: {{HKpi.FLC}}</span>
                             </div>
                         </div>
                         <div class="col-auto"><i class="fas fa-hand-stop-o fa-2x text-gray-300"></i></div>
@@ -138,21 +138,114 @@
                 </div>
             </div>
         </div>
-
-
-
-
     </div>
+    {% endif %}
+
+    {% if HKpiJ %}
+    <div class="row">
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card shadow border-left-info py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span>
+                                    <h6>A_Au CrossDock</h6>
+                                </span></div>
+    
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>Non
+                                            Traitée: {{HKpiJ.T_A_NT }}</span></div>
+                                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span
+                                            style="color: lawngreen;">Train: {{HKpiJ.Train}} </span></div>
+                                </div>
+                                <div class="col">
+    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto"><i class="fas fa-compress fa-2x text-gray-300"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card shadow border-left-success py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-uppercase text-success font-weight-bold text-xs mb-1  "><span>
+                                    <h6>A_Au Débord</h6>
+                                </span></div>
+    
+                            <div class="text-dark font-weight-bold h5 mb-0"><span>AU Débord:{{HKpiJ.Adebord}} </span></div>
+                            <div class="text-dark font-weight-bold h5 mb-0"><span
+                                    style="color:chartreuse;">Livré:{{HKpiJ.Livré}} </span></div>
+                        </div>
+                        <div class="col-auto"><i class="fas fa-store fa-2x text-gray-300"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card shadow border-left-info py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span>
+                                    <h6>Anticipations</h6>
+                                </span></div>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>A_Tranche:{{HKpiJ.AT}} </span>
+                                    </div>
+                                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span
+                                            style="color: fuchsia;">A_Remorque: {{HKpiJ.AR}} </span>
+                                    </div>
+                                </div>
+                                <div class="col">
+    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto"><i class="fas fa-clipboard-list fa-2x text-gray-300"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card shadow border-left-warning py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-uppercase text-warning font-weight-bold text-xs  mb-1"><span>
+                                    <h6>Alertes</h6>
+                                </span></div>
+    
+                            <div class="text-dark font-weight-bold h5 mb-0"><span>Alertes: {{HKpiJ.TA}}</span></div>
+                            <div class="text-dark font-weight-bold h5 mb-0"><span style="color: red;">FLC: {{HKpi.FLC}}</span>
+                            </div>
+                        </div>
+                        <div class="col-auto"><i class="fas fa-hand-stop-o fa-2x text-gray-300"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </div>
 
 
 <!-- end of KPI of CrossDock  Historique ------------------------------------------------------------------------------------------------------------------->
 <div class="container-fluid">
     <div class="card">
+        
         <div id="result" class="card-body">
-
+                
             <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
-                <table class="table my-0" id="InvTable">
+                <table class="table my-0" id="tableData">
                     <thead>
                         <tr>
 
@@ -169,31 +262,31 @@
                             <th>HFA</th>
                         </tr>
                     </thead>
-                   
-                    <tr id="">
+                {% if Hdserch %}
+                {% for i in Hdserch %}
+                    <tr id="i-{{i.id}}">
 
-                        <td class="ms-vb2"><button class="btn btn-info form-control ms-vb2" id="btn1"></button></td>
+                        <td class="ms-vb2"><button class="btn btn-info form-control ms-vb2" id="btn1" onClick="editUser({{i.id}})" data-toggle="modal" data-target="#myModal">{{i.statut}}</button></td>
 
-                        <td class="réf invData ms-vb2" id="réfi" name="Reference"></td>
-                        <td class="nbrbac invData ms-vb2" id="nbci" name="Nombre_De_Bac"></td>
-                        <td class="zkit invData ms-vb2" id="zkit" name="Zone_De_Kit"></td>
-                        <td class="smcsc invData ms-vb2" id="smcsc" name="SM_Csc"></td>
+                        <td class="réf invData ms-vb2" id="réfi" name="Reference">{{i.Reference}}</td>
+                        <td class="nbrbac invData ms-vb2" id="nbci" name="Nombre_De_Bac">{{i.Nombre_De_Bac}}</td>
+                        <td class="zkit invData ms-vb2" id="zkit" name="Zone_De_Kit">{{i.Zone_De_Kit}}</td>
+                        <td class="smcsc invData ms-vb2" id="smcsc" name="SM_Csc">{{i.SM_Csc}}</td>
 
-                        <td class="smcsc invData ms-vb2 " id="smcsc" name="code_condi"></td>
-                        <td class="smcsc invData ms-vb2 " id="smcsc" name="qte UC"></td>
-
-
-                        <td class="date invData ms-vb2 " id="date" name="Date"></td>
-                        <td class="heure invData ms-vb2 " id="heure" name="heure"></td>
-                        <td class="moniteur invData ms-vb2 " id="moniteur" name="moniteur"></td>
-                        <td class="moniteur invData ms-vb2 " id="HFA" name="HFA"></td>
+                        <td class="smcsc invData ms-vb2 " id="smcsc" name="code_condi">{{i.Code_condi}}</td>
+                        <td class="smcsc invData ms-vb2 " id="smcsc" name="qte UC">{{i.QTe_Uc}}</td>
 
 
-
-
+                        <td class="date invData ms-vb2 " id="date" name="Date">{{i.Date}}</td>
+                        <td class="heure invData ms-vb2 " id="heure" name="heure">{{i.heure}}</td>
+                        <td class="moniteur invData ms-vb2 " id="moniteur" name="moniteur">{{i.Moniteur}}</td>
+                        <td class="moniteur invData ms-vb2 " id="HFA" name="HFA">{{i.HFA}}</td>
                         <!--<td><button class="btn btn-primary" onClick="deleteUser({{inv.id}})" style="background: rgb(252,2,2);">Supprimer</button></td> -->
-
                     </tr>
+                    {% endfor %}
+                    {% else %}
+                    <h3 id="test" style="color: crimson; text-align: center; "> Merci de Chercher Votre Réference </h3>
+                    {% endif %}
                     
 
                 </table>
@@ -204,16 +297,199 @@
     </div>
 </div>
 </div>
+<!-- modals pour changer le statut  ----------------------------------------------------------------------------------------------------------->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Alertes</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
 
+
+
+            </div>
+            
+            <form id="updateAlertes" action="">
+
+                <div class="modal-body">
+                    <input class="form-control" id="form-id" type="hidden" name="formId" />
+                    <select  class="stg" name="shifts" id="shifts" class="selectS" style="border-radius:5px;" onchange="">
+                    
+                        <option data-Sh="SHIFTS" value="SHIFTS" disabled >SHIFTS</option>
+                        <option data-Sh="MATIN" value="MATIN">MATIN</option>
+                        <option data-Sh="SOIR" value="SOIR">SOIR</option>
+                        <option data-Sh="NUIT" value="NUIT">NUIT</option>
+                    
+                    </select>
+                    
+                    <select class="stg" name="groupes" id="groupes" class="selectG" style="border-radius:5px;" onchange="">
+                        <option data-Gr="" value="GROUPES" disabled >GROUPES</option>
+                        <option data-Gr="A" value="A">A</option>
+                        <option data-Gr="B" value="B">B</option>
+                        <option data-Gr="C" value="C">C</option>
+                    </select>
+                    <div>
+
+                    </div>
+
+                    
+                    <label for="form-statut" >Statut:</label>
+                    <select name="formStatut" id="form-statut" class="custom-select custom-select-sm"
+                        onchange="change1()">
+                        <optgroup label="">
+
+                            <option value=""></option>
+
+                            <option value="Train">Sortie Train</option>
+                            <option value="Alerte">Alerte</option>
+                            <option value="A_Tranche">Anticipation par Tranche</option>
+                            <option value="A_Remorque">Anticipation par Remorque</option>
+                            <option value="FLC">FLC</option>
+                            <option value="Livré">Livré</option>
+                            <option value="Non_T">NON Trouvé</option>
+                            <option value="A_Débord">Au Débord</option>
+                                    
+
+
+                        </optgroup>
+                    </select>
+
+
+
+                    <label for="comment">Commentaire:</label>
+
+                    <input class="form-control" id="form-comment" type="text" name="formComment" />
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Sauvegarder</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+<!-- end of modals pour changer le statut  ------------------------------------------------------------------------------------------------------>
 {% endblock %}
 
 {% block javascript %}
+
 <script>
+     $(document).ready(function () {
+            $('td.ms-vb2').each(function (index) {
+                var c = $(this).find('#btn1').text()
+                if (c === 'Livré' || c === 'Train') {
+                    $(this).find('#btn1').css("background-color", "lawngreen");
+                }
+                if (c === 'Non_T' || c === 'Alerte' || c === 'A_Débord') {
+                    $(this).find('#btn1').css("background-color", "darkorange");
+                }
+                if (c === 'A_Remorque' || c === 'A_Tranche') {
+                    $(this).find('#btn1').css("background-color", "fuchsia");
+                }
+                if (c === 'FLC') {
+                    $(this).find('#btn1').css("background-color", "red");
+                }
+            });
+        });
    
 
+    // Create Django Ajax Call for Histo
+    $("form#updateAlertes").submit(function () {
+        var shiftinp = document.getElementById("shifts").value;
+        var grpinp = document.getElementById("groupes").value;
+        var idInput = $('input[name="formId"]').val().trim();
+        var Statutinp = document.getElementById("form-statut").value;
+        var commenataireInput = $('input[name="formComment"]').val().trim();
 
+//var hfa = d.toLocaleTimeString('it-IT');
+
+        if ((Statutinp && shiftinp&& grpinp) || commenataireInput) {
+            // Create Ajax Call
+            $.ajax({
+                url: '{% url "GA_UEP:update_CD_Histo" %}',
+                data: {
+                    'id': idInput,
+                    'statut': Statutinp,
+                    'Commenataire': commenataireInput,
+                    'Shifts': shiftinp,
+                    'Groupes': grpinp,
+                },
+                dataType: 'json',
+                success: function (data) {
+                    alert("L'Alerte est traitée");
+                }
+            });
+        } else {
+            alert("Tous Les champs doivent avoir une valeur Valide.");
+        }
+        $('form#updateAlertes').trigger("reset");
+        $('#myModal').modal('hide');
+        return false;
+    });
+
+
+
+    function editUser(id) {
+       
+
+        if (id) {
+            tr_id = "#i-" + id;
+            $('#form-id').val(id);
+
+        }
+    }
+
+    //kepp the selected option slect shifts and groupes--------------------------------------------------------------------
+        $('#groupes,#shifts').change(function (event) {
+            var selectedcategory = $("#groupes").children("option:selected").val();
+            var selectedcategory2 = $("#shifts").children("option:selected").val();
+            localStorage.setItem("itemName", selectedcategory);
+            localStorage.setItem("itemName2", selectedcategory2);
+        });
+
+        $('#groupes').find('option[value=' + localStorage.getItem('itemName') + ']').attr('selected', 'selected');
+        $('#shifts').find('option[value=' + localStorage.getItem('itemName2') + ']').attr('selected', 'selected');
+
+
+    function print() {
+        // Get the checkbox
+        var checkBox = document.getElementById("imprimer");
+        if (checkBox.checked == true) {
+            var printme = document.getElementById('tableData');
+            var wme = window.open("", ",width=900,height=700");
+            wme.document.write(printme.outerHTML);
+            wme.document.close;
+            wme.focus();
+            wme.print();
+            wme.close();
+        }
+    }
+    
+
+
+    function exporterr() {
+        // Get the checkbox
+        var checkBoxi = document.getElementById("exporter");
+        if (checkBoxi.checked == true) {
+          $('#tableData').excelExport();
+        }
+    }
+    
+     
+
+        
+
+       
+            
+         
+    
 
 
 </script>
+
 
 {% endblock javascript %}

@@ -18,13 +18,16 @@ urlpatterns = [
     path("crud/", CrudView.as_view(), name='crud_ajax'),
     path("crossdock/", CrudCrossDock.as_view(), name='cross_dock'),
 
-    path("crossdock/historique", HistoCrossDock.as_view(), name='cross_dock_Historique'),
+    path("crossdock/historique/Search", views.SearchHCD, name='cross_dock_HSearch'),
+
     path("Magdebord/", CrudMagDebord.as_view(), name='Mag_debord'),
     path("FLC/", CrudFLC.as_view(), name='FLC_A'),
     
 
     path("update/CD", UpdateAler.as_view(), name="update_CD"),
 
+    path("update/CD/Histo", UpdateAlerHisto.as_view(), name="update_CD_Histo"),
+    #
     path("update/FLC", UpdateAlerFLC.as_view(), name="update_FLC"),
     
     path("update/DB", UpdateAlerDB.as_view(), name="update_DB"),
