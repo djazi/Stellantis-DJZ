@@ -5,8 +5,8 @@ from . models import Alertes,Membership,Inventaire,Map
 
 class MapAdmin(admin.ModelAdmin):
     list_display = ("Map_Réference", "Designation_Produit", "Map_PDC", "condi",
-                    "condiQ", "ligne",  "UA_Appro", "UcTourRef",  "Train", "CVM")
-
+                    "condiQ", "ligne",  "UA_Appro", "UcTourRef",  "Train", "CVM",
+                    "Quai", "Crossdock", "BDL", "Id_Appro", "Nom_Appro", "Prénom_Appro")
 
 
 

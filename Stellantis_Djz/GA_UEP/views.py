@@ -1,4 +1,5 @@
 from typing import List
+from django import template
 from django.contrib.auth import authenticate, login, logout
 from django.db.models.expressions import When
 from . models import Alertes, Inventaire, Map, Membership
@@ -15,14 +16,14 @@ import json
 from django.views.generic import TemplateView, ListView, View
 from django.contrib.sessions.models import Session
 from django.db.models import Q
-from django.template import Context
-
-
+from django.template import Context, context
+from django.core.mail import EmailMessage
+from django.conf import settings
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
 
 #----------------------------------------------------
-
 # Create your views here.----------------------------------------
-
 # data we use ------------------------------------------------------------------------------------
 today = date.today()
 now = datetime.now()
@@ -69,27 +70,19 @@ class CreateCrudInv(View):
         global nm_input,hc
         réf_inv = request.GET.get('Reference', None)
         nbr_bac_inv = request.GET.get('Nombre_De_Bac', None)
-
         nm_input = request.GET.get('name', None)
-
         dc = request.GET.get('Date', None)
         hc = request.GET.get('heure', None)
-
         filt2 = Inventaire.objects.filter(name=nm_input)
         for j in filt2:
             nm = j.name
-       
         filt1 = Map.objects.filter(Map_Réference=réf_inv)
         for i in filt1:
             zkit = i.Map_PDC
             cvm = i.CVM  
             condi = i.condi
             uc = i.condiQ
-
         #add data to alertes
-        
-       
-        
         obj = Inventaire.objects.create(
             Reference = réf_inv,
             Nombre_De_Bac = nbr_bac_inv,
@@ -168,7 +161,6 @@ class CrudCrossDock(TemplateView):
             Date=datetime.now().strftime("%d/%m/%Y")).count()
         context['FLC'] = Alertes.objects.filter(
             statut='FLC', Date=datetime.now().strftime("%d/%m/%Y")).count()
-            
         return context
 class UpdateAler(View):
     def get(self, request):
@@ -177,9 +169,7 @@ class UpdateAler(View):
         cmnt = request.GET.get('Commenataire', None)
         shif = request.GET.get('Shifts', None)
         grp = request.GET.get('Groupes', None)
-
         #h = now.strftime("%H:%M:%S")
-        
         obj = Alertes.objects.get(id=id1)
         obj.statut = st
         obj.Commenataire = cmnt
@@ -199,25 +189,24 @@ class UpdateAler(View):
         g.statut=st
         g.save()
 
-
-        
-
         alt = {'id': obj.id, 'statut': obj.statut, 
                'Commenataire': obj.Commenataire, 'Shifts': obj.Shifts,
-               'Groupes': obj.Groupes,'HFA':obj.HFA}
+               'Groupes': obj.Groupes,'HFA':obj.HFA }
         data = {
             'alt': alt
+            
         }
         return JsonResponse(data)
 
+#topologie 
+
+
+
+
+
 # crud view pour Cross Dock Historique------------------------------------------------------------------ 
-
-    
 # pour la recherche sur les references Alertes dans l'historique 
-
-
 def SearchHCD(request):
-    
     #total kpi--------------------------------
     HKpi= Context()
     HKpi['T_A_NT'] = Alertes.objects.filter(
@@ -236,8 +225,6 @@ def SearchHCD(request):
         
     HKpi['TA'] = Alertes.objects.all().count()
     HKpi['FLC'] = Alertes.objects.filter(statut='FLC').count()
-    
-
     if request.method == 'POST': 
         Hréf = request.POST['Hréf']
         Hdate = request.POST['Hdate']
@@ -261,13 +248,15 @@ def SearchHCD(request):
                 Date=Hdate, statut='FLC').count()
 
         elif(Hdate==""):
+            flux = Map.objects.filter(Map_Réference=Hréf)
             Hdsearch = Alertes.objects.filter(Reference=Hréf)
         else:
             Hdsearch = Alertes.objects.filter(Date=Hdate, Reference=Hréf)
+            flux = Map.objects.filter(Map_Réference=Hréf)
         if(Hdsearch and Hréf == ""):
          return render(request, 'CDhistorique.html', {"Hdserch": Hdsearch, "HKpiJ": HKpiJ})
         elif(Hdsearch):
-            return render(request, 'CDhistorique.html', {"Hdserch": Hdsearch, "HKpi": HKpi})
+            return render(request, 'CDhistorique.html', {"Hdserch": Hdsearch, "HKpi": HKpi, "flux": flux})
 
         else:
             msg = "Réfrence ou Date Non Valide"
@@ -276,7 +265,6 @@ def SearchHCD(request):
     return render(request,  'CDhistorique.html', {"HKpi": HKpi})
 
 # update alertes from Historique 
-
 
 class UpdateAlerHisto(View):
     def get(self, request):
@@ -360,11 +348,8 @@ class UpdateAlerDB(View):
 
 
 # crud view pour le FLC -----------------------------------------------------------------------------
-
-
 class CrudFLC(TemplateView):
     template_name = 'FLC.html'
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['alertesF'] = Alertes.objects.filter(
@@ -381,7 +366,7 @@ class UpdateAlerFLC(View):
         obj = Alertes.objects.get(id=id1)
         obj.statut = st
         obj.Commenataire = cmnt
-        if(st == "Livré" or st == "Train" or st == "A_Tranche" or st == "A_Remorque"):
+        if(st == "Livré" or st == "Train" or st == "A_Tranche" or st == "A_Remorque" or st == "FLC_T"):
             obj.HFA = datetime.now().strftime("%H:%M:%S")
         else:
             obj.HFA = '....'
@@ -400,12 +385,6 @@ class UpdateAlerFLC(View):
             'alt': alt
         }
         return JsonResponse(data)
-
-
-
-
-
-
 
 #login functions-------------------------------------------------------------------------------
 def index(request):
@@ -442,11 +421,7 @@ def logout_view(request):
     })
 
 
-
-
-
-
-
+#sending automatique email--------------------------------------------------------------------
 
 
 #bord KIt function-----------------------------------------------------------------------------------

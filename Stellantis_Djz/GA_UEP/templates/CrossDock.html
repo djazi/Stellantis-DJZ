@@ -2,6 +2,9 @@
 {% load static %}
 
 {% block body %}
+<style>
+   
+</style>
 <!-- KPI of crossdock ------------------------------------------------------------------------------------------------------------------->
 <div class="container-fluid">
 
@@ -26,18 +29,7 @@
         </select>
     <!-- <a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="#"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a> -->
     <a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="{% url 'GA_UEP:cross_dock_HSearch' %}"><i class="fas fa-book-open fa-sm text-white-50"></i>&nbsp;Historique</a>
-                        
-
-
-        
-    
-
     </div>
-    
-
-
-
-
 <div class="row">
     <div class="col-md-6 col-xl-3 mb-4">
         <div class="card shadow border-left-info py-2">
@@ -101,9 +93,7 @@
             </div>
         </div>
     </div>
-
     
-
     <div class="col-md-6 col-xl-3 mb-4">
         <div class="card shadow border-left-warning py-2">
             <div class="card-body">
@@ -125,18 +115,18 @@
     
     </div>
 </div>
-
     
 <!-- end of KPI of CrossDock ------------------------------------------------------------------------------------------------------------------->
+
                 <div class="container-fluid" >
                         <div class="card">
                             <div id="result" class="card-body">
-                        
+                            <input class="form-control" id="myInput" type="text" placeholder="Chercher..">
+                            
                                 <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
                                     <table class="table my-0" id="InvTable">
                                         <thead>
                                             <tr>
-                                                
                                                 <th>Statut</th>
                                                 <th>Réference</th>
                                                 <th>Nombre de Bac</th>
@@ -150,10 +140,14 @@
                                                 <th>HFA</th>
                                             </tr>
                                         </thead>
-                                        {% if alertes %}
+                                        {% if alertes  %}
                                         {% for alert in alertes %}
+
+                                        
+                                        <tbody id="myTable">
+
                                           
-                                        <tr id="alert-{{alert.id}}">
+                                        <tr id="alert-{{alert.id}} ">
                                             
                                             <td class="ms-vb2"><button class="btn btn-info form-control ms-vb2" id="btn1" onClick="editUser({{alert.id}})" data-toggle="modal" data-target="#myModal" >{{alert.statut}}</button></td>
                                                     
@@ -178,10 +172,11 @@
                         
                                         </tr>
                                         {% endfor %}
+                                        </tbody>
                                         {% else %}
                                         <h3 style="color: crimson; text-align: center; "> Aucune Alertes Trouvé </h3>
                                         {% endif %}
-                        
+
                                     </table>
                                 </div>
 
@@ -196,19 +191,21 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title" id="myModalLabel">Alertes</h4>
+
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    
-                        
-                        
+
                         </div>
                         <form id="updateAlertes" action="">
                             
                             <div class="modal-body">
                                 <input class="form-control" id="form-id" type="hidden" name="formId" />
-                            
+                                
                                 <div>
+                                    
                                     <h5 id="grpr" style=" text-align:right;float:right; color: rgb(0, 193, 252);"></h5>
+        
                                     <h5 id="shfr" style=" color: rgb(0, 193, 252);"></h5>
+                                    
                                    
                                 </div>
                                 <label for="statut">Statut: </label>
@@ -251,6 +248,10 @@
                 </div>
             </div>
 <!-- end of modals pour changer le statut  ------------------------------------------------------------------------------------------------------>
+
+
+
+
 {% endblock %}
 
 {% block javascript %}
@@ -258,15 +259,11 @@
 
     // Create Django Ajax Call
     $("form#updateAlertes").submit(function () {
-         
-        
-
         var shiftinp = document.getElementById("shifts").value;
         var grpinp = document.getElementById("groupes").value;
         var idInput = $('input[name="formId"]').val().trim();
         var Statutinp = document.getElementById("form-statut").value;
         var commenataireInput = $('input[name="formComment"]').val().trim();
-
 
         //var hfa = d.toLocaleTimeString('it-IT');
         
@@ -279,9 +276,7 @@
                     'statut': Statutinp, 
                     'Commenataire': commenataireInput,
                     'Shifts': shiftinp,
-                    'Groupes': grpinp,
-
-                    
+                    'Groupes': grpinp,  
                 },
                 dataType: 'json',
                 success: function (data) {
@@ -303,10 +298,11 @@ function editUser(id) {
     var shf = $("#shifts").children("option:selected").val();
     $('#shfr').text(shf);
     $('#grpr').text(grp);
-        
         if (id) {
+            //
             tr_id = "#alert-" + id;
             $('#form-id').val(id);
+            
             
         }
     }
@@ -340,12 +336,23 @@ function editUser(id) {
             if (c === 'FLC') {
                 $(this).find('#btn1').css("background-color", "red");
             }
+            if (c === 'FLC_T') {
+                $(this).find('#btn1').css("background-color", "lightcoral");
+            }
         });
     });
 
-
-
-
+//filter table ------------------------------------------------------------------------------
+    $(document).ready(function () {
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+//flux interne ----------------------------------------------------------------
+  
 </script>
 
 {% endblock javascript %}

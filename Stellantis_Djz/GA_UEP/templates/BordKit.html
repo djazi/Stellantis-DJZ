@@ -196,7 +196,7 @@
 $(document).ready(function () {
         $('td.ms-vb2').each(function (index) {
             var c = $(this).find('#btn1').val()
-            if (c === 'Livré' || c === 'Train' || c === 'A_Remorque' || c === 'A_Tranche') {
+            if (c === 'Livré' || c === 'Train' || c === 'A_Remorque' || c === 'A_Tranche' || c==='FLC_T') {
                 $(this).find('#btn1').css("background-color", "lawngreen");
             }
             if (c === 'Non_T' || c === 'Alerte' || c === 'A_Débord') {

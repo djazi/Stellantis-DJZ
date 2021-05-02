@@ -19,6 +19,13 @@ class Map(models.Model):
     Train = models.CharField(max_length=50, null=True, blank=True)
     CVM = models.CharField(max_length=50, null=True, blank=True)
 
+    Quai = models.CharField(max_length=50, null=True, blank=True)
+    Crossdock = models.CharField(max_length=50, null=True, blank=True)
+    BDL = models.CharField(max_length=50, null=True, blank=True)
+    Id_Appro = models.CharField(max_length=50, null=True, blank=True)
+    Nom_Appro = models.CharField(max_length=50, null=True, blank=True)
+    Prénom_Appro = models.CharField(max_length=50, null=True, blank=True)
+
 
 
 
