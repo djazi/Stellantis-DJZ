@@ -53,7 +53,7 @@ class CrudView(TemplateView):
     template_name = 'BordKit.html'
     def get_context_data(self, **kwargs):
         person = self.request.user.username 
-        c = Inventaire.objects.filter(Date=d1, name=person).count()
+        c = Inventaire.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"), name=person).count()
         if c == 0:
             k = Inventaire(Reference="--",
                            Nombre_De_Bac="--", Zone_De_Kit="--",
@@ -183,12 +183,14 @@ class UpdateAler(View):
         #reponse pour agent Bord de Kit 
         h= Alertes.objects.filter(id= id1)
         for i in h:
+            global réfj
             heurej = i.heure
             réfj = i.Reference
         g = Inventaire.objects.get(heure=heurej, Reference=réfj)
         g.statut=st
         g.save()
-
+        if(st=="FLC"):
+            mail()
         alt = {'id': obj.id, 'statut': obj.statut, 
                'Commenataire': obj.Commenataire, 'Shifts': obj.Shifts,
                'Groupes': obj.Groupes,'HFA':obj.HFA }
@@ -197,10 +199,6 @@ class UpdateAler(View):
             
         }
         return JsonResponse(data)
-
-#topologie 
-
-
 
 
 
@@ -286,11 +284,14 @@ class UpdateAlerHisto(View):
         obj.save()
         h = Alertes.objects.filter(id=id1)
         for i in h:
+            global réfj
             heurej = i.heure
             réfj = i.Reference
         g = Inventaire.objects.get(heure=heurej, Reference=réfj)
         g.statut = st
         g.save()
+        if(st == "FLC"):
+            mail()
         alt = {'id': obj.id, 'statut': obj.statut,
                'Commenataire': obj.Commenataire, 'Shifts': obj.Shifts,
                'Groupes': obj.Groupes, 'HFA': obj.HFA}
@@ -300,11 +301,6 @@ class UpdateAlerHisto(View):
         return JsonResponse(data)
 
         
-    
-    
-
-
-
 
 # crud view pour le Magdebord -----------------------------------------------------------------------------
 class CrudMagDebord(TemplateView):
@@ -422,6 +418,15 @@ def logout_view(request):
 
 
 #sending automatique email--------------------------------------------------------------------
+def mail():
+    subject = 'Bonjour'
+    message = f'Merci de preparer la Réfrence: {réfj} \n LOGOP \n Cdt '
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = ['adamdjazi@gmail.com',
+                      'youssef.kabab@gmail.com', 'youssef.kabab@stellantis.com']
+    send_mail(subject, message, email_from, recipient_list)
+
+    
 
 
 #bord KIt function-----------------------------------------------------------------------------------
