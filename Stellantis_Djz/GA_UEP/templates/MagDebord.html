@@ -185,7 +185,25 @@ function editUser(id) {
             $('#form-id').val(id);
 
         }
+    var rowId = event.target.parentNode.parentNode.id;
+    var data = document.getElementById(rowId).querySelectorAll(".ms-vb2");
+
+    var k = data[1].innerHTML;
+    if (k === 'Alerte') {
+        $('#form-statut option[value="Livré"]').attr('disabled', 'disabled');
+        $('#form-statut option[value="Non_T"]').attr('disabled', false);
+        $('#form-statut option[value="A_Débord"]').attr('disabled', false);
     }
+        
+    if (k === 'A_Débord') {
+        
+        $('#form-statut option[value="Livré"]').attr('disabled', false);
+        $('#form-statut option[value="Non_T"]').attr('disabled', false);
+        $('#form-statut option[value="A_Débord"]').attr('disabled', false);
+    }
+    
+    
+}
 
 
 

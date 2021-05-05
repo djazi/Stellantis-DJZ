@@ -45,9 +45,7 @@ def get_réf(request):
     data = 'fail'
   mimetype = 'application/json'
   return HttpResponse(data, mimetype)
-
-
-                                                
+                                          
 #crud  pour Borkit page view with ajax -----------------------------------------------------------------------
 class CrudView(TemplateView): 
     template_name = 'BordKit.html'
@@ -416,16 +414,15 @@ def logout_view(request):
         "message": "Merci pour Votre Travail ."
     })
 
-
 #sending automatique email--------------------------------------------------------------------
 def mail():
-    subject = 'Bonjour'
-    message = f'Merci de preparer la Réfrence: {réfj} \n LOGOP \n Cdt '
+    subject = 'Mail Automatique FLC '
+    message = f'Attention risque arrêt de ligne SUR  la reference: {réfj} \n merci de confirmer la reception \n LOGOP \n Cdt  '
     email_from = settings.EMAIL_HOST_USER
     recipient_list = ['adamdjazi@gmail.com',
-                      'youssef.kabab@gmail.com', 'youssef.kabab@stellantis.com']
+                       'youssef.kabab@stellantis.com']
     send_mail(subject, message, email_from, recipient_list)
-
+    
     
 
 
@@ -445,6 +442,7 @@ def Error(request):
 #Dashboard function 
 def Dashboard(request):
     return render(request, 'Dashboard.html')
+
 
 
 

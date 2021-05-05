@@ -195,6 +195,11 @@
                         <div class="modal-header">
                             <h4 class="modal-title" id="myModalLabel">Alertes</h4>
 
+                            <h4  id="m"></h4>
+
+                            
+                            
+
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 
                         </div>
@@ -220,7 +225,7 @@
 
                                         <option value="Train">Sortie Train</option>
                                         <option value="Alerte">Alerte</option>
-                                        <option value="A_Tranche">Anticipation par Tranche</option>
+                                        <option value="A_Tranche" id="AT">Anticipation par Tranche</option>
                                         <option value="A_Remorque">Anticipation par Remorque</option>
                                         <option value="FLC">FLC</option>
                                         <!--
@@ -305,9 +310,40 @@ function editUser(id) {
             //
             tr_id = "#alert-" + id;
             $('#form-id').val(id);
-            
-            
+
         }
+   
+        var rowId = event.target.parentNode.parentNode.id;
+        var data = document.getElementById(rowId).querySelectorAll(".ms-vb2");
+
+        var k = data[1].innerHTML;
+        if(k==='None' || k==='Alerte' || k=='A_Débord' ){
+            $('#form-statut option[value="A_Tranche"]').attr('disabled', 'disabled');
+            $('#form-statut option[value="A_Remorque"]').attr('disabled', 'disabled');
+            $('#form-statut option[value="FLC"]').attr('disabled', 'disabled');
+
+            $('#form-statut option[value="Train"]').attr('disabled', false);
+            $('#form-statut option[value="Alerte"]').attr('disabled', false);
+        }
+        if(k==='Non_T'){
+            $('#form-statut option[value="Train"]').attr('disabled', 'disabled');
+            $('#form-statut option[value="Alerte"]').attr('disabled', 'disabled');
+            
+            $('#form-statut option[value="A_Tranche"]').attr('disabled', false);
+            $('#form-statut option[value="A_Remorque"]').attr('disabled', false);
+            $('#form-statut option[value="FLC"]').attr('disabled', false);
+        }
+        if(k==='FLC'){
+            $('#form-statut option[value="Train"]').attr('disabled', false);
+            $('#form-statut option[value="Alerte"]').attr('disabled', false);
+            $('#form-statut option[value="A_Tranche"]').attr('disabled', false);
+            $('#form-statut option[value="A_Remorque"]').attr('disabled', false);
+            $('#form-statut option[value="FLC"]').attr('disabled', false);
+        }
+
+        
+    
+        
     }
 
     
@@ -323,9 +359,9 @@ function editUser(id) {
         $('#groupes').find('option[value=' + localStorage.getItem('itemName') + ']').attr('selected', 'selected');
         $('#shifts').find('option[value=' + localStorage.getItem('itemName2') + ']').attr('selected', 'selected');
 //fin kepp the selected option slect shifts and groupes-----------------------------------------------------------------
-
    $(document).ready(function () {
         $('td.ms-vb2').each(function (index) {
+        
              var c = $(this).find('#btn1').text() 
             if (c === 'Livré'|| c=== 'Train') {
                 $(this).find('#btn1').css("background-color", "lawngreen");
@@ -338,10 +374,14 @@ function editUser(id) {
             }
             if (c === 'FLC') {
                 $(this).find('#btn1').css("background-color", "red");
+                
             }
             if (c === 'FLC_T') {
                 $(this).find('#btn1').css("background-color", "lightcoral");
+                
             }
+
+            
         });
     });
 
