@@ -26,9 +26,9 @@
   content: '';
   height: 1px;
   background: black;
-  width: 50px;
+  width: 100px;
   position: absolute;
-  right: -50px;
+  right: -100px;
   top: 50%;
 }
 .flux:not(:last-child):before {
@@ -40,9 +40,12 @@
   border-style: solid;
   border-width: 7px 0 7px 20px;
   border-color: transparent transparent transparent black;
-  right: -50px;
+  right: -100px;
   transform: translateY(-50%);
 }
+
+
+
     
 </style>
 <!-- KPI of crossdock Historique  ------------------------------------------------------------------------------------------------------------------->
@@ -421,11 +424,11 @@
             <div class="modal-body">
             
             <div class="d-flex justify-content-between ">
-                <div class="p-2 bd-highlight ">Quai</div>
-                <div class="p-2 bd-highlight ">Cross Dock</div>
-                <div class="p-2 bd-highlight ">Zone de Kit</div>
-                <div class="p-2 bd-highlight ">CVM</div>
-                <div class="p-2 bd-highlight ">BDL</div>
+                <div class="p-2 bd-highlight int ">Quai</div>
+                <div class="p-2 bd-highlight int ">CrossDock</div>
+                <div class="p-2 bd-highlight int ">Zone de Kit</div>
+                <div class="p-2 bd-highlight int ">CVM</div>
+                <div class="p-2 bd-highlight int ">BDL</div>
             </div>
             
             {% if flux %}

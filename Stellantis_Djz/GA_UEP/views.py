@@ -417,7 +417,7 @@ def logout_view(request):
 #sending automatique email--------------------------------------------------------------------
 def mail():
     subject = 'Mail Automatique FLC '
-    message = f'Attention risque arrêt de ligne SUR  la reference: {réfj} \n merci de confirmer la reception \n LOGOP \n Cdt  '
+    message = f'Attention risque arrêt de ligne SUR  la reference: {réfj}.'
     email_from = settings.EMAIL_HOST_USER
     recipient_list = ['adamdjazi@gmail.com',
                        'youssef.kabab@stellantis.com']

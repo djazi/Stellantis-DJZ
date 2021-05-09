@@ -1,0 +1,53 @@
+version: '3.7'
+
+
+services:
+    db:
+        image: postgres:12.5
+        ports: 
+            - "5432"
+        restart: always
+        volumes: 
+            - production_db_volume:/var/lib/postgresql/data/
+        env_file: 
+            - .live.env
+    pgadmin:
+        container_name: pgadmin4_container
+        image: dpage/pgadmin4
+        restart: always
+        environment: 
+            PGADMIN_DEFAULT_EMAIL: admin@admin.com
+            PGADMIN_DEFAULT_PASSWORD: root
+        ports: 
+            - "5555:5555"   
+            
+    app:
+        build: 
+            context: .
+        command: python manage.py runserver 0.0.0.0:7777
+        ports: 
+            - "7777:7777"
+        volumes:
+            - ./Stellantis_Djz:/vol/web
+        restart: always
+        env_file: 
+            - .live.env
+        
+        depends_on: 
+            - db
+        
+    
+    proxy:
+        build: 
+            context: ./proxy
+        volumes: 
+            - production_static_data:/vol/static
+        restart: always
+        ports: 
+            - "7070:7070"
+        depends_on: 
+            - app
+
+volumes:
+    production_static_data: 
+    production_db_volume:  
