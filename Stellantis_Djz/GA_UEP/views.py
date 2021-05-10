@@ -187,8 +187,7 @@ class UpdateAler(View):
         g = Inventaire.objects.get(heure=heurej, Reference=réfj)
         g.statut=st
         g.save()
-        if(st=="FLC"):
-            mail()
+       
         alt = {'id': obj.id, 'statut': obj.statut, 
                'Commenataire': obj.Commenataire, 'Shifts': obj.Shifts,
                'Groupes': obj.Groupes,'HFA':obj.HFA }
@@ -288,8 +287,7 @@ class UpdateAlerHisto(View):
         g = Inventaire.objects.get(heure=heurej, Reference=réfj)
         g.statut = st
         g.save()
-        if(st == "FLC"):
-            mail()
+       
         alt = {'id': obj.id, 'statut': obj.statut,
                'Commenataire': obj.Commenataire, 'Shifts': obj.Shifts,
                'Groupes': obj.Groupes, 'HFA': obj.HFA}
@@ -415,13 +413,7 @@ def logout_view(request):
     })
 
 #sending automatique email--------------------------------------------------------------------
-def mail():
-    subject = 'Mail Automatique FLC '
-    message = f'Attention risque arrêt de ligne SUR  la reference: {réfj}.'
-    email_from = settings.EMAIL_HOST_USER
-    recipient_list = ['adamdjazi@gmail.com',
-                       'youssef.kabab@stellantis.com']
-    send_mail(subject, message, email_from, recipient_list)
+
     
     
 

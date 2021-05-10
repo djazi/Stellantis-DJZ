@@ -95,6 +95,11 @@
 
             </div>
             <form id="updateAlertes" action="">
+                <div style="text-align: center;">
+                    <button type="button" data-toggle="modal" id="fluxinterne"  class="btn btn-primary" onclick="sendMail();" >Envoyer Mail</button>
+                    <h1 hidden  id="ha"></h1>
+                        
+                </div>
 
                 <div class="modal-body">
                     <input class="form-control" id="form-id" type="hidden" name="formId" />
@@ -182,15 +187,43 @@
         $('#myModal').modal('hide');
         return false;
     });
-
+var k;
     function editUser(id) {
         if (id) {
             tr_id = "#alert-" + id;
             $('#form-id').val(id);
 
         }
+        var rowId = event.target.parentNode.parentNode.id;
+        var data = document.getElementById(rowId).querySelectorAll(".ms-vb2");
+
+        var k = data[2].innerHTML;
+        $('#ha').text(k);
+
+        
+        
+           
     }
 
+function sendMail() {
+    var réf = $('#ha').text()
+    confirm('êtes-vous sûr de vouloir envoyer ce-mail concernant la réference: '+réf+'')
+    var mail = prompt("Envoyer Mail a:",)
+    Email.send({
+                SecureToken:"d83aaeed-b0ec-4b65-b0ca-93efbf8abce9",
+                Host: "smtp.google.com",
+                Username: "khalid.djaz11@gmail.com",
+                Password: "Fsociety@kafka1997khalid",
+                To: ''+mail+'',
+                From: "khalid.djaz11@gmail.com",
+                Subject: "Mail Automatique FLC",
+                Body: 'Attention risque arrêt de ligne SUR  la reference:'+ réf +'\nLOGOP \nCordialement '
+            }).then(message => alert(message));
+      
+
+    }
+
+    
 
 
 
