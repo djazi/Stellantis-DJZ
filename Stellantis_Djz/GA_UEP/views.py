@@ -139,13 +139,13 @@ class CrudCrossDock(TemplateView):
             Q(Date=datetime.now().strftime("%d/%m/%Y"), ) | Q(HFA='....') | Q(HFA=None)).order_by('-Date').order_by('-heure').order_by('Nombre_De_Bac')
         
         context['T_A_NT'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
-        statut__in=('FLC', 'Alerte', 'Non_T', 'A_Débord')).count()
+             statut__in=('FLC', 'Alerte_DEB', 'Alerte_CK', 'A_Débord')).count()
 
         context['Train'] = Alertes.objects.filter(
             statut='Train', Date=datetime.now().strftime("%d/%m/%Y")).count()
 
         context['Adebord'] = Alertes.objects.filter(
-            statut__in=('A_Débord', 'Alerte'), Date=datetime.now().strftime("%d/%m/%Y")).count()
+            statut__in=('A_Débord', 'Alerte_DEB'), Date=datetime.now().strftime("%d/%m/%Y")).count()
 
         context['Livré'] = Alertes.objects.filter(
             statut='Livré', Date=datetime.now().strftime("%d/%m/%Y")).count()
@@ -205,12 +205,12 @@ def SearchHCD(request):
     #total kpi--------------------------------
     HKpi= Context()
     HKpi['T_A_NT'] = Alertes.objects.filter(
-        statut__in=('FLC', 'Alerte', 'Non_T', 'A_Débord')).count()
+        statut__in=('FLC', 'Alerte', 'Alerte_CK', 'A_Débord')).count()
                                                
     HKpi['Train'] = Alertes.objects.filter(statut='Train').count()
         
     HKpi['Adebord'] = Alertes.objects.filter(
-        statut__in=('A_Débord', 'Alerte')).count()
+        statut__in=('A_Débord', 'Alerte_DEB')).count()
 
     HKpi['Livré'] = Alertes.objects.filter(statut='Livré').count()
 
@@ -227,11 +227,11 @@ def SearchHCD(request):
             Hdsearch = Alertes.objects.filter( Date=Hdate )
             HKpiJ = Context()
             HKpiJ['T_A_NT'] = Alertes.objects.filter(Date=Hdate,
-                statut__in=('FLC', 'Alerte', 'Non_T', 'A_Débord')).count()
+                 statut__in=('FLC', 'Alerte_DEB', 'Alerte_CK', 'A_Débord')).count()
             HKpiJ['Train'] = Alertes.objects.filter(
                 Date=Hdate, statut='Train').count()
             HKpiJ['Adebord'] = Alertes.objects.filter(Date=Hdate,
-                statut__in=('A_Débord', 'Alerte')).count()
+                    statut__in=('A_Débord', 'Alerte_DEB')).count()
             HKpiJ['Livré'] = Alertes.objects.filter(
                 Date=Hdate, statut='Livré').count()
             HKpiJ['AT'] = Alertes.objects.filter(
@@ -305,7 +305,7 @@ class CrudMagDebord(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['alertesD'] = Alertes.objects.filter(
-            Q(Date=today.strftime("%d/%m/%Y"), statut__in=('Alerte', 'A_Débord')) | Q(statut__in=('Alerte', 'A_Débord'))).order_by('-heure')
+            Q(Date=today.strftime("%d/%m/%Y"), statut__in=('Alerte_DEB', 'A_Débord')) | Q(statut__in=('Alerte_DEB', 'A_Débord'))).order_by('-heure')
         return context
 
 

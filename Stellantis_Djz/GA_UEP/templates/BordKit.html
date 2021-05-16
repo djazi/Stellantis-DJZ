@@ -55,6 +55,8 @@
 </div>
 <div class="card">
     <div id="result" class="card-body">
+    <input class="form-control" id="myInput" type="text" placeholder="Chercher..">
+
 
         <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
             <table class="table my-0" id="InvTable">
@@ -199,7 +201,7 @@ $(document).ready(function () {
             if (c === 'Livré' || c === 'Train' || c === 'A_Remorque' || c === 'A_Tranche' || c==='FLC_T') {
                 $(this).find('#btn1').css("background-color", "lawngreen");
             }
-            if (c === 'Non_T' || c === 'Alerte' || c === 'A_Débord') {
+            if (c === 'Alerte_CK' || c === 'Alerte_DEB' || c === 'A_Débord') {
                 $(this).find('#btn1').css("background-color", "darkorange");
             }
             
@@ -209,8 +211,29 @@ $(document).ready(function () {
         });
 });
 
+    //refresh the page when no click and no activity 
+    (function (seconds) {
+        var refresh,
+            intvrefresh = function () {
+                clearInterval(refresh);
+                refresh = setTimeout(function () {
+                    location.href = location.href;
+                }, seconds * 1000);
+            };
 
+        $(document).on('keypress click', function () { intvrefresh() });
+        intvrefresh();
 
+    }(60));
 
+//filter table ------------------------------------------------------------------------------
+    $(document).ready(function () {
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#InvTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
 </script>
 {% endblock javascript %}
