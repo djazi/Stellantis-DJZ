@@ -47,6 +47,9 @@
 
                         <a class="nav-link " href="{% url 'GA_UEP:FLC_A'%}"><i class="fas fa-hand-stop-o"></i>&nbsp;FLC</a>
                         <a class="nav-link " href="{% url 'GA_UEP:logout' %}"><i class="fas fa-close"></i>&nbsp;Log out</a>
+                        
+                        <a class="nav-link " href="#myModalinfo" data-toggle="modal" ><i class="fas fa-info"></i>&nbsp; How to use it</a>
+                        
                             
                     </li>
                     <li class="nav-item"></li>
@@ -64,15 +67,55 @@
                         <form
                             class="form-inline d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                             
+                               
+                            
                             
                         </form>
+                       
                         <div>
+                        
+                           
                             
                             <h3 id="supername" style="text-align:right;float:right;" name="supername">{{ request.user.username }}</h3>
-                            
+                             
+                                                                                
+
                         </div>
                     </div>
                 </nav>
+<!-- modals pour changer le statut  ----------------------------------------------------------------------------------------------------------->
+<div class="modal fade" id="myModalinfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Traitement Des Alertes</h4>
+                <h4 id="m"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="text-center">
+                                <img src="{% static 'img/Flowchart.png' %}" class="rounded img-fluid " alt="Flowchart">
+                            </div>
+                        </div>
+                       
+                    </div>
+
+                    
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+
+           
+
+        </div>
+    </div>
+</div>
+
 
                 {% block body %}
 

@@ -63,7 +63,7 @@
 
 
 <div class="row">
-    <div class="col-12 ">
+    <div class="col-6 ">
         <div class="card shadow mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="text-primary font-weight-bold m-0">Evolution des Alertes</h6>
@@ -72,6 +72,18 @@
                 <div class="chart-area" id="EVDA"></div>
             </div>
 
+        </div>
+    </div>
+
+    <div class="col-6 ">
+        <div class="card shadow mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="text-primary font-weight-bold m-0">TOP 10 des Alertes</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-area" id="TOP10"></div>
+            </div>
+    
         </div>
     </div>
 </div>
@@ -235,100 +247,120 @@
     var chartDom2 = document.getElementById('top5E');
     var myChart2 = echarts.init(chartDom2);
     var option2;
+
     option2 = {
-        toolbox: {
-            feature: {
-                saveAsImage: {}
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
             }
         },
-        color:["green"],
-        legend: {
-            data: ['TOP 5 Entrées'],   
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
         },
-        textStyle:{
-            fontSize:15,
-            color:"black"
-        },
-        tooltip: {
-            trigger: 'item'
-        },
-        radar: {
-            // shape: 'circle',
-            indicator: [
-                { name: '9823196780', max: 50 },
-                { name: '96343100XX', max: 50 },
-                { name: '98029783VL', max: 50 },
-                { name: '9659224180', max: 50 },
-                { name: '98262055SM', max: 50 }
-            ],
-            
-            center:['50%','60%']
-        },
-        series: [{
-            type: 'radar',
-            data: [
-                {
-                    value: [20, 20, 20, 20, 20],
-                    name: 'TOP 5 Entrées'
-                    
+        xAxis: [{
+            type: 'value'
+        }
+
+        ],
+        yAxis: [
+            {
+                type: 'category',
+                data: ['9823196780', '96343100XX', '98029783VL', '9659224180', '98262055SM'],
+
+
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }
+
+        ],
+        series: [
+
+            {
+                label: {
+                    show: true
                 },
-            ]
-        }]
+                emphasis: {
+                    focus: 'series'
+                },
+                color: 'lawngreen',
+                name: 'Alertes',
+                type: 'bar',
+                barWidth: '60%',
+                data: [10, 52, 200, 334, 390]
+            }
+        ]
     };
 //top5 sorties
-        var chartDom3 = document.getElementById('top5S');
-        var myChart3 = echarts.init(chartDom3);
-        var option3;
-        option3 = {
-            toolbox: {
-                feature: {
-                    saveAsImage: {}
-                }
-            },
-            color: ["red"],
-            legend: {
-                data: ['TOP 5 Sorties'],
-            },
-            textStyle: {
-                fontSize: 15,
-                color: "black"
-            },
-            tooltip: {
-                trigger: 'item'
-            },
-            radar: {
-                // shape: 'circle',
-                indicator: [
-                    { name: '9823196780', max: 50 },
-                    { name: '96343100XX', max: 50 },
-                    { name: '98029783VL', max: 50 },
-                    { name: '9659224180', max: 50 },
-                    { name: '98262055SM', max: 50 }
-                ],
+    var chartDom3 = document.getElementById('top5S');
+    var myChart3 = echarts.init(chartDom3);
+    var option3;
 
-                center: ['50%', '60%']
-            },
-            series: [{
-                type: 'radar',
-                data: [
-                    
-                    {
-                        value: [22, 22, 22, 22, 22],
-                        name: 'TOP 5 Sorties'
-                    }
-                ]
-            }]
-        };
+    option3 = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: [{
+            type: 'value'
+        }
+
+        ],
+        yAxis: [
+            {
+                type: 'category',
+                data: ['9823196780', '96343100XX', '98029783VL', '9659224180', '98262055SM'],
+
+
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }
+        ],
+        series: [
+
+            {
+                label: {
+                    show: true
+                },
+                emphasis: {
+                    focus: 'series'
+                },
+                color: '#ef5350',
+                name: 'Alertes',
+                type: 'bar',
+                barWidth: '60%',
+                data: [10, 52, 200, 334, 390]
+            }
+        ]
+    };
 //les gauges
-function createGauje(divId, datai,name) {
+function createGauje(divId, datai,name,colorf,max, formatter) {
         var gaujeDom = document.getElementById(divId);
         var mygauje = echarts.init(gaujeDom)
         var option4;
         option4 = {
-            
-            
              series: [{
                 type: 'gauge',
+                min:0,
+                max:max,
+                pointer: {
+                     itemStyle: {
+                         color: 'auto'
+                     }
+                 },
                 progress: {
                     show: false,
                     width: 18
@@ -336,11 +368,7 @@ function createGauje(divId, datai,name) {
                 axisLine: {
                     lineStyle: {
                         width: 18,
-                        color: [
-                            [0.3, '#e74a3b'],
-                            [0.7, '#f6c23e'],
-                            [1, '#1cc88a']
-                        ]
+                        color: colorf
                     }
                 },
                 axisTick: {
@@ -356,43 +384,40 @@ function createGauje(divId, datai,name) {
                     distance: 19,
                     fontSize: 10
                 },
-                anchor: {
-                    show: true,
-                    showAbove: true,
-                    size: 19,
-                    itemStyle: {
-                        borderWidth: 7
-                    }
-                },
+                
                 title:{
                     show:true,
                     offsetCenter:[0,'-130%'],
-                    fontSize: 25,
+                    fontSize: 15,
                     color:"#4e73df"
                 },
                 detail: {
                     valueAnimation: true,
                     fontSize: 28,
                     offsetCenter: [0, '80%'],
-                    formatter: '{value} %',
+                    formatter: formatter ,
+                    color:'auto'
                 },
                 data: [{
                     value: datai,
-                    name:name
+                    name:name,
+                    fontSize: 28,
+                    
+                    
                    
                     
                 }]
             }]
         }
         mygauje.setOption(option4);
-        window.addEventListener('resize', function () {
+        window.addEventListener('resize', function () {         
         mygauje.resize();
     });
     };
-createGauje('gauge1', [10],"per1");
-createGauje('gauge2', [75], "per2");
-createGauje('gauge3', [15], "per3");
-createGauje('gauge4', [65], "per4");
+createGauje('gauge1', [10],"Traitement des Alertes", [[0.3, '#1cc88a'], [0.5, '#f6c23e'], [1, '#e74a3b']],120, '{value} min');
+createGauje('gauge2', [75], "Remontée d'Alerte", [ [0.8, '#e74a3b'],[0.9, '#f6c23e'],[1, '#1cc88a']],100, '{value} %');
+createGauje('gauge3', [15], "per3", [[0.3, '#e74a3b'], [0.7, '#f6c23e'], [1, '#1cc88a']],100, '{value} %');
+createGauje('gauge4', [65], "per4", [[0.3, '#e74a3b'], [0.7, '#f6c23e'], [1, '#1cc88a']],100, '{value} %');
 
 //Nombre de Bac journaliere 
     var chartNBJ = document.getElementById('BACJ');
@@ -419,14 +444,15 @@ createGauje('gauge4', [65], "per4");
         },
         xAxis: {
             type: 'category',
-            data: ['05/05/2021', '06/05/2021', '07/05/2021', '08/05/2021', '09/05/2021', '10/05/2021', '11/05/2021']
+            data: ['05/05/2021', '06/05/2021', '07/05/2021', '08/05/2021', '09/05/2021', '10/05/2021', '11/05/2021', '12/05/2021', '13/05/2021', '14/05/2021', '15/05/2021', '16/05/2021', '17/05/2021', '18/05/2021']
         },
         yAxis: {
             type: 'value'
         },
         series: [{
-            data: [120, 200, 150, 80, 70, 110, 130],
-            type: 'bar'
+            color:'orange',
+            data: [120, 200, 150, 80, 70, 110, 130,120, 200, 150, 80, 70, 110, 130],
+            type: 'line'
         }]
     };
 
@@ -608,6 +634,56 @@ createGauje('gauge4', [65], "per4");
 
         ]
     };
+//Top 10 des Alertes:
+    var chartTOP10A = document.getElementById('TOP10');
+    var myChartTOP10A = echarts.init(chartTOP10A);
+    var optionTOP10A;
+
+    optionTOP10A = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: [{
+            type: 'value'
+        }
+
+        ],
+        yAxis: [
+            {
+                type: 'category',
+                data: ['9823196780', '96343100XX', '98029783VL', '9659224180', '98262055SM', '9823196780', '96343100XX', '98029783VL', '9659224180', '98262055SM'],
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }
+
+        ],
+        series: [
+
+            {
+                label: {
+                    show: true
+                },
+                emphasis: {
+                    focus: 'series'
+                },
+                color: '#ff1744',
+                name: 'Alertes',
+                type: 'bar',
+                barWidth: '60%',
+                data: [10, 52, 200, 334, 390, 10, 52, 200, 334, 390]
+            }
+        ]
+    };
 
 myChartEVDA.setOption(optionEVDA);
 myChartLA.setOption(optionLA);
@@ -616,12 +692,18 @@ myChartNB.setOption(optionNBJ);
 myChart2.setOption(option2);    
 myChart3.setOption(option3);    
 myChart.setOption(option);
+myChartTOP10A.setOption(optionTOP10A);
 
 window.addEventListener('resize', function () {
         myChart.resize();
         myChart2.resize();
         myChart3.resize();
-        mygauje.resize();
+       
+        myChartEVDA.resize();
+        myChartLA.resize();
+        myChartDoun.resize();
+        myChartNB.resize();
+        myChartTOP10A.resize();
         
         
     });

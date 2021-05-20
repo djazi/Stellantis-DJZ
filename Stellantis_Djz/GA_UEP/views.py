@@ -75,48 +75,53 @@ class CreateCrudInv(View):
         for j in filt2:
             nm = j.name
         filt1 = Map.objects.filter(Map_Réference=réf_inv)
-        for i in filt1:
-            zkit = i.Map_PDC
-            cvm = i.CVM  
-            condi = i.condi
-            uc = i.condiQ
-        #add data to alertes
-        obj = Inventaire.objects.create(
-            Reference = réf_inv,
-            Nombre_De_Bac = nbr_bac_inv,
-            Zone_De_Kit= zkit,
-            SM_Csc=cvm,
-            Date=dc,
-            heure=hc,
-            name=nm,)
-        inv = {'id': obj.id, 'Reference': obj.Reference,
-                'Nombre_De_Bac': obj.Nombre_De_Bac,
-                'Zone_De_Kit': obj.Zone_De_Kit,
-                'SM_Csc':obj.SM_Csc,
-                'Date': obj.Date,
-                'heure': obj.heure,
-                'name': obj.name
+        if not filt1:
+            msg="Réference Non Trouvé"
+            data={'msg':msg}
+            return JsonResponse(data)
+        else:
+            for i in filt1:
+                zkit = i.Map_PDC
+                cvm = i.CVM  
+                condi = i.condi
+                uc = i.condiQ
+            #add data to alertes
+            obj = Inventaire.objects.create(
+                Reference = réf_inv,
+                Nombre_De_Bac = nbr_bac_inv,
+                Zone_De_Kit= zkit,
+                SM_Csc=cvm,
+                Date=dc,
+                heure=hc,
+                name=nm,)
+            inv = {'id': obj.id, 'Reference': obj.Reference,
+                    'Nombre_De_Bac': obj.Nombre_De_Bac,
+                    'Zone_De_Kit': obj.Zone_De_Kit,
+                    'SM_Csc':obj.SM_Csc,
+                    'Date': obj.Date,
+                    'heure': obj.heure,
+                    'name': obj.name
+                    }
+            data = {
+                    'inv':inv
                 }
-        data = {
-                'inv':inv
-            }
-        # convert inventair to alerte
-        filt3 = Membership.objects.filter(person=nm_input)
-        for j in filt3:
-            moniteur = j.Moniteur
-        al = Alertes(
-            Reference=réf_inv,
-            Nombre_De_Bac=nbr_bac_inv,
-            Zone_De_Kit=zkit,
-            SM_Csc=cvm,
-            Code_condi=condi,
-            QTe_Uc=uc,
-            Date=dc,
-            heure=hc,
-            Moniteur= moniteur)
-        al.save()
-        
-        return JsonResponse(data)
+        # convert inventaire to alerte
+        if filt1:
+            filt3 = Membership.objects.filter(person=nm_input)
+            for j in filt3:
+                moniteur = j.Moniteur
+            al = Alertes(
+                Reference=réf_inv,
+                Nombre_De_Bac=nbr_bac_inv,
+                Zone_De_Kit=zkit,
+                SM_Csc=cvm,
+                Code_condi=condi,
+                QTe_Uc=uc,
+                Date=dc,
+                heure=hc,
+                Moniteur= moniteur)
+            al.save()
+            return JsonResponse(data)
 
 
 class DeleteCrudInv(View):
@@ -136,10 +141,10 @@ class CrudCrossDock(TemplateView):
     def get_context_data(self, **kwargs):   
         context = super().get_context_data(**kwargs)
         context['alertes'] = Alertes.objects.filter(
-            Q(Date=datetime.now().strftime("%d/%m/%Y"), ) | Q(HFA='....') | Q(HFA=None)).order_by('-Date').order_by('-heure').order_by('Nombre_De_Bac')
+            Q(Date=datetime.now().strftime("%d/%m/%Y"), ) | Q(HFA='....') | Q(HFA=None)).order_by('-statut')
         
         context['T_A_NT'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
-             statut__in=('FLC', 'Alerte_DEB', 'Alerte_CK', 'A_Débord')).count()
+                                                   statut__in=('FLC', 'Alerte_DEB', 'Alerte_CK', 'A_Débord')).count()
 
         context['Train'] = Alertes.objects.filter(
             statut='Train', Date=datetime.now().strftime("%d/%m/%Y")).count()
@@ -227,11 +232,11 @@ def SearchHCD(request):
             Hdsearch = Alertes.objects.filter( Date=Hdate )
             HKpiJ = Context()
             HKpiJ['T_A_NT'] = Alertes.objects.filter(Date=Hdate,
-                 statut__in=('FLC', 'Alerte_DEB', 'Alerte_CK', 'A_Débord')).count()
+                                                     statut__in=('FLC', 'Alerte_DEB', 'Alerte_CK', 'A_Débord')).count()
             HKpiJ['Train'] = Alertes.objects.filter(
                 Date=Hdate, statut='Train').count()
             HKpiJ['Adebord'] = Alertes.objects.filter(Date=Hdate,
-                    statut__in=('A_Débord', 'Alerte_DEB')).count()
+                                                      statut__in=('A_Débord', 'Alerte_DEB')).count()
             HKpiJ['Livré'] = Alertes.objects.filter(
                 Date=Hdate, statut='Livré').count()
             HKpiJ['AT'] = Alertes.objects.filter(
