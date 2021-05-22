@@ -74,7 +74,13 @@
     {% if msg %}
     <h6 style="color: crimson; text-align: center;">{{msg}} </h6>
     {% endif %}
-  
+
+<div class="row justify-content-md-center">
+    <div class="alert alert-danger" role="alert">
+        Totales des Alertes Journaliere: {{HKpiJ.TA}}
+    </div>
+</div>
+
     {% if HKpi   %}
     <div class="row">
         <div class="col-md-6 col-xl-3 mb-4">
@@ -88,9 +94,9 @@
 
                             <div class="row no-gutters align-items-center">
                                 <div class="col-auto">
-                                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>Non
-                                            Traitée: {{HKpi.T_A_NT  }}</span></div>
-                                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span
+                                    <div class="text-dark  h6 mb-0 mr-3"><span>Alertes CD
+                                            : {{HKpi.T_A_NT  }}</span></div>
+                                    <div class="text-dark  h6 mb-0 mr-3"><span
                                             style="color: lawngreen;">Train: {{HKpi.Train}} </span></div>
                                 </div>
                                 <div class="col">
@@ -112,8 +118,8 @@
                                     <h6>A_Au Débord</h6>
                                 </span></div>
 
-                            <div class="text-dark font-weight-bold h5 mb-0"><span>AU Débord:{{HKpi.Adebord}} </span></div>
-                            <div class="text-dark font-weight-bold h5 mb-0"><span style="color:chartreuse;">Livré:{{HKpi.Livré}}  </span></div>
+                            <div class="text-dark  h6 mb-0"><span>AU Débord:{{HKpi.Adebord}} </span></div>
+                            <div class="text-dark  h6 mb-0"><span style="color:chartreuse;">Livré:{{HKpi.Livré}}  </span></div>
                         </div>
                         <div class="col-auto"><i class=" fa-2x text-gray-300"></i></div>
                     </div>
@@ -130,9 +136,9 @@
                                 </span></div>
                             <div class="row no-gutters align-items-center">
                                 <div class="col-auto">
-                                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>A_Tranche:{{HKpi.AT}} </span>
+                                    <div class="text-dark  h6 mb-0 mr-3"><span>A_Tranche:{{HKpi.AT}} </span>
                                     </div>
-                                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span
+                                    <div class="text-dark  h6 mb-0 mr-3"><span
                                             style="color: fuchsia;">A_Remorque: {{HKpi.AR}} </span>
                                     </div>
                                 </div>
@@ -155,8 +161,8 @@
                                     <h6>Alertes</h6>
                                 </span></div>
 
-                            <div class="text-dark font-weight-bold h5 mb-0"><span>Alertes: {{HKpi.TA}}</span></div>
-                            <div class="text-dark font-weight-bold h5 mb-0"><span style="color: red;">FLC: {{HKpi.FLC}}</span>
+                            <div class="text-dark  h6 mb-0"><span>FLC_T: {{HKpi.FLC_T}}</span></div>
+                            <div class="text-dark  h6 mb-0"><span style="color: red;">FLC: {{HKpi.FLC}}</span>
                             </div>
                         </div>
                         <div class="col-auto"><i class="fas  fa-2x text-gray-300"></i></div>
@@ -175,14 +181,14 @@
                     <div class="row align-items-center no-gutters">
                         <div class="col mr-2">
                             <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span>
-                                    <h6>A_Au CrossDock</h6>
+                                    <h6>CrossDock:</h6>
                                 </span></div>
     
                             <div class="row no-gutters align-items-center">
                                 <div class="col-auto">
-                                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>Non
-                                            Traitée: {{HKpiJ.T_A_NT }}</span></div>
-                                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span
+                                    <div class="text-dark h6 mb-0 mr-3"><span>Alertes CD : {{HKpiJ.T_A_NT }}</span></div>
+                                            
+                                    <div class="text-dark h6 mb-0 mr-3"><span
                                             style="color: lawngreen;">Train: {{HKpiJ.Train}} </span></div>
                                 </div>
                                 <div class="col">
@@ -202,11 +208,11 @@
                     <div class="row align-items-center no-gutters">
                         <div class="col mr-2">
                             <div class="text-uppercase text-success font-weight-bold text-xs mb-1  "><span>
-                                    <h6>A_Au Débord</h6>
+                                    <h6>Débord</h6>
                                 </span></div>
     
-                            <div class="text-dark font-weight-bold h5 mb-0"><span>AU Débord:{{HKpiJ.Adebord}} </span></div>
-                            <div class="text-dark font-weight-bold h5 mb-0"><span
+                            <div class="text-dark  h6 mb-0"><span>Alertes Débord:{{HKpiJ.Adebord}} </span></div>
+                            <div class="text-dark  h6 mb-0"><span
                                     style="color:chartreuse;">Livré:{{HKpiJ.Livré}} </span></div>
                         </div>
                         <div class="col-auto"><i class="fas fa-store fa-2x text-gray-300"></i></div>
@@ -225,9 +231,9 @@
                                 </span></div>
                             <div class="row no-gutters align-items-center">
                                 <div class="col-auto">
-                                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>A_Tranche:{{HKpiJ.AT}} </span>
+                                    <div class="text-dark  h6 mb-0 mr-3"><span>A_Tranche:{{HKpiJ.AT}} </span>
                                     </div>
-                                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span
+                                    <div class="text-dark  h6 mb-0 mr-3"><span
                                             style="color: fuchsia;">A_Remorque: {{HKpiJ.AR}} </span>
                                     </div>
                                 </div>
@@ -249,9 +255,8 @@
                             <div class="text-uppercase text-warning font-weight-bold text-xs  mb-1"><span>
                                     <h6>Alertes</h6>
                                 </span></div>
-    
-                            <div class="text-dark font-weight-bold h5 mb-0"><span>Alertes: {{HKpiJ.TA}}</span></div>
-                            <div class="text-dark font-weight-bold h5 mb-0"><span style="color: red;">FLC: {{HKpi.FLC}}</span>
+                            <div class="text-dark  h6 mb-0"><span>FLC_T: {{HKpiJ.FLC_T}}</span></div>
+                            <div class="text-dark  h6 mb-0"><span style="color: red;">FLC: {{HKpiJ.FLC}}</span>
                             </div>
                         </div>
                         <div class="col-auto"><i class="fas fa-hand-stop-o fa-2x text-gray-300"></i></div>

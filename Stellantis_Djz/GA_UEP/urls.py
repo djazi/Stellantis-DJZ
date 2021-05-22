@@ -8,9 +8,9 @@ from django.views.generic import TemplateView
 from .views import *
 app_name = "GA_UEP"
 urlpatterns = [
-    path("", views.index, name="index"),
-    path("login", views.login_view, name="login"),
-    path("logout", views.logout_view, name="logout"),
+    path("", views.index, name="indexx"),
+    path("loginn/", views.login_view, name="login"),
+    path("logoutt/", views.logout_view, name="logout"),
     
     path("api/get_réf/", views.get_réf, name='get_réf'),
 

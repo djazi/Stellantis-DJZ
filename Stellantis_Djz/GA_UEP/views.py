@@ -21,7 +21,6 @@ from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
-
 #----------------------------------------------------
 # Create your views here.----------------------------------------
 # data we use ------------------------------------------------------------------------------------
@@ -141,30 +140,29 @@ class CrudCrossDock(TemplateView):
     def get_context_data(self, **kwargs):   
         context = super().get_context_data(**kwargs)
         context['alertes'] = Alertes.objects.filter(
-            Q(Date=datetime.now().strftime("%d/%m/%Y"), ) | Q(HFA='....') | Q(HFA=None)).order_by('-statut')
-        
-        context['T_A_NT'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
-                                                   statut__in=('FLC', 'Alerte_DEB', 'Alerte_CK', 'A_Débord')).count()
-
+            Q(Date=datetime.now().strftime("%d/%m/%Y"), ) | Q(HFA='....') | Q(HFA=None)).order_by('-heure')
+        context['T_A_NT'] = Alertes.objects.filter(
+            Q(Date=datetime.now().strftime("%d/%m/%Y")) & (Q(statut='Alerte_CK')
+            | Q(statut=None))).count()
         context['Train'] = Alertes.objects.filter(
             statut='Train', Date=datetime.now().strftime("%d/%m/%Y")).count()
-
         context['Adebord'] = Alertes.objects.filter(
             statut__in=('A_Débord', 'Alerte_DEB'), Date=datetime.now().strftime("%d/%m/%Y")).count()
-
         context['Livré'] = Alertes.objects.filter(
             statut='Livré', Date=datetime.now().strftime("%d/%m/%Y")).count()
-
         context['AT'] = Alertes.objects.filter(
             statut='A_Tranche', Date=datetime.now().strftime("%d/%m/%Y")).count()
         context['AR'] = Alertes.objects.filter(
             statut='A_Remorque', Date=datetime.now().strftime("%d/%m/%Y")).count()
-
-        context['TA'] = Alertes.objects.filter(
+        context['TA'] = Alertes.objects.filter(statut__in=('Alerte_CK', 'A_Débord', 'Alerte_DEB',
+         'Livré', 'A_Tranche', 'A_Remorque', 'FLC', 'FLC_T'),                                                                        
             Date=datetime.now().strftime("%d/%m/%Y")).count()
         context['FLC'] = Alertes.objects.filter(
             statut='FLC', Date=datetime.now().strftime("%d/%m/%Y")).count()
+        context['FLC_T'] = Alertes.objects.filter(
+            statut='FLC_T', Date=datetime.now().strftime("%d/%m/%Y")).count()
         return context
+
 class UpdateAler(View):
     def get(self, request):
         id1 = request.GET.get('id', None)
@@ -210,7 +208,8 @@ def SearchHCD(request):
     #total kpi--------------------------------
     HKpi= Context()
     HKpi['T_A_NT'] = Alertes.objects.filter(
-        statut__in=('FLC', 'Alerte', 'Alerte_CK', 'A_Débord')).count()
+        (Q(statut='Alerte_CK') | Q(statut=None))).count()
+            
                                                
     HKpi['Train'] = Alertes.objects.filter(statut='Train').count()
         
@@ -223,16 +222,22 @@ def SearchHCD(request):
         
     HKpi['AR'] = Alertes.objects.filter(statut='A_Remorque').count()
         
-    HKpi['TA'] = Alertes.objects.all().count()
+    HKpi['TA'] = Alertes.objects.filter(statut__in=('Alerte_CK', 'A_Débord', 'Alerte_DEB',
+                                                    'Livré', 'A_Tranche', 'A_Remorque', 'FLC', 'FLC_T')
+                                        ).count()
     HKpi['FLC'] = Alertes.objects.filter(statut='FLC').count()
+    HKpi['FLC_T'] = Alertes.objects.filter(statut='FLC_T').count()
+
+
     if request.method == 'POST': 
         Hréf = request.POST['Hréf']
         Hdate = request.POST['Hdate']
         if(Hréf==""):
             Hdsearch = Alertes.objects.filter( Date=Hdate )
             HKpiJ = Context()
-            HKpiJ['T_A_NT'] = Alertes.objects.filter(Date=Hdate,
-                                                     statut__in=('FLC', 'Alerte_DEB', 'Alerte_CK', 'A_Débord')).count()
+            HKpiJ['T_A_NT'] = Alertes.objects.filter(Q(Date=Hdate) & 
+            (Q(statut='Alerte_CK') | Q(statut=None))).count()
+                                                     
             HKpiJ['Train'] = Alertes.objects.filter(
                 Date=Hdate, statut='Train').count()
             HKpiJ['Adebord'] = Alertes.objects.filter(Date=Hdate,
@@ -243,9 +248,15 @@ def SearchHCD(request):
                 Date=Hdate, statut='A_Tranche').count()
             HKpiJ['AR'] = Alertes.objects.filter(
                 Date=Hdate, statut='A_Remorque').count()
-            HKpiJ['TA'] = Alertes.objects.filter(Date=Hdate).count()
+
+            HKpiJ['TA'] = Alertes.objects.filter(statut__in=('Alerte_CK', 'A_Débord', 'Alerte_DEB',
+                'Livré', 'A_Tranche', 'A_Remorque', 'FLC', 'FLC_T'),Date=Hdate).count()
+                                                 
             HKpiJ['FLC'] = Alertes.objects.filter(
                 Date=Hdate, statut='FLC').count()
+
+            HKpiJ['FLC_T'] = Alertes.objects.filter(
+                Date=Hdate, statut='FLC_T').count()
 
         elif(Hdate==""):
             flux = Map.objects.filter(Map_Réference=Hréf)
@@ -388,7 +399,7 @@ def index(request):
     if not request.user.is_authenticated:
         return render(request, 'login.html')
         #return HttpResponseRedirect(reverse("login"))
-    return render(request, 'login.html')
+    return render(request, 'Dashboard.html')
 
 
 def login_view(request):
@@ -396,8 +407,6 @@ def login_view(request):
         global username
         username = request.POST["username"]
         password = request.POST["password"]
-        
-        
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
@@ -408,7 +417,10 @@ def login_view(request):
                 "message": "NOM ou Mot de pass est invalide."
             })
     else:
-        return render(request, 'login.html')
+        if  request.user.is_authenticated:
+            return render(request, 'Dashboard.html')
+        
+        
 
 
 def logout_view(request):

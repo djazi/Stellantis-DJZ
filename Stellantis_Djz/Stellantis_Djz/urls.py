@@ -23,6 +23,7 @@ urlpatterns = [
     path('',include('GA_UEP.urls')),
     
     
+    
 
     
 ]

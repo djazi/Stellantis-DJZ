@@ -30,13 +30,20 @@
     <!-- <a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="#"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a> -->
     <a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="{% url 'GA_UEP:cross_dock_HSearch' %}"><i class="fas fa-book-open fa-sm text-white-50"></i>&nbsp;Historique</a>
     </div>
+
+<div class="row justify-content-md-center">
+        <div class="alert alert-danger" role="alert">
+            Totales des Alertes : {{TA}}
+        </div>
+</div>
+
 <div class="row">
     <div class="col-md-6 col-xl-3 mb-4">
         <div class="card shadow border-left-info py-2">
             <div class="card-body">
                 <div class="row align-items-center no-gutters">
                     <div class="col mr-2">
-                        <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span> <h6>CrossDock:</h6> </span></div>
+                        <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span> <h6>CrossDock</h6> </span></div>
                                 
                         <div class="row no-gutters align-items-center">
                             <div class="col-auto">
@@ -60,9 +67,9 @@
             <div class="card-body">
                 <div class="row align-items-center no-gutters">
                     <div class="col mr-2">
-                        <div class="text-uppercase text-success font-weight-bold text-xs mb-1  "><span> <h6>Débord:</h6> </span></div> 
+                        <div class="text-uppercase text-success font-weight-bold text-xs mb-1  "><span> <h6>Débord</h6> </span></div> 
                                 
-                        <div class="text-dark  h6 mb-0"><span>Alertes Débord: {{Adebord}}</span></div>
+                        <div class="text-dark  h6 mb-0"><span>Alertes Débord {{Adebord}}</span></div>
                         <div class="text-dark  h6 mb-0"><span style="color:chartreuse;">Livré: {{Livré}}</span></div>
                     </div>
                     <div class="col-auto"><i class="fas fa-store fa-2x text-gray-300"></i></div>
@@ -76,7 +83,7 @@
             <div class="card-body">
                 <div class="row align-items-center no-gutters">
                     <div class="col mr-2">
-                        <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span> <h6>Anticipations:</h6> </span></div>
+                        <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span> <h6>Anticipations</h6> </span></div>
                         <div class="row no-gutters align-items-center">
                             <div class="col-auto">
                                 <div class="text-dark  h6 mb-0 mr-3"><span>A_Tranche: {{AT}}</span></div>
@@ -99,9 +106,9 @@
             <div class="card-body">
                 <div class="row align-items-center no-gutters">
                     <div class="col mr-2">
-                        <div class="text-uppercase text-warning font-weight-bold text-xs  mb-1"><span><h6>Alertes:</h6></span></div>
+                        <div class="text-uppercase text-warning font-weight-bold text-xs  mb-1"><span><h6>Alertes</h6></span></div>
                                
-                        <div class="text-dark  h6 mb-0"><span>Alertes: {{TA}}</span></div>
+                        <div class="text-dark  h6 mb-0"><span>FLC_T:{{FLC_T}} </span></div>
                         <div class="text-dark  h6 mb-0"><span style="color: red;">FLC:{{FLC}}</span></div>
                     </div>
                     <div class="col-auto"><i class="fas fa-hand-stop-o fa-2x text-gray-300"></i></div>

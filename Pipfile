@@ -7,6 +7,8 @@ name = "pypi"
 django = "*"
 psycopg2 = "*"
 amadeus = "*"
+django-import-export = "*"
+django-admin-rangefilter = "*"
 
 [dev-packages]
 
