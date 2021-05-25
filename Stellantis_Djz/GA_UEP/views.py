@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.db.models import Count
 from django.core import serializers
 from django.http.response import HttpResponse, JsonResponse
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from django.http import JsonResponse
 from django.contrib import messages
 import json
@@ -453,14 +453,22 @@ class KPIS(TemplateView):
     template_name = 'Dashboard.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        context['DoughnutKPI'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
-            statut__in=('Alerte_CK', 'A_Débord', 'Alerte_DEB',
-            'Livré', 'A_Tranche', 'A_Remorque', 'FLC', 'FLC_T')).count()
-
+#Doughnut alertes Data--------------------------------------------------------------------------------------------
+        context['alertCK'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
+            statut__in=('Alerte_CK')).count()
+        context['anticipations'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
+            statut__in=( 'A_Tranche', 'A_Remorque',)).count()
+        context['alertDébord'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
+             statut__in=('A_Débord', 'Alerte_DEB',)).count()
+        context['FLC'] = Alertes.objects.filter(
+            statut='FLC', Date=datetime.now().strftime("%d/%m/%Y")).count()
         context['Train'] = Alertes.objects.filter(
             statut='Train', Date=datetime.now().strftime("%d/%m/%Y")).count()
-            
+        context['Livré'] = Alertes.objects.filter(
+            statut='Livré', Date=datetime.now().strftime("%d/%m/%Y")).count()
+#barchart suivi des alertes Data------------------------------------------------------------------------------------------
+        context['barchatDate'] = Alertes.objects.filter(SDate__gte=datetime.now()-timedelta(days=7))
+    
         return context
 
 

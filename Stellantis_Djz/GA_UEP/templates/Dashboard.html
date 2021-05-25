@@ -488,17 +488,17 @@ createGauje('gauge4', [65], "per4", [[0.3, '#e74a3b'], [0.7, '#f6c23e'], [1, '#1
                 emphasis: {
                     label: {
                         show: true,
-                        fontSize: '20',
+                        fontSize: '15',
                         fontWeight: 'bold'
                     }
                 },
                 data: [
-                    { value: "{{DoughnutKPI}}", name: 'Alerttes CK' },
-                    { value:  "{{DoughnutKPI}}", name: 'Sortie Train' },
-                    { value:  "{{DoughnutKPI}}", name: 'Alertes Débord' },
-                    { value:  "{{DoughnutKPI}}", name: 'FLC' },
-                    { value:  "{{DoughnutKPI}}", name: 'Anticipations' },
-                    { value:  "{{DoughnutKPI}}", name: 'Livré' }
+                    { value: "{{alertCK}}", name: 'Alerttes CK' },
+                    { value:  "{{Train}}", name: 'Sortie Train' },
+                    { value:  "{{alertDébord}}", name: 'Alertes Débord' },
+                    { value:  "{{FLC}}", name: 'FLC' },
+                    { value:  "{{anticipations}}", name: 'Anticipations' },
+                    { value:  "{{Livré}}", name: 'Livré' }
                 ],
                 labelLine: {
                     smooth: 0.2,
@@ -534,7 +534,9 @@ createGauje('gauge4', [65], "per4", [[0.3, '#e74a3b'], [0.7, '#f6c23e'], [1, '#1
         xAxis: [
             {
                 type: 'category',
-                data: ['05/05/2021', '06/05/2021', '07/05/2021', '08/05/2021', '09/05/2021', '10/05/2021', '11/05/2021'],
+                data: [  
+                    '05/05/2021', '06/05/2021', '07/05/2021', '08/05/2021', '09/05/2021', '10/05/2021', '11/05/2021'
+                ],
                 axisTick: {
                     alignWithLabel: true
                 }
