@@ -16,5 +16,22 @@
 
 {% endblock %}
 {% block javascript %}
+<script>
+    $(document).ready(function () {
+        var supername = $("#supername").text();
+       
 
+        if (supername === 'Youssef' || supername ==='khalid') {
+            console.log(supername)
+           
+        }
+        else{
+              $('#dasha').addClass('disabled');
+            
+        }
+        
+
+    });
+
+</script>
 {% endblock javascript %}

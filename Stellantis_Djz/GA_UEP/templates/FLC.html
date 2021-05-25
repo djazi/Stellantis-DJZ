@@ -226,12 +226,6 @@ function sendMail() {
 
     }
 
-    
-
-
-
-
-
     $(document).ready(function () {
         $('td.ms-vb2').each(function (index) {
            var c = $(this).find('#btn1').text()
@@ -290,7 +284,17 @@ function sendMail() {
             });
         });
     });
+    //permissions
+    $(document).ready(function () {
+        var supername = $("#supername").text();
+        if (supername === 'Youssef' || supername === 'khalid') {
+            console.log(supername)
+        }
+        else {
+            $('#dasha').addClass('disabled');
 
+        }
+    });
 
 
 </script>
