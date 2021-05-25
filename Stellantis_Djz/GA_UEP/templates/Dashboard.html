@@ -193,7 +193,7 @@
 {% endblock %}
 
 {% block javascript %}
-<script src="{% static 'js/echarts.js'%}"></script>
+<script src="{% static 'js/echarts.js'%}" charset="utf-8"></script>
 
   <script>
 // les entrées et les sorties magasin Débord
@@ -460,7 +460,6 @@ createGauje('gauge4', [65], "per4", [[0.3, '#e74a3b'], [0.7, '#f6c23e'], [1, '#1
     var chartDoun = document.getElementById('DOA');
     var myChartDoun = echarts.init(chartDoun);
     var option;
-
     optionDOU = {
         toolbox: {
             feature: {
@@ -476,7 +475,7 @@ createGauje('gauge4', [65], "per4", [[0.3, '#e74a3b'], [0.7, '#f6c23e'], [1, '#1
         },
         series: [
             {
-                center: ['50%', '65%'],
+                center: ['50%', '60%'],
                 name: 'Alertes',
                 type: 'pie',
                 radius: ['40%', '70%'],
@@ -486,7 +485,6 @@ createGauje('gauge4', [65], "per4", [[0.3, '#e74a3b'], [0.7, '#f6c23e'], [1, '#1
                     borderColor: '#fff',
                     borderWidth: 2
                 },
-
                 emphasis: {
                     label: {
                         show: true,
@@ -495,19 +493,18 @@ createGauje('gauge4', [65], "per4", [[0.3, '#e74a3b'], [0.7, '#f6c23e'], [1, '#1
                     }
                 },
                 data: [
-                    { value: 1048, name: 'Alerttes CK' },
-                    { value: 735, name: 'Sortie Train' },
-                    { value: 580, name: 'Alertes Débord' },
-                    { value: 484, name: 'FLC' },
-                    { value: 300, name: 'Anticipations' },
-                    { value: 300, name: 'Livré' }
+                    { value: "{{DoughnutKPI}}", name: 'Alerttes CK' },
+                    { value:  "{{DoughnutKPI}}", name: 'Sortie Train' },
+                    { value:  "{{DoughnutKPI}}", name: 'Alertes Débord' },
+                    { value:  "{{DoughnutKPI}}", name: 'FLC' },
+                    { value:  "{{DoughnutKPI}}", name: 'Anticipations' },
+                    { value:  "{{DoughnutKPI}}", name: 'Livré' }
                 ],
                 labelLine: {
                     smooth: 0.2,
                     length: 10,
                     length2: 20
                 },
-
             }
         ]
     };
@@ -515,7 +512,6 @@ createGauje('gauge4', [65], "per4", [[0.3, '#e74a3b'], [0.7, '#f6c23e'], [1, '#1
     var chartLA = document.getElementById('SDA');
     var myChartLA = echarts.init(chartLA);
     var optionLA;
-
     optionLA = {
         toolbox: {
             feature: {

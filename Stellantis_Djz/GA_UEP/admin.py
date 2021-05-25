@@ -2,6 +2,7 @@ from django.contrib import admin
 from . models import Alertes,Membership,Inventaire,Map
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
 from rangefilter.filters import DateRangeFilter, DateTimeRangeFilter
+from datetime import date, datetime
 
 
 # Register your models here.
@@ -14,22 +15,20 @@ class MapAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin):
 
 
 
-
 @admin.register(Membership)
 class MembershipAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin):
-    list_display = ("person", "Ru", "Moniteur")
+    list_display = ("person", "Ru", "Moniteur", "permission")
     pass
     
     
 @admin.register(Inventaire)
 class InventaireAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin):
     list_display = ("Reference", "Nombre_De_Bac",
-                    "Zone_De_Kit", "SM_Csc", "Date", "heure", "name", "statut")
+                    "Zone_De_Kit", "SM_Csc", "Date", "heure", "name", "statut", "SDate")
     list_filter = (
-        ('Date', DateRangeFilter),('name')
+        ('SDate', DateRangeFilter), ('name')
     )
     
-
 
 @admin.register(Alertes)
 class AlertesAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin):
@@ -38,11 +37,8 @@ class AlertesAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin):
                     "SM_Csc", "Code_condi", "QTe_Uc",
                     "Date", "heure", "Moniteur", "statut",
                     "Commenataire", "HFA", "Shifts",
-                    "Groupes")
+                    "Groupes", "SDate")
+                    
     list_filter = (
-        ('Date', DateRangeFilter), ('Date', DateTimeRangeFilter),
+        ('SDate', DateRangeFilter), ('SDate', DateTimeRangeFilter),
     )
-  
-
-
-

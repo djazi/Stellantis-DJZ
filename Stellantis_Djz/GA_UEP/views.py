@@ -54,7 +54,7 @@ class CrudView(TemplateView):
         if c == 0:
             k = Inventaire(Reference="--",
                            Nombre_De_Bac="--", Zone_De_Kit="--",
-                           SM_Csc="--", Date=datetime.now().strftime("%d/%m/%Y"), heure=now.strftime("%H:%M:%S"), name=person)
+                           SM_Csc="--", Date=datetime.now().strftime("%d/%m/%Y"), heure=now.strftime("%H:%M:%S"), name=person, SDate=datetime.now())
             k.save()
         context = super().get_context_data(**kwargs)
         context['invs'] = Inventaire.objects.filter(
@@ -92,7 +92,8 @@ class CreateCrudInv(View):
                 SM_Csc=cvm,
                 Date=dc,
                 heure=hc,
-                name=nm,)
+                name=nm,
+                )
             inv = {'id': obj.id, 'Reference': obj.Reference,
                     'Nombre_De_Bac': obj.Nombre_De_Bac,
                     'Zone_De_Kit': obj.Zone_De_Kit,
@@ -118,7 +119,8 @@ class CreateCrudInv(View):
                 QTe_Uc=uc,
                 Date=dc,
                 heure=hc,
-                Moniteur= moniteur)
+                Moniteur= moniteur,
+                )
             al.save()
             return JsonResponse(data)
 
@@ -154,9 +156,10 @@ class CrudCrossDock(TemplateView):
             statut='A_Tranche', Date=datetime.now().strftime("%d/%m/%Y")).count()
         context['AR'] = Alertes.objects.filter(
             statut='A_Remorque', Date=datetime.now().strftime("%d/%m/%Y")).count()
-        context['TA'] = Alertes.objects.filter(statut__in=('Alerte_CK', 'A_Débord', 'Alerte_DEB',
-         'Livré', 'A_Tranche', 'A_Remorque', 'FLC', 'FLC_T'),                                                                        
+
+        context['TA'] = Alertes.objects.exclude(statut='Train').filter(                                                                    
             Date=datetime.now().strftime("%d/%m/%Y")).count()
+
         context['FLC'] = Alertes.objects.filter(
             statut='FLC', Date=datetime.now().strftime("%d/%m/%Y")).count()
         context['FLC_T'] = Alertes.objects.filter(
@@ -249,8 +252,8 @@ def SearchHCD(request):
             HKpiJ['AR'] = Alertes.objects.filter(
                 Date=Hdate, statut='A_Remorque').count()
 
-            HKpiJ['TA'] = Alertes.objects.filter(statut__in=('Alerte_CK', 'A_Débord', 'Alerte_DEB',
-                'Livré', 'A_Tranche', 'A_Remorque', 'FLC', 'FLC_T'),Date=Hdate).count()
+            HKpiJ['TA'] = Alertes.objects.exclude(statut='Train').filter(                                                                    
+                Date=Hdate).count()
                                                  
             HKpiJ['FLC'] = Alertes.objects.filter(
                 Date=Hdate, statut='FLC').count()
@@ -399,7 +402,7 @@ def index(request):
     if not request.user.is_authenticated:
         return render(request, 'login.html')
         #return HttpResponseRedirect(reverse("login"))
-    return render(request, 'Dashboard.html')
+    return render(request, 'home.html')
 
 
 def login_view(request):
@@ -410,19 +413,17 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            
             #return HttpResponseRedirect(reverse("index"))
-            return render(request, 'Dashboard.html')
+            return render(request, 'home.html')
         else:
             return render(request, 'login.html', {
                 "message": "NOM ou Mot de pass est invalide."
             })
     else:
         if  request.user.is_authenticated:
-            return render(request, 'Dashboard.html')
+            return render(request, 'home.html')
         
-        
-
-
 def logout_view(request):
     logout(request)
     return render(request, 'login.html', {
@@ -430,11 +431,6 @@ def logout_view(request):
     })
 
 #sending automatique email--------------------------------------------------------------------
-
-    
-    
-
-
 #bord KIt function-----------------------------------------------------------------------------------
 def Bord_Kit(request):
     return render(request, 'BordKit.html')
@@ -452,6 +448,20 @@ def Error(request):
 def Dashboard(request):
     return render(request, 'Dashboard.html')
 
+#Dashboard KPI
+class KPIS(TemplateView):
+    template_name = 'Dashboard.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['DoughnutKPI'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
+            statut__in=('Alerte_CK', 'A_Débord', 'Alerte_DEB',
+            'Livré', 'A_Tranche', 'A_Remorque', 'FLC', 'FLC_T')).count()
+
+        context['Train'] = Alertes.objects.filter(
+            statut='Train', Date=datetime.now().strftime("%d/%m/%Y")).count()
+            
+        return context
 
 
 

@@ -1,11 +1,7 @@
 from django.db import models
-from django.db.models.fields import CharField, FloatField, IntegerField, TimeField
+from django.db.models.fields import CharField, DateField, FloatField, IntegerField, TimeField
 
 # Create your models here.
-
-
-
-
 class Map(models.Model):
     Map_Réference = models.CharField(max_length=50,null=True,blank=True)
     Map_PDC = models.CharField(max_length=50, null=True, blank=True)
@@ -27,15 +23,12 @@ class Map(models.Model):
     Prénom_Appro = models.CharField(max_length=50, null=True, blank=True)
 
 
-
-
-
-
 class Membership(models.Model):
     person = models.CharField(max_length=50)
     Ru = models.CharField(max_length=50)
     Moniteur = models.CharField(max_length=50)
-        
+    permission = models.CharField(max_length=50, null=True, blank=True)
+
 class Inventaire(models.Model):
     Reference = models.CharField(max_length=50, null=True, blank=True)
     Nombre_De_Bac = models.CharField(max_length=50, null=True, blank=True)
@@ -45,6 +38,7 @@ class Inventaire(models.Model):
     heure = models.CharField(max_length=50, null=True, blank=True)
     name = models.CharField(max_length=50, null=True, blank=True)
     statut = models.CharField(max_length=50,null=True,blank=True)
+    SDate = models.DateField(auto_now_add=True,null=True, blank=True)
     
 
 class Alertes(models.Model):
@@ -62,6 +56,7 @@ class Alertes(models.Model):
     HFA = models.CharField(max_length=50, null=True, blank=True)
     Shifts = models.CharField(max_length=50, null=True, blank=True)
     Groupes= models.CharField(max_length=50, null=True, blank=True)
+    SDate = models.DateField(auto_now_add=True,null=True, blank=True)
     
 
     
