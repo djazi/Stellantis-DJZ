@@ -10,40 +10,47 @@
 
 <!--Les Gauges-->
 <div class="row">
-    <div class="col" >
+    <div class="col-3 " >
             <div >
                 <div class="chart-area" id="gauge1"></div>
             </div>
     </div>
-    
-    <div class="col">
-            <div >
-                <div class="chart-area" id="gauge2"></div>
-            </div>
-    </div>
-    <div class="col">
+    <div class="col-3 ">
         <div>
-            <div class="chart-area" id="gauge3"></div>
+            <div class="chart-area" id="gauge2"></div>
         </div>
     </div>
-    <div class="col">
-        <div >
-            <div >
-                <div class="chart-area" id="gauge4"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--Doughnut et linear chart-->
-<div class="row">
-    <div class="col-7">
+    
+    <div class="col-6  ">
         <div class="card shadow mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="text-primary font-weight-bold m-0">ALERTES</h6>
             </div>
             <div class="card-body">
                 <div class="chart-area" id="DOA"></div>
+            </div>
+        </div>
+    </div>
+        
+    
+    </div>
+    
+    
+        
+            
+        
+
+    
+
+<!--Doughnut et linear chart-->
+<div class="row">
+    <div class="col-7">
+        <div class="card shadow mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="text-primary font-weight-bold m-0">Zones de Kits</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-area" id="rose"></div>
             </div>
         </div>
     </div>
@@ -195,7 +202,7 @@
 {% block javascript %}
 <script src="{% static 'js/echarts.js'%}" charset="utf-8"></script>
 
-  <script>
+  <script  type="text/javascript">
 // les entrées et les sorties magasin Débord
     var chartDom = document.getElementById('ES7');
     var myChart = echarts.init(chartDom);
@@ -402,10 +409,6 @@ function createGauje(divId, datai,name,colorf,max, formatter) {
                     value: datai,
                     name:name,
                     fontSize: 28,
-                    
-                    
-                   
-                    
                 }]
             }]
         }
@@ -414,10 +417,9 @@ function createGauje(divId, datai,name,colorf,max, formatter) {
         mygauje.resize();
     });
     };
-createGauje('gauge1', [10],"Traitement des Alertes", [[0.3, '#1cc88a'], [0.5, '#f6c23e'], [1, '#e74a3b']],120, '{value} min');
+createGauje('gauge1', ['{{TAlertes}}'],"Traitement des Alertes", [[0.3, '#1cc88a'], [0.5, '#f6c23e'], [1, '#e74a3b']],120, '{value} min');
 createGauje('gauge2', [75], "Remontée d'Alerte", [ [0.8, '#e74a3b'],[0.9, '#f6c23e'],[1, '#1cc88a']],100, '{value} %');
-createGauje('gauge3', [15], "per3", [[0.3, '#e74a3b'], [0.7, '#f6c23e'], [1, '#1cc88a']],100, '{value} %');
-createGauje('gauge4', [65], "per4", [[0.3, '#e74a3b'], [0.7, '#f6c23e'], [1, '#1cc88a']],100, '{value} %');
+
 
 //Nombre de Bac journaliere 
     var chartNBJ = document.getElementById('BACJ');
@@ -470,12 +472,12 @@ createGauje('gauge4', [65], "per4", [[0.3, '#e74a3b'], [0.7, '#f6c23e'], [1, '#1
             trigger: 'item'
         },
         legend: {
-            top: '5%',
+            top: 'bottom',
             left: 'center'
         },
         series: [
             {
-                center: ['50%', '60%'],
+                center: ['50%', '40%'],
                 name: 'Alertes',
                 type: 'pie',
                 radius: ['40%', '70%'],
@@ -509,202 +511,318 @@ createGauje('gauge4', [65], "per4", [[0.3, '#e74a3b'], [0.7, '#f6c23e'], [1, '#1
         ]
     };
 //Suivi linear Alertes 
-    var chartLA = document.getElementById('SDA');
-    var myChartLA = echarts.init(chartLA);
-    var optionLA;
-    optionLA = {
-        toolbox: {
-            feature: {
-                saveAsImage: {}
+    $(function () {
+        $.ajax({
+            url: '{% url "GA_UEP:suiviAlertes" %}',
+            success: function (data) {
+                fill(data.dates, data.valeures)
             }
-        },
-        color: 'crimson',
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-                type: 'shadow'
-            }
-        },
-        grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-        },
-        xAxis: [
-            {
-                type: 'category',
-                data: [  
-                    '05/05/2021', '06/05/2021', '07/05/2021', '08/05/2021', '09/05/2021', '10/05/2021', '11/05/2021'
+        });
+    });
+function fill(dates, vals) {
+            var chartLA = document.getElementById('SDA');
+            var myChartLA = echarts.init(chartLA);
+            var optionLA;
+            optionLA = {
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                color: 'crimson',
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: dates,
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
                 ],
-                axisTick: {
-                    alignWithLabel: true
-                }
-            }
-        ],
-        yAxis: [
-            {
-                type: 'value'
-            }
-        ],
-        series: [
-            {
-                name: 'Alertes',
-                type: 'bar',
-                barWidth: '60%',
-                data: [100, 52, 200, 334, 390, 330, 220]
-            }
-        ]
-    };
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                        name: 'Alertes',
+                        type: 'bar',
+                        barWidth: '60%',
+                        data: vals,
+                    }
+                ]
+            };
+            myChartLA.setOption(optionLA);
+            myChartLA.resize();
+        };
 
 //Evolution Des Alertes
-    var chartEVDA = document.getElementById('EVDA');
-    var myChartEVDA = echarts.init(chartEVDA);
-    var optionEVDA;
+    $(function () {
+            $.ajax({
+                url: '{% url "GA_UEP:evolutionAlertes" %}',
+                success: function (data) {
+                    fill1(data.dates, data.antici, data.livré, data.train, data.flct)
 
-    optionEVDA = {
-        toolbox: {
-            feature: {
-                saveAsImage: {}
-            }
-        },
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-                type: 'shadow'
-            }
-        },
-        legend: {
-            data: ['Anticipations', 'Débord', 'Totale des Alertes']
-        },
-        grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-        },
-        xAxis: {
-            type: 'value'
-        },
-        yAxis: {
-            type: 'category',
-            data: ['05/05/2021', '06/05/2021', '07/05/2021', '08/05/2021', '09/05/2021', '10/05/2021', '11/05/2021'],
-
-        },
-        series: [
-            {
-                name: 'Totale des Alertes',
-                type: 'bar',
-                stack: 'total',
-                label: {
-                    show: true
-                },
-                emphasis: {
-                    focus: 'series'
-                },
-                data: [320, 302, 300, 400, 200, 50, 90]
-            },
-            {
-                name: 'Anticipations',
-                type: 'bar',
-                stack: 'total',
-                label: {
-                    show: true
-                },
-                emphasis: {
-                    focus: 'series'
-                },
-                data: [100, 200, 150, 200, 100, 25, 45]
-            },
-            {
-                name: 'Débord',
-                type: 'bar',
-                stack: 'total',
-                label: {
-                    show: true
-                },
-                emphasis: {
-                    focus: 'series'
-                },
-                data: [220, 102, 150, 200, 100, 25, 45]
-            },
-
-
-        ]
-    };
-//Top 10 des Alertes:
-    var chartTOP10A = document.getElementById('TOP10');
-    var myChartTOP10A = echarts.init(chartTOP10A);
-    var optionTOP10A;
-
-    optionTOP10A = {
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-                type: 'shadow'
-            }
-        },
-        grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-        },
-        xAxis: [{
-            type: 'value'
-        }
-
-        ],
-        yAxis: [
-            {
-                type: 'category',
-                data: ['9823196780', '96343100XX', '98029783VL', '9659224180', '98262055SM', '9823196780', '96343100XX', '98029783VL', '9659224180', '98262055SM'],
-                axisTick: {
-                    alignWithLabel: true
                 }
-            }
+            });
+        });
+        function fill1(dates, antici, livré, train, flct) {
+            var chartEVDA = document.getElementById('EVDA');
+            var myChartEVDA = echarts.init(chartEVDA);
+            var optionEVDA;
 
-        ],
-        series: [
-
-            {
-                label: {
-                    show: true
+            optionEVDA = {
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
                 },
-                emphasis: {
-                    focus: 'series'
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
                 },
-                color: '#ff1744',
-                name: 'Alertes',
-                type: 'bar',
-                barWidth: '60%',
-                data: [10, 52, 200, 334, 390, 10, 52, 200, 334, 390]
-            }
-        ]
-    };
+                legend: {
+                    data: ['Anticipations', 'Livré', 'Sortie Train', 'FLC_T']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'value'
+                },
+                yAxis: {
+                    type: 'category',
+                    data: dates,
 
-myChartEVDA.setOption(optionEVDA);
-myChartLA.setOption(optionLA);
+                },
+                series: [
+                    {
+                        name: 'Anticipations',
+                        type: 'bar',
+                        stack: 'total',
+                        label: {
+                            show: true
+                        },
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        data: antici
+                    },
+                    {
+                        name: 'Sortie Train',
+                        type: 'bar',
+                        stack: 'total',
+                        label: {
+                            show: true
+                        },
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        data: train
+                    },
+                    {
+                        name: 'Livré',
+                        type: 'bar',
+                        stack: 'total',
+                        label: {
+                            show: true
+                        },
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        data: livré
+                    },
+                    {
+                        name: 'FLC_T',
+                        type: 'bar',
+                        stack: 'total',
+                        label: {
+                            show: true
+                        },
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        data: flct
+                    },
+
+
+
+                ]
+            };
+            myChartEVDA.setOption(optionEVDA);
+
+            myChartEVDA.resize();
+        };
+//Top 10 des Alertes:
+     $(function () {
+            $.ajax({
+                url: '{% url "GA_UEP:Top10Alertes" %}',
+                success: function (data) {
+                    fill2(data.réf, data.fhz)
+                }
+            });
+        });
+        function fill2(réf, fhz) {
+            var chartTOP10A = document.getElementById('TOP10');
+            var myChartTOP10A = echarts.init(chartTOP10A);
+            var optionTOP10A;
+            optionTOP10A = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: [{
+                    type: 'value'
+                }
+                ],
+                yAxis: [
+                    {
+                        type: 'category',
+                        data: réf,
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        label: {
+                            show: true
+                        },
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        color: '#ff1744',
+                        name: 'Alertes',
+                        type: 'bar',
+                        barWidth: '60%',
+                        data: fhz
+                    }
+                ]
+            };
+            myChartTOP10A.setOption(optionTOP10A);
+            myChartTOP10A.resize();
+        };
+
+//rose chart 
+            var chartRoze = document.getElementById('rose');
+            var myChartRoze = echarts.init(chartRoze);
+            var optionRose;
+
+            optionRose = {
+                tooltip: {
+                    trigger: 'item'
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        mark: { show: true },
+                        dataView: { show: true, readOnly: false },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
+                },
+                series: [
+                    {
+                        name: 'Zones de Kit',
+                        type: 'pie',
+                        radius: [40, 150],
+                        center: ['50%', '50%'],
+                        roseType: 'area',
+                        itemStyle: {
+                            borderRadius: 8
+                        },
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: '15',
+                                fontWeight: 'bold'
+                            }
+                        },
+                        data:[
+                            
+                            { value: "{{KHM}}", name: 'Kit HAM'},
+                            { value: "{{KH1}}", name: 'Kit HC1'},
+                            { value: "{{KH2}}", name: 'Kit HC2'},
+                            { value: "{{PCI}}", name: 'Kit PCI'},
+                            { value: "{{KPO}}", name: 'Kit Portes'},
+                            { value: "{{MV34}}", name: 'Kit MV3/4'},
+                            { value: "{{MV2}}", name: 'Kit MV2'},
+                            { value: "{{KTB}}", name: 'Kit TAR-BERCEAU'},
+                            { value: "{{POM}}", name: 'Kit POM'},
+                            { value: "{{KK7}}", name: 'Kit K7 GMV'},
+                            { value: "{{PSP}}", name: 'Kit PSP'},
+                           
+                            
+                        ]
+                    }
+                ]
+            };
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 myChartDoun.setOption(optionDOU);
 myChartNB.setOption(optionNBJ);
 myChart2.setOption(option2);    
 myChart3.setOption(option3);    
 myChart.setOption(option);
-myChartTOP10A.setOption(optionTOP10A);
-
+myChartRoze.setOption(optionRose);
 window.addEventListener('resize', function () {
         myChart.resize();
         myChart2.resize();
-        myChart3.resize();
-       
-        myChartEVDA.resize();
-        myChartLA.resize();
+        myChart3.resize();       
         myChartDoun.resize();
         myChartNB.resize();
-        myChartTOP10A.resize();
-        
-        
+        myChartRoze.resize();
+            myChartRoze.resize();
+
+
     });
-  
   </script>
 {% endblock javascript %}

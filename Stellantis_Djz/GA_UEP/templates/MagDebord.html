@@ -174,15 +174,18 @@
                 },
                 dataType: 'json',
                 success: function (data) {
-                    alert("L'Alerte est traitée ");
-                }
+                    if (data.alt) {
+                        alert("L'Alerte est traitée");
+
+                    }
+                },
             });
         } else {
             alert("Tous Les champs doivent avoir une valeur Valide.");
         }
         $('form#updateAlertes').trigger("reset");
         $('#myModal').modal('hide');
-        return false;
+        //return false;
     });
 
 function editUser(id) {

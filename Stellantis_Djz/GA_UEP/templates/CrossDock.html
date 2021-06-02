@@ -278,9 +278,7 @@
         var idInput = $('input[name="formId"]').val().trim();
         var Statutinp = document.getElementById("form-statut").value;
         var commenataireInput = $('input[name="formComment"]').val().trim();
-
         //var hfa = d.toLocaleTimeString('it-IT');
-        
         if (Statutinp  || commenataireInput) {
             // Create Ajax Call
             $.ajax({
@@ -294,15 +292,17 @@
                 },
                 dataType: 'json',
                 success: function (data) {
-                    alert("L'Alerte est traitée");
+                    if(data.alt){
+                        alert("L'Alerte est traitée");
                     }
+                    },
             });
         } else {
             alert("Tous Les champs doivent avoir une valeur Valide.");
         }
-        $('form#updateAlertes').trigger("reset");
-        $('#myModal').modal('hide');
-        return false;
+       // $('form#updateAlertes').trigger("reset");
+        //$('#myModal').modal('hide');
+        //return false;
     });
 
     

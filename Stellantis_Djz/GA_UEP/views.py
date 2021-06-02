@@ -1,12 +1,15 @@
+from datetime import timedelta
 from typing import List
+from typing_extensions import Annotated
 from django import template
 from django.contrib.auth import authenticate, login, logout
+from django.db.models.aggregates import Max
 from django.db.models.expressions import When
 from . models import Alertes, Inventaire, Map, Membership
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, Http404, request, HttpResponse
 from django.urls import reverse
 from django.shortcuts import render
-from django.db.models import Count
+from django.db.models import Count, query
 from django.core import serializers
 from django.http.response import HttpResponse, JsonResponse
 from datetime import date, datetime, timedelta
@@ -15,12 +18,17 @@ from django.contrib import messages
 import json
 from django.views.generic import TemplateView, ListView, View
 from django.contrib.sessions.models import Session
-from django.db.models import Q
+from django.db.models import Q, F, DurationField, ExpressionWrapper, Avg, FloatField
 from django.template import Context, context
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
+from django.db.models.functions import TruncDate
+from django.utils.dateparse import parse_datetime
+import statistics
+
+
 #----------------------------------------------------
 # Create your views here.----------------------------------------
 # data we use ------------------------------------------------------------------------------------
@@ -449,11 +457,12 @@ def Dashboard(request):
     return render(request, 'Dashboard.html')
 
 #Dashboard KPI
+
 class KPIS(TemplateView):
     template_name = 'Dashboard.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-#Doughnut alertes Data--------------------------------------------------------------------------------------------
+    #Doughnut alertes Data--------------------------------------------------------------------------------------------
         context['alertCK'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
             statut__in=('Alerte_CK')).count()
         context['anticipations'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
@@ -466,10 +475,101 @@ class KPIS(TemplateView):
             statut='Train', Date=datetime.now().strftime("%d/%m/%Y")).count()
         context['Livré'] = Alertes.objects.filter(
             statut='Livré', Date=datetime.now().strftime("%d/%m/%Y")).count()
-#barchart suivi des alertes Data------------------------------------------------------------------------------------------
-        context['barchatDate'] = Alertes.objects.filter(SDate__gte=datetime.now()-timedelta(days=7))
-    
+        context['KPO'] = Alertes.objects.filter(
+            Zone_De_Kit__startswith ='KPO').count()
+        context['KHM'] = Alertes.objects.filter(
+            Zone_De_Kit__startswith ='KHM').count()
+        context['KH1'] = Alertes.objects.filter(
+            Zone_De_Kit__startswith ='KH1').count()
+        context['KH2'] = Alertes.objects.filter(
+            Zone_De_Kit__startswith ='KH2').count()
+        context['KK7'] = Alertes.objects.filter(
+            Zone_De_Kit__startswith ='KK7').count()
+        context['MV2'] = Alertes.objects.filter(
+            Zone_De_Kit__startswith ='KV2').count()
+        context['MV34'] = Alertes.objects.filter(
+            Zone_De_Kit__startswith ='KMVK').count()
+        context['PCI'] = Alertes.objects.filter(
+            Zone_De_Kit__startswith ='KPCV').count()
+        context['POM'] = Alertes.objects.filter(
+            Zone_De_Kit__startswith ='KPM').count()
+        context['PSP'] = Alertes.objects.filter(
+            Zone_De_Kit__startswith ='KPST').count()
+        context['KTB'] = Alertes.objects.filter(
+            Zone_De_Kit__startswith ='KTBG').count()
+        c = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"))
+        datetimeFormat = '%H:%M:%S'
+        l=[]
+        for i in c:
+            h= i.heure
+            hf=i.HFA
+            diff = abs(datetime.strptime(h, datetimeFormat)
+                       - datetime.strptime(hf, datetimeFormat))
+            l.append(round(diff.seconds/60,1))
+        average = round(Average(l),1)
+        
+        context['TAlertes'] = average
+        
+
+        
         return context
+#barchart suivi des alertes Data------------------------------------------------------------------------------------------
+
+def suiviAlertes(request):
+    dates=[]
+    valeures=[]
+    queryset = Alertes.objects.filter(SDate__gte=datetime.now()-timedelta(days=8),
+        statut__in=('Alerte_DEB', 'A_Débord', 'FLC', 'A_Remorque', 'A_Tranche', 'Livré', 'Alerte_CK', 'FLC_T')
+        ).annotate(Dates=TruncDate('SDate') ).values('Date').annotate(Reference=Count('Reference')
+        ).values('Reference', 'Date').order_by('SDate' )
+    for i in queryset:
+        valeures.append(i['Reference'])
+        dates.append(i['Date'])
+    return JsonResponse(data={
+        'dates':dates,
+        'valeures':valeures,
+    })
+
+def evolutionAlertes(request):
+    dates=[]
+    antici=[]
+    livré=[]
+    train=[]
+    flct=[]
+    queryset = Alertes.objects.filter(SDate__gte=datetime.now()-timedelta(days=8)
+    ).annotate(Dates=TruncDate('SDate')).values('Date').annotate(
+        liv=Count('statut',filter=Q(statut='Livré')),
+        anticip=Count('statut', filter=Q(statut__in=('A_Remorque', 'A_Tranche'))),
+        tr=Count('statut', filter=Q(statut='Train')),
+        ft=Count('statut', filter=Q(statut='FLC_T')),
+    ).values('Date', 'liv', 'anticip','tr','ft').order_by('SDate')
+    for i in queryset:
+        dates.append(i['Date'])
+        livré.append(i['liv'])
+        antici.append(i['anticip'])
+        train.append(i['tr'])
+        flct.append(i['ft'])
+    return JsonResponse(data={
+        'dates': dates,
+        'antici': antici,
+        'livré': livré,
+        'train': train,
+        'flct': flct,
+    })
+
+def Top10Alertes(request):
+    réf=[]
+    fhz=[]
+    queryset = Alertes.objects.values('Reference').annotate(fhz=Count('Reference')).order_by('-fhz')[:10]
+    for i in queryset:
+        réf.insert(0,i['Reference'])
+        fhz.insert(0,i['fhz'])
+       
+    return JsonResponse(data={
+        'réf': réf,
+        'fhz': fhz,
+    })
 
 
-
+def Average(lst):
+    return sum(lst) / len(lst)

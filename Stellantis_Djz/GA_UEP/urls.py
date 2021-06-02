@@ -29,5 +29,10 @@ urlpatterns = [
 
     #Dashboards url
     path("Dashboard/KPIS", KPIS.as_view(), name="KPIS"),
+    path("Dashboard/SUIVIAL", views.suiviAlertes, name="suiviAlertes"),
+
+    path("Dashboard/EVALAL", views.evolutionAlertes, name="evolutionAlertes"),
+    path("Dashboard/TOP10", views.Top10Alertes, name="Top10Alertes"),
+    
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
