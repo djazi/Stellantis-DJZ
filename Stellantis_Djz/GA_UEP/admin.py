@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import Alertes,Membership,Inventaire,Map
+from . models import Alertes, Membership, Inventaire, Map, Stock, MapStock
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
 from rangefilter.filters import DateRangeFilter, DateTimeRangeFilter
 from datetime import date, datetime
@@ -13,6 +13,19 @@ class MapAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin):
                     "condiQ", "ligne",  "UA_Appro", "UcTourRef",  "Train", "CVM",
                     "Quai", "Crossdock", "BDL", "Id_Appro", "Nom_Appro", "Prénom_Appro")
 
+
+@admin.register(Stock)
+class StockAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin):
+    list_display = ("Emplacement_SM", "Reference", "Nb_bacs", "Date_heure",
+                    "Travee_debord", "Conditionnement_UC",  "Qt_pieces_UC", "Appro",
+                     "Fournisseur", "CMJ","FDS" )
+
+
+@admin.register(MapStock)
+class MapStockAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin):
+    list_display = ("M_Reference", "M_Emplacement_SM", "M_Conditionnement_UC", "M_Qt_pieces_UC",
+                    "M_Appro", "M_Fournisseur",  "M_CMJ", "M_FDS"
+                     )
 
 
 @admin.register(Membership)

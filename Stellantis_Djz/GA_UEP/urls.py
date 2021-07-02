@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
 from .views import *
+from django.views.decorators.csrf import csrf_exempt
 app_name = "GA_UEP"
 urlpatterns = [
     path("", views.index, name="indexx"),
@@ -33,6 +34,16 @@ urlpatterns = [
 
     path("Dashboard/EVALAL", views.evolutionAlertes, name="evolutionAlertes"),
     path("Dashboard/TOP10", views.Top10Alertes, name="Top10Alertes"),
+#gestion de stock ---------------------------------------------
+    path("Magdebord/stcokDebord", CrudStock.as_view(), name='Gestion_SDB'),
+
+    path("search-items", csrf_exempt(views.search_items), name="search-items"),
+
+    path("ajouteritem/", ajouteritem.as_view(), name='ajouteritem'),
+
+    path("updateitems/", updateitems.as_view(), name='updateitems'),
     
+    path("api/get_réfS/", views.get_réfS, name='get_réfS'),
+    path("api/get_réfT/", views.get_réfT, name='get_réfT'),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

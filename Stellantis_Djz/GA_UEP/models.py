@@ -58,5 +58,27 @@ class Alertes(models.Model):
     Groupes= models.CharField(max_length=50, null=True, blank=True)
     SDate = models.DateField(auto_now_add=True,null=True, blank=True)
     
-
+#gestion de stock débord 
+class Stock(models.Model):
+    Emplacement_SM = models.CharField(max_length=50, null=True, blank=True)
+    Reference = models.CharField(max_length=50, null=True, blank=True)
+    Nb_bacs = models.IntegerField(max_length=50, null=True, blank=True)
+    Date_heure = models.CharField(max_length=50, null=True, blank=True)
+    Travee_debord = models.CharField(max_length=50, null=True, blank=True)
+    Conditionnement_UC = models.CharField(max_length=50, null=True, blank=True)
+    Qt_pieces_UC = models.CharField(max_length=50, null=True, blank=True)
+    Appro = models.CharField(max_length=50, null=True, blank=True)
+    Fournisseur = models.CharField(max_length=50, null=True, blank=True)
+    CMJ = models.CharField(max_length=50, null=True, blank=True)
+    FDS = models.CharField(max_length=50, null=True, blank=True)
     
+
+class MapStock(models.Model):
+    M_Emplacement_SM = models.CharField(max_length=50, null=True, blank=True)
+    M_Reference = models.CharField(max_length=50, null=True, blank=True)
+    M_Conditionnement_UC = models.CharField(max_length=50, null=True, blank=True)
+    M_Qt_pieces_UC = models.CharField(max_length=50, null=True, blank=True)
+    M_Appro = models.CharField(max_length=50, null=True, blank=True)
+    M_Fournisseur = models.CharField(max_length=50, null=True, blank=True)
+    M_CMJ = models.CharField(max_length=50, null=True, blank=True)
+    M_FDS = models.CharField(max_length=50, null=True, blank=True)

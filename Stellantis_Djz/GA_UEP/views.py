@@ -1,14 +1,14 @@
 from datetime import timedelta
 from typing import List
-from typing_extensions import Annotated
+#from typing_extensions import Annotated
 from django import template
 from django.contrib.auth import authenticate, login, logout
 from django.db.models.aggregates import Max
+from django.db.models.base import Model
 from django.db.models.expressions import When
-from . models import Alertes, Inventaire, Map, Membership
+from . models import Alertes, Inventaire, Map, MapStock, Membership, Stock
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, Http404, request, HttpResponse
 from django.urls import reverse
-from django.shortcuts import render
 from django.db.models import Count, query
 from django.core import serializers
 from django.http.response import HttpResponse, JsonResponse
@@ -27,6 +27,9 @@ from django.core.mail import send_mail
 from django.db.models.functions import TruncDate
 from django.utils.dateparse import parse_datetime
 import statistics
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .forms import StockForm
+from django.shortcuts import render, redirect
 
 
 #----------------------------------------------------
@@ -324,7 +327,6 @@ class UpdateAlerHisto(View):
         return JsonResponse(data)
 
         
-
 # crud view pour le Magdebord -----------------------------------------------------------------------------
 class CrudMagDebord(TemplateView):
     template_name = 'MagDebord.html'
@@ -449,6 +451,9 @@ def CrossDock(request):
 #Magdebord function
 def MagDebord(request):
     return render(request, 'MagDebord.html')
+
+def GestionStock(request):
+    return render(request, 'GestionStock.html' )
 # Error function
 def Error(request):
     return render(request, 'Error.html')
@@ -475,29 +480,30 @@ class KPIS(TemplateView):
             statut='Train', Date=datetime.now().strftime("%d/%m/%Y")).count()
         context['Livré'] = Alertes.objects.filter(
             statut='Livré', Date=datetime.now().strftime("%d/%m/%Y")).count()
-        context['KPO'] = Alertes.objects.filter(
+
+        context['KPO'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
             Zone_De_Kit__startswith ='KPO').count()
-        context['KHM'] = Alertes.objects.filter(
+        context['KHM'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
             Zone_De_Kit__startswith ='KHM').count()
-        context['KH1'] = Alertes.objects.filter(
+        context['KH1'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
             Zone_De_Kit__startswith ='KH1').count()
-        context['KH2'] = Alertes.objects.filter(
+        context['KH2'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
             Zone_De_Kit__startswith ='KH2').count()
-        context['KK7'] = Alertes.objects.filter(
+        context['KK7'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
             Zone_De_Kit__startswith ='KK7').count()
-        context['MV2'] = Alertes.objects.filter(
+        context['MV2'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
             Zone_De_Kit__startswith ='KV2').count()
-        context['MV34'] = Alertes.objects.filter(
+        context['MV34'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
             Zone_De_Kit__startswith ='KMVK').count()
-        context['PCI'] = Alertes.objects.filter(
+        context['PCI'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
             Zone_De_Kit__startswith ='KPCV').count()
-        context['POM'] = Alertes.objects.filter(
+        context['POM'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
             Zone_De_Kit__startswith ='KPM').count()
-        context['PSP'] = Alertes.objects.filter(
+        context['PSP'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
             Zone_De_Kit__startswith ='KPST').count()
-        context['KTB'] = Alertes.objects.filter(
+        context['KTB'] = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"),
             Zone_De_Kit__startswith ='KTBG').count()
-        c = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y"))
+        c = Alertes.objects.filter(statut__in=('Livré','Train','FLC_T','A_Tranche','A_Remorque'), Date=datetime.now().strftime("%d/%m/%Y"))
         datetimeFormat = '%H:%M:%S'
         l=[]
         for i in c:
@@ -507,9 +513,14 @@ class KPIS(TemplateView):
                        - datetime.strptime(hf, datetimeFormat))
             l.append(round(diff.seconds/60,1))
         average = round(Average(l),1)
-        
         context['TAlertes'] = average
-        
+        a = Alertes.objects.filter(
+            Nombre_De_Bac='2', Date=datetime.now().strftime("%d/%m/%Y")).count()
+        b = Alertes.objects.filter(Date=datetime.now().strftime("%d/%m/%Y")).count()
+        if b != 0:
+            remont = round(((a*100)/b),2)
+        else: remont=0
+        context['RAlertes'] = remont
 
         
         return context
@@ -560,7 +571,8 @@ def evolutionAlertes(request):
 def Top10Alertes(request):
     réf=[]
     fhz=[]
-    queryset = Alertes.objects.values('Reference').annotate(fhz=Count('Reference')).order_by('-fhz')[:10]
+    queryset = Alertes.objects.filter(SDate__gte=datetime.now()-timedelta(days=7)).values(
+        'Reference').annotate(fhz=Count('Reference')).order_by('-fhz')[:10]
     for i in queryset:
         réf.insert(0,i['Reference'])
         fhz.insert(0,i['fhz'])
@@ -572,4 +584,110 @@ def Top10Alertes(request):
 
 
 def Average(lst):
+    if sum(lst) ==0 and len(lst)==0:
+        return 0
     return sum(lst) / len(lst)
+
+#gestion stock débord---------------------------------------------------------
+
+#autocomplete
+def get_réfS(request):
+  if request.is_ajax():
+    q = request.GET.get('term', '')
+    réfs = MapStock.objects.filter(M_Reference__icontains=q)
+    results = []
+    for pl in réfs:
+      réfs_json = {}
+      réfs_json = pl.M_Reference
+      results.append(réfs_json)
+    data = json.dumps(results)
+  else:
+    data = 'fail'
+  mimetype = 'application/json'
+  return HttpResponse(data, mimetype)
+
+
+def get_réfT(request):
+  if request.is_ajax():
+    q = request.GET.get('term', '')
+    réfs = Stock.objects.filter(Travee_debord__icontains=q)
+    results = []
+    for pl in réfs:
+      réfs_json = {}
+      réfs_json = pl.Travee_debord
+      results.append(réfs_json)
+    data = json.dumps(results)
+  else:
+    data = 'fail'
+  mimetype = 'application/json'
+  return HttpResponse(data, mimetype)
+
+#stock crud 
+class CrudStock(ListView):
+    model = Stock
+    template_name = 'GestionStock.html'
+    context_object_name = 'stocks'
+    paginate_by = 10
+    queryset = Stock.objects.all().order_by('-Date_heure')
+
+
+def search_items(request):
+    if request.method == 'POST':
+        search_str=json.loads(request.body).get('searchText')
+        items = Stock.objects.filter(Emplacement_SM__istartswith=search_str) | Stock.objects.filter(
+            Reference__istartswith=search_str)
+        data = items.values() 
+        return JsonResponse(list(data),safe=False)
+        
+        
+class ajouteritem(View):
+    def get(self, request):
+        ajréf = request.GET.get('ajréf', None)
+        ajBac = request.GET.get('ajBac', None)
+        ajT = request.GET.get('ajT', None)
+        filt1 = MapStock.objects.filter(M_Reference=ajréf)
+        if not filt1:
+            msg="Réference Non Trouvé"
+            data={'msg':msg}
+            return JsonResponse(data)
+        else:
+            for i in filt1:
+                M_Emplacement_SM = i.M_Emplacement_SM
+                M_Conditionnement_UC = i.M_Conditionnement_UC
+                M_Qt_pieces_UC = i.M_Qt_pieces_UC
+                M_Appro = i.M_Appro
+                M_Fournisseurc = i.M_Fournisseur
+                M_CMJ = i.M_CMJ
+                M_FDS = i.M_FDS
+                #add data to Stock
+            Stock.objects.create(
+            Emplacement_SM=M_Emplacement_SM,
+            Reference=ajréf,
+            Nb_bacs=ajBac,
+            Date_heure=datetime.now().strftime("%d/%m/%Y, %H:%M:%S"),
+            Travee_debord=ajT,
+            Conditionnement_UC=M_Conditionnement_UC,
+            Qt_pieces_UC=M_Qt_pieces_UC,
+            Appro=M_Appro,
+            Fournisseur=M_Fournisseurc,
+            CMJ=M_CMJ,
+            FDS=M_FDS,)
+            msgy = "Réference ajoutée"
+            data = {'msgy': msgy}
+          
+        return JsonResponse(data)
+        
+   
+class updateitems(View):
+    def get(self, request):
+        id1 = request.GET.get('idInput', None)
+        Nb_bacs = request.GET.get('Nb_bacs', None)
+        obj = Stock.objects.get(id=id1)
+        obj.Nb_bacs = Nb_bacs
+        obj.save()
+
+        alt = {'idInput': obj.id, 'Nb_bacs': obj.Nb_bacs}
+        data = {
+            'alt': alt
+        }
+        return JsonResponse(data)

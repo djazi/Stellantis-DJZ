@@ -216,7 +216,7 @@
                         <form id="updateAlertes" action="">
                             
                             <div class="modal-body">
-                                <input class="form-control" id="form-id" type="hidden" name="formId" />
+                                <input class="form-control" id="form-id" type="hidden" name="formId"/>
                                 
                                 <div>
                                     
@@ -272,7 +272,7 @@
    
 
     // Create Django Ajax Call
-    $("form#updateAlertes").submit(function () {
+$("form#updateAlertes").submit(function () {
         var shiftinp = document.getElementById("shifts").value;
         var grpinp = document.getElementById("groupes").value;
         var idInput = $('input[name="formId"]').val().trim();

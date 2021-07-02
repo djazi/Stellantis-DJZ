@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'GA_UEP',
     'import_export',
     'rangefilter',
+    'django_extensions',
     
 ]
 

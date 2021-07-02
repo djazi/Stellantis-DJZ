@@ -1,0 +1,478 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block body %}
+<div class="text-center mt-1">
+    <h3 class="display-6">Stock Mgasin Débord </h3>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal1"  >Ajouter</button>
+                
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2" >Vider travée</button>
+                <button type="button" class="btn btn-info">E/S</button>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row justify-content-md-center">
+                <div class="alert alert-danger" role="alert">
+                    Totales des bacs : 11209
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <a class="btn btn-primary  d-none d-sm-inline-block" role="button" href="" onclick="exporter()" ><i
+                            class="fas fa-file-download fa-sm text-white-50"></i>&nbsp;Exporter</a>
+
+                <a class="btn btn-primary  d-none d-sm-inline-block" role="button" href="" onclick="imprimer()"><i
+                            class="fas fa-print fa-sm text-white-50"></i>&nbsp;imprimer</a>
+
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-danger" id="yo" role="alert" style="display:none;">
+    This is a danger alert—check it out!
+</div>
+
+<!--  table magasin débord-->
+
+
+<div class="card">
+    <div id="result" class="card-body">
+        <div class="form-group">
+            <input type="text" class="form-control" id="searchField" placeholder=" Rechercher...">
+        </div>
+        <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
+           
+        <div class="app-table" >
+            <table class="table table-sm table-hover" id="tableData" style="color: #33313b;">
+                <thead>
+                    <tr>
+                        <th>Action</th>
+                        <th>Emplacement SM</th>
+                        <th>Réference</th>
+                        <th>Nombre de Bac</th>
+                        <th>Date d'éntrée</th>
+                        <th>Travée débord</th>
+                        <th>code condi</th>
+                        <th>Qt piéce/UC</th>
+                        <th>Appro</th>
+                        <th>Fournisseur</th>
+                        <th>CMJ</th>
+                        <th>FDS</th>
+                    </tr>
+                </thead>
+            {% if stocks %}
+            {% for stock in stocks %}
+                <tbody id="myTable">
+                <tr id="stock-{{stock.id}}">
+                    <td class="ms-vb2" style="text-align: center;" ><button id="btn1" class="btn btn-danger" onClick="editUser({{stock.id}})" type="button" data-toggle="modal" data-target="#myModal3"></button></td>
+                    <td class="réf invData" name="Emplacement_SM" style="text-align: center;">{{stock.Emplacement_SM}}</td>
+                    <td class="réf invData" name="Réference" style="text-align: center;">{{stock.Reference}}</td>
+                    <td class="réf invData" name="Nombre de Bac" style="text-align: center;">{{stock.Nb_bacs}}</td>
+                    <td class="réf invData" name="Date" style="text-align: center;">{{stock.Date_heure}}</td>
+                    <td class="réf invData" name="Travée débord" style="text-align: center;">{{stock.Travee_debord}}</td>
+                    <td class="réf invData" name="code_condi" style="text-align: center;">{{stock.Conditionnement_UC}}</td>
+                    <td class="réf invData" name="piéce/UC" style="text-align: center;">{{stock.Qt_pieces_UC}}</td>
+                    <td class="réf invData" name="Appro" style="text-align: center;">{{stock.Appro}}</td>
+                    <td class="réf invData" name="Fournisseur" style="text-align: center;">{{stock.Fournisseur}}</td>
+                    <td class="réf invData" name="CMJ" style="text-align: center;">{{stock.CMJ}}</td>
+                    <td class="réf invData" name="FDS" style="text-align: center;">{{stock.FDS}}</td>
+                </tr>
+            {% endfor %}
+            
+            </tbody>
+            {% else %}
+            <h3 style="color: crimson; text-align: center; "> Stock Débord Vide </h3>
+            {% endif %}
+               
+
+            </table>
+        </div>
+    <div class="table-output" >
+
+        <table class="table table-sm table-hover" id="tableData" style="color: #33313b;">
+            <thead>
+                <tr id="stock-{{stock.id}}" >
+                    <th style="text-align: center;">Action</th>
+                    <th style="text-align: center;">Emplacement SM</th>
+                    <th style="text-align: center;">Réference</th>
+                    <th style="text-align: center;">Nombre de Bac</th>
+                    <th style="text-align: center;">Date d'éntrée</th>
+                    <th style="text-align: center;">Travée débord</th>
+                    <th style="text-align: center;">code condi</th>
+                    <th style="text-align: center;">Qt piéce/UC</th>
+                    <th style="text-align: center;">Appro</th>
+                    <th style="text-align: center;">Fournisseur</th>
+                    <th style="text-align: center;">CMJ</th>
+                    <th style="text-align: center;">FDS</th>
+                </tr>
+            </thead>
+            <tbody class="table-body">
+
+            </tbody>
+
+        </table>
+    </div>
+</div>
+        </div>
+            <!--paination______________________________________________________-->
+        
+        <div class="container">
+            {% if is_paginated %}
+            <nav aria-label="Page navigation example">
+            <ul class="pagination">
+
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                <li class="disabled"><span class="page-link">&laquo;</span></li>
+                {% endif %}
+                {% for i in paginator.page_range %}
+                {% if page_obj.number == i %}
+                <li class="page-item" class="active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                <li class="disabled"><spa class="page-link">&raquo;</span></li>
+                {% endif %}
+
+            </ul>
+            </nav>
+            {% endif %}
+            </div>
+            <!--end paination______________________________________________________-->
+
+        </div>
+
+
+   
+
+<!-- modals pour changer le button ajouter  ----------------------------------------------------------------------------------------------------------->
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Ajouter une Réference</h4>
+
+                <h4 id="m"></h4>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+
+            </div>
+            <form  id="ajouteritem" action="">
+                
+                <div class="modal-body">
+                    
+
+                
+                <label for="comment">Réference:</label>
+                
+                
+                <input class="form-control" id="ajréf" type="text" name="ajréf" />
+
+                <label for="comment">Nombre de Bacs:</label>
+                
+                <input class="form-control" id="ajBac" type="number" name="ajBac" />
+
+                    <label for="statut">Travée: </label>
+                    <input class="form-control" id="ajT" type="text" name="ajT" />
+                   
+                    </select>
+                    
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Sauvegarder</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+<!-- end of modals pour ajouter  ------------------------------------------------------------------------------------------------------>
+<!-- modals pour changer vider travée  ----------------------------------------------------------------------------------------------------------->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Vider travée</h4>
+
+                <h4 id="m"></h4>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+
+            </div>
+            <form id="vidertravée" action="">
+
+                <div class="modal-body">
+                    
+                    <label for="statut">Vider une travée: </label>
+
+                    <input class="form-control" id="VidT" type="text" name="formComment" />
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Sauvegarder</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+<!-- end of modals pourvider travée ------------------------------------------------------------------------------------------------------>
+<!-- modals pour changer sorti bac  ----------------------------------------------------------------------------------------------------------->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Saisie Sortie de bac</h4>
+
+                <h4 id="m"></h4>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+
+            </div>
+            <form id="updateitems" action="">
+
+                <div class="modal-body">
+                    <input class="form-control" id="form-id"  name="formId" />
+
+                    <label for="comment">Indiquer le nombre de bac a sortir :</label>
+                    <input class="form-control" id="form-comment" type="number" name="formunbc" />
+
+                    <label for="statut">Statut: </label>
+                    <select name="formStatut" id="form-statut" class="custom-select custom-select-sm"
+                        onchange="">
+                        <optgroup label="">
+
+                            <option value=""></option>
+
+                            <option value="Train">Sortie Train</option>
+                            <option value="Alerte_DEB">Alerte_DEB</option>
+                            <option value="A_Tranche" id="AT">Anticipation par Tranche</option>
+                            <option value="A_Remorque">Anticipation par Remorque</option>
+                            <option value="FLC">FLC</option>
+
+                        </optgroup>
+                    </select>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Sauvegarder</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+<!-- end of modals sorti bac ------------------------------------------------------------------------------------------------------>
+{% endblock %}
+{% block javascript %}
+
+<script type="text/javascript" >
+    const searchField = document.querySelector("#searchField");
+    const tableoutput= document.querySelector(".table-output");
+    const apptable= document.querySelector(".app-table");
+    const tablebody= document.querySelector(".table-body");
+    tableoutput.style.display="none";
+    searchField.addEventListener("keyup", (e) => {
+        const searchValue = e.target.value;
+        tablebody.innerHTML=" ";
+        if (searchValue.trim().length>0 ) {
+
+            fetch("/search-items",{
+                body:JSON.stringify({ searchText: searchValue}),
+                method:"POST",
+            })
+            .then((res) => res.json())
+            .then((data)=>{
+                console.log("data",data);
+                apptable.style.display = "none";
+                tableoutput.style.display = 'block';
+            if(data.length===0){
+                tableoutput.innerHTML="No results found"
+
+            }else{
+                data.forEach((item)=> {
+                     tablebody.innerHTML += `
+<trid="stock-${item.id}" >
+                <td class="ms-vb2" style="text-align: center;"><button id="btn1" class="btn btn-danger" type="button" onClick="editUser(${item.id})"  data-toggle="modal" data-target="#myModal3"></button></td>
+                    <td class="réf invData" name="Emplacement_SM" style="text-align: center;">${item.Emplacement_SM}</td>
+                    <td class="réf invData" name="Réference" style="text-align: center;">${item.Reference}</td>
+                    <td class="réf invData" name="Nombre de Bac" style="text-align: center;">${item.Nb_bacs}</td>
+                    <td class="réf invData" name="Date" style="text-align: center;">${item.Date_heure}</td>
+                    <td class="réf invData" name="Travée débord" style="text-align: center;">${item.Travee_debord}</td>
+                    <td class="réf invData" name="code_condi" style="text-align: center;">${item.Conditionnement_UC}</td>
+                    <td class="réf invData" name="piéce/UC" style="text-align: center;">${item.Qt_pieces_UC}</td>
+                    <td class="réf invData" name="Appro" style="text-align: center;">${item.Appro}</td>
+                    <td class="réf invData" name="Fournisseur" style="text-align: center;">${item.Fournisseur}</td>
+                    <td class="réf invData" name="CMJ" style="text-align: center;">${item.CMJ}</td>
+                    <td class="réf invData" name="FDS" style="text-align: center;">${item.FDS}</td>  
+</tr>  `     
+                });
+            }
+            });
+        }else{
+            tableoutput.style.display = "none";
+            apptable.style.display = "block";
+        }
+    });
+
+
+$(document).ready(function () {
+        var supername = $("#supername").text();
+
+
+        if (supername === 'Youssef' || supername === 'khalid') {
+            console.log(supername)
+
+        }
+        else {
+            $('#dasha').addClass('disabled');
+
+        }
+
+
+    });
+//chercher  
+
+
+     
+//exporter excel 
+function exporter(){
+    $('#tableData').excelExport();
+}
+//imprimer
+function imprimer(){
+    var printme = document.getElementById('tableData');
+    var wme = window.open("", ",width=900,height=700");
+    wme.document.write(printme.outerHTML);
+    wme.document.close;
+    wme.focus();
+    wme.print();
+    wme.close();
+}
+//autocomplete 
+$(function () {
+        $("#ajréf").autocomplete({
+            appendTo: "#myModal1",
+            source: "/api/get_réfS/",
+            select: function (event, ui) { //item selected
+                AutoCompleteSelectHandler(event, ui)
+                
+            },
+            minLength: 2,
+        });
+
+    });
+
+function AutoCompleteSelectHandler(event, ui) {
+        var selectedObj = ui.item;
+    }
+
+$(function () {
+        $("#ajT").autocomplete({
+            appendTo: "#myModal1",
+            source: "/api/get_réfT/",
+            select: function (event, ui) { //item selected
+                AutoCompleteSelectHandler(event, ui)
+
+            },
+            minLength: 2,
+        });
+
+    });
+
+    function AutoCompleteSelectHandler(event, ui) {
+        var selectedObj = ui.item;
+    }
+    
+//ajouter item
+$("form#ajouteritem").submit(function () {
+        var ajréf = $('input[name="ajréf"]').val().trim();
+        var ajBac = $('input[name="ajBac"]').val().trim();
+        var ajT = $('input[name="ajT"]').val().trim();
+        //var hfa = d.toLocaleTimeString('it-IT');
+        if (ajréf && ajBac && ajT) {
+            // Create Ajax Call
+            $.ajax({
+                url: '{% url "GA_UEP:ajouteritem" %}',
+                data: {
+                    'ajréf': ajréf,
+                    'ajBac': ajBac,
+                    'ajT': ajT,
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.msgy) {
+                        alert("La réference est ajoutée");
+                    }else if (data.msg){
+                        alert("La réference non valide ")
+                    }
+                },
+            });
+        } else {
+            alert("Tous Les champs doivent avoir une valeur Valide.");
+        }
+        // $('form#updateAlertes').trigger("reset");
+        //return false;
+    });
+
+function editUser(id) {
+        if (id) {
+            //
+            tr_id = "#stock-" + id;
+            $('#form-id').val(id);
+
+        }}
+
+$("form#updateitems").submit(function () {
+
+        var idInput = $('input[name="formId"]').val().trim();
+        var Nb_bacs = $('input[name="formunbc"]').val().trim();
+        
+        if (Nb_bacs) {
+            // Create Ajax Call
+            $.ajax({
+                url: '{% url "GA_UEP:updateitems" %}',
+                data: {
+                    'idInput': idInput,
+                    'Nb_bacs': Nb_bacs,
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.alt) {
+                        alert("Stock updated");
+                    }
+                },
+            });
+        } else {
+            alert("Tous Les champs doivent avoir une valeur Valide.");
+        }
+    });
+</script>
+{% endblock javascript %}

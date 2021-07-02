@@ -2,67 +2,65 @@
 {% load static %}
 
 {% block body %}
+
 <div class="container-fluid">
 
 <h3 class="text-dark mb-0">TABLEAU DE BORD</h3>
+
 
 <!--KPI Gestion de Stock-->
 
 <!--Les Gauges-->
 <div class="row">
-    <div class="col-3 " >
-            <div >
-                <div class="chart-area" id="gauge1"></div>
+    <div class="col-sm-3 " >
+        
+            <div>
+                <div class="chart-area" id="gauge1" style="width: 100%; min-height: 100px" ></div>
             </div>
     </div>
-    <div class="col-3 ">
+
+    <div class="col-sm-3 ">
         <div>
-            <div class="chart-area" id="gauge2"></div>
+            <div class="chart-area" id="gauge2" style="width: 100%; min-height: 100px"></div>
         </div>
     </div>
     
-    <div class="col-6  ">
+    <div class="col-sm-6 ">
         <div class="card shadow mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="text-primary font-weight-bold m-0">ALERTES</h6>
             </div>
             <div class="card-body">
-                <div class="chart-area" id="DOA"></div>
+                <div class="chart-area" id="DOA" style="width: 100%; min-height: 200px"></div>
             </div>
         </div>
     </div>
         
     
-    </div>
+</div>
     
     
-        
-            
-        
-
-    
-
 <!--Doughnut et linear chart-->
 <div class="row">
-    <div class="col-7">
+    <div class="col-sm-7">
         <div class="card shadow mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="text-primary font-weight-bold m-0">Zones de Kits</h6>
             </div>
             <div class="card-body">
-                <div class="chart-area" id="rose"></div>
+                <div class="chart-area" id="rose" style="width: 100%; min-height: 200px"></div>
             </div>
         </div>
     </div>
 
 
-    <div class="col-5">
+    <div class="col-sm-5">
         <div class="card shadow mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="text-primary font-weight-bold m-0">Suivi des Alertes</h6>
             </div>
             <div class="card-body">
-                <div class="chart-area" id="SDA"></div>
+                <div class="chart-area" id="SDA" style="width: 100%; min-height: 200px"></div>
             </div>
         </div>
     </div>
@@ -70,25 +68,25 @@
 
 
 <div class="row">
-    <div class="col-6 ">
+    <div class="col-sm-6 ">
         <div class="card shadow mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="text-primary font-weight-bold m-0">Evolution des Alertes</h6>
             </div>
             <div class="card-body">
-                <div class="chart-area" id="EVDA"></div>
+                <div class="chart-area" id="EVDA" style="width: 100%; min-height: 200px"></div>
             </div>
 
         </div>
     </div>
 
-    <div class="col-6 ">
+    <div class="col-sm-6 ">
         <div class="card shadow mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="text-primary font-weight-bold m-0">TOP 10 des Alertes</h6>
             </div>
             <div class="card-body">
-                <div class="chart-area" id="TOP10"></div>
+                <div class="chart-area" id="TOP10" style="width: 100%; min-height: 200px"></div>
             </div>
     
         </div>
@@ -107,7 +105,7 @@
                 <h6 class="text-primary font-weight-bold m-0">Entrées/Sorties Magasin Débord</h6>
             </div>
             <div class="card-body">
-                <div class="chart-area" id="ES7" ></div>
+                <div class="chart-area" id="ES7" style="width: 100%; min-height: 400px" ></div>
             </div>
         </div>
 
@@ -128,13 +126,13 @@
                         <div class="progress-bar bg-danger" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
                             style="width: 40%;"><span class="sr-only">40%</span></div>
                     </div>
-                    <h4 class="small font-weight-bold">Nombre de Bac<span class="float-right">60</span></h4>
+                    <h4 class="small font-weight-bold">Nombre de Bac<span class="float-right">11209</span></h4>
                     <div class="progress mb-4">
                         <div class="progress-bar bg-primary" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100000"
                             style="width: 60%;"><span class="sr-only">60</span></div>
                     </div>
 
-                    <h4 class="small font-weight-bold">Respect De FIFO<span class="float-right">90</span></h4>
+                    <h4 class="small font-weight-bold">Respect De FIFO<span class="float-right">90%</span></h4>
                     <div class="progress mb-4">
                         <div class="progress-bar bg-warning" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100000"
                             style="width: 90%;"><span class="sr-only">90</span></div>
@@ -146,7 +144,7 @@
 </div>
 <!-- BAR CHART nombre de bac/j-->
 <div class="row">
-    <div class="col-12 ">
+    <div class="col-sm-12 ">
         <div class="card shadow mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="text-primary font-weight-bold m-0">Nombre de Bac journaliére</h6>
@@ -160,7 +158,7 @@
 </div>
 
 <div class="row">
-    <div class="col-6">
+    <div class="col-sm-6">
         <div class="card shadow mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="text-primary font-weight-bold m-0">TOP 5 Entrées</h6>
@@ -172,7 +170,7 @@
         </div>
     </div>
     
-    <div class="col-6 ">
+    <div class="col-sm-6 ">
             <div class="card shadow mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h6 class="text-primary font-weight-bold m-0">TOP 5 Sorties</h6>
@@ -412,13 +410,13 @@ function createGauje(divId, datai,name,colorf,max, formatter) {
                 }]
             }]
         }
-        mygauje.setOption(option4);
+        option4 && mygauje.setOption(option4);
         window.addEventListener('resize', function () {         
         mygauje.resize();
     });
     };
 createGauje('gauge1', ['{{TAlertes}}'],"Traitement des Alertes", [[0.3, '#1cc88a'], [0.5, '#f6c23e'], [1, '#e74a3b']],120, '{value} min');
-createGauje('gauge2', [75], "Remontée d'Alerte", [ [0.8, '#e74a3b'],[0.9, '#f6c23e'],[1, '#1cc88a']],100, '{value} %');
+createGauje('gauge2', ['{{RAlertes}}'], "Remontée d'Alerte", [ [0.8, '#e74a3b'],[0.9, '#f6c23e'],[1, '#1cc88a']],100, '{value} %');
 
 
 //Nombre de Bac journaliere 
@@ -495,12 +493,12 @@ createGauje('gauge2', [75], "Remontée d'Alerte", [ [0.8, '#e74a3b'],[0.9, '#f6c
                     }
                 },
                 data: [
-                    { value: "{{alertCK}}", name: 'Alerttes CK' },
-                    { value:  "{{Train}}", name: 'Sortie Train' },
-                    { value:  "{{alertDébord}}", name: 'Alertes Débord' },
-                    { value:  "{{FLC}}", name: 'FLC' },
-                    { value:  "{{anticipations}}", name: 'Anticipations' },
-                    { value:  "{{Livré}}", name: 'Livré' }
+                    { value: "{{alertCK}}", name: 'Alerttes CK:{{alertCK}}' },
+                    { value:  "{{Train}}", name: 'Sortie Train: {{Train}}' },
+                    { value:  "{{alertDébord}}", name: 'Alertes Débord: {{alertDébord}}' },
+                    { value:  "{{FLC}}", name: 'FLC: {{FLC}}' },
+                    { value:  "{{anticipations}}", name: 'Anticipations: {{anticipations}}' },
+                    { value:  "{{Livré}}", name: 'Livré: {{Livré}}' }
                 ],
                 labelLine: {
                     smooth: 0.2,
@@ -562,11 +560,18 @@ function fill(dates, vals) {
                         type: 'bar',
                         barWidth: '60%',
                         data: vals,
+                         label: {
+                            show: true,
+                            position: 'inside'
+                        },
                     }
                 ]
             };
-            myChartLA.setOption(optionLA);
-            myChartLA.resize();
+    myChartLA.setOption(optionLA);
+    window.addEventListener('resize', function () {
+        myChartLA.resize();
+    });
+            
         };
 
 //Evolution Des Alertes
@@ -668,8 +673,12 @@ function fill(dates, vals) {
                 ]
             };
             myChartEVDA.setOption(optionEVDA);
+            window.addEventListener('resize', function () {
+                myChartEVDA.resize();
 
-            myChartEVDA.resize();
+            });
+
+            
         };
 //Top 10 des Alertes:
      $(function () {
@@ -727,7 +736,11 @@ function fill(dates, vals) {
                 ]
             };
             myChartTOP10A.setOption(optionTOP10A);
-            myChartTOP10A.resize();
+            window.addEventListener('resize', function () {
+
+               myChartTOP10A.resize();
+            });
+           
         };
 
 //rose chart 
@@ -767,17 +780,17 @@ function fill(dates, vals) {
                         },
                         data:[
                             
-                            { value: "{{KHM}}", name: 'Kit HAM'},
-                            { value: "{{KH1}}", name: 'Kit HC1'},
-                            { value: "{{KH2}}", name: 'Kit HC2'},
-                            { value: "{{PCI}}", name: 'Kit PCI'},
-                            { value: "{{KPO}}", name: 'Kit Portes'},
-                            { value: "{{MV34}}", name: 'Kit MV3/4'},
-                            { value: "{{MV2}}", name: 'Kit MV2'},
-                            { value: "{{KTB}}", name: 'Kit TAR-BERCEAU'},
-                            { value: "{{POM}}", name: 'Kit POM'},
-                            { value: "{{KK7}}", name: 'Kit K7 GMV'},
-                            { value: "{{PSP}}", name: 'Kit PSP'},
+                            { value: "{{KHM}}", name: 'Kit HAM: {{KHM}}'},
+                            { value: "{{KH1}}", name: 'Kit HC1: {{KH1}}'},
+                            { value: "{{KH2}}", name: 'Kit HC2: {{KH2}}'},
+                            { value: "{{PCI}}", name: 'Kit PCI: {{PCI}}'},
+                            { value: "{{KPO}}", name: 'Kit Portes: {{KPO}}'},
+                            { value: "{{MV34}}", name: 'Kit MV3/4: {{MV34}}'},
+                            { value: "{{MV2}}", name: 'Kit MV2: {{MV2}}'},
+                            { value: "{{KTB}}", name: 'Kit TAR: {{KTB}}'},
+                            { value: "{{POM}}", name: 'Kit POM: {{POM}}'},
+                            { value: "{{KK7}}", name: 'Kit K7 GMV: {{KK7}}'},
+                            { value: "{{PSP}}", name: 'Kit PSP: {{PSP}}'},
                            
                             
                         ]
@@ -786,27 +799,6 @@ function fill(dates, vals) {
             };
 
             
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 myChartDoun.setOption(optionDOU);
 myChartNB.setOption(optionNBJ);
 myChart2.setOption(option2);    
@@ -814,15 +806,20 @@ myChart3.setOption(option3);
 myChart.setOption(option);
 myChartRoze.setOption(optionRose);
 window.addEventListener('resize', function () {
+   
         myChart.resize();
         myChart2.resize();
         myChart3.resize();       
         myChartDoun.resize();
         myChartNB.resize();
         myChartRoze.resize();
-            myChartRoze.resize();
-
-
+        
+        
+        
     });
+
+
+
+
   </script>
 {% endblock javascript %}
