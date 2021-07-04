@@ -62,7 +62,7 @@ class Alertes(models.Model):
 class Stock(models.Model):
     Emplacement_SM = models.CharField(max_length=50, null=True, blank=True)
     Reference = models.CharField(max_length=50, null=True, blank=True)
-    Nb_bacs = models.IntegerField(max_length=50, null=True, blank=True)
+    Nb_bacs = models.IntegerField(null=True, blank=True)
     Date_heure = models.CharField(max_length=50, null=True, blank=True)
     Travee_debord = models.CharField(max_length=50, null=True, blank=True)
     Conditionnement_UC = models.CharField(max_length=50, null=True, blank=True)

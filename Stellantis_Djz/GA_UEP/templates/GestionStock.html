@@ -20,7 +20,7 @@
         <div class="col-6">
             <div class="row justify-content-md-center">
                 <div class="alert alert-danger" role="alert">
-                    Totales des bacs : 11209
+                    Totales des bacs : {{invs.Nb_bacs__sum}}
                 </div>
             </div>
         </div>
@@ -38,9 +38,18 @@
     </div>
 </div>
 
-<div class="alert alert-danger" id="yo" role="alert" style="display:none;">
-    This is a danger alert—check it out!
+<div class="alert alert-danger" role="alert" id="yo1" style="display: none;">
+    <div class="row justify-content-md-center" id='yo'>
+        erreur : veuillez vérifier le nombre de bacs que vous avez saisis
+    </div>
 </div>
+
+<div class="alert alert-success" role="alert" id="yo2" style="display: none;" >
+    <div class="row justify-content-md-center" id='succ'>
+      
+    </div>
+</div>
+
 
 <!--  table magasin débord-->
 
@@ -48,7 +57,7 @@
 <div class="card">
     <div id="result" class="card-body">
         <div class="form-group">
-            <input type="text" class="form-control" id="searchField" placeholder=" Rechercher...">
+            <input type="text" class="form-control" id="searchField"  placeholder=" Rechercher...">
         </div>
         <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
            
@@ -74,10 +83,10 @@
             {% for stock in stocks %}
                 <tbody id="myTable">
                 <tr id="stock-{{stock.id}}">
-                    <td class="ms-vb2" style="text-align: center;" ><button id="btn1" class="btn btn-danger" onClick="editUser({{stock.id}})" type="button" data-toggle="modal" data-target="#myModal3"></button></td>
+                    <td class="ms-vb2 invData" style="text-align: center;" ><button id="btn1" class="btn btn-danger" onClick="editUser({{stock.id}})" type="button" data-toggle="modal" data-target="#myModal3"></button></td>
                     <td class="réf invData" name="Emplacement_SM" style="text-align: center;">{{stock.Emplacement_SM}}</td>
                     <td class="réf invData" name="Réference" style="text-align: center;">{{stock.Reference}}</td>
-                    <td class="réf invData" name="Nombre de Bac" style="text-align: center;">{{stock.Nb_bacs}}</td>
+                    <td class="réf invData" name="Nombre_de_Bac" id="nc" style="text-align: center;">{{stock.Nb_bacs}}</td>
                     <td class="réf invData" name="Date" style="text-align: center;">{{stock.Date_heure}}</td>
                     <td class="réf invData" name="Travée débord" style="text-align: center;">{{stock.Travee_debord}}</td>
                     <td class="réf invData" name="code_condi" style="text-align: center;">{{stock.Conditionnement_UC}}</td>
@@ -253,6 +262,8 @@
                         aria-hidden="true">&times;</span></button>
 
             </div>
+          
+
             <form id="updateitems" action="">
 
                 <div class="modal-body">
@@ -294,6 +305,8 @@
 {% block javascript %}
 
 <script type="text/javascript" >
+   
+
     const searchField = document.querySelector("#searchField");
     const tableoutput= document.querySelector(".table-output");
     const apptable= document.querySelector(".app-table");
@@ -319,11 +332,11 @@
             }else{
                 data.forEach((item)=> {
                      tablebody.innerHTML += `
-<trid="stock-${item.id}" >
-                <td class="ms-vb2" style="text-align: center;"><button id="btn1" class="btn btn-danger" type="button" onClick="editUser(${item.id})"  data-toggle="modal" data-target="#myModal3"></button></td>
+<tr id="stock-${item.id}" >
+                <td class="ms-vb2 invData" style="text-align: center;"><button id="btn1" class="btn btn-danger" type="button" onClick="editUser(${item.id})"  data-toggle="modal" data-target="#myModal3"></button></td>
                     <td class="réf invData" name="Emplacement_SM" style="text-align: center;">${item.Emplacement_SM}</td>
                     <td class="réf invData" name="Réference" style="text-align: center;">${item.Reference}</td>
-                    <td class="réf invData" name="Nombre de Bac" style="text-align: center;">${item.Nb_bacs}</td>
+                    <td class="réf invData" name="Nombre_de_Bac" style="text-align: center;">${item.Nb_bacs}</td>
                     <td class="réf invData" name="Date" style="text-align: center;">${item.Date_heure}</td>
                     <td class="réf invData" name="Travée débord" style="text-align: center;">${item.Travee_debord}</td>
                     <td class="réf invData" name="code_condi" style="text-align: center;">${item.Conditionnement_UC}</td>
@@ -450,7 +463,7 @@ function editUser(id) {
 
         }}
 
-$("form#updateitems").submit(function () {
+$("form#updateitems").submit(function (e) {
 
         var idInput = $('input[name="formId"]').val().trim();
         var Nb_bacs = $('input[name="formunbc"]').val().trim();
@@ -466,13 +479,36 @@ $("form#updateitems").submit(function () {
                 dataType: 'json',
                 success: function (data) {
                     if (data.alt) {
-                        alert("Stock updated");
+                        updateitem(data.alt);
+                        document.getElementById("yo2").style.display = "block";
+                        document.getElementById("yo1").style.display = "none";
+                        $('#succ').text(Nb_bacs+" bacs de la réference "+data.alt.Reference+" sont sortis du magasin  ");
+                        
+                    }
+
+                    if(data.impossible){
+                        document.getElementById("yo1").style.display = "block";
+                        document.getElementById("yo2").style.display = "none";
                     }
                 },
             });
         } else {
             alert("Tous Les champs doivent avoir une valeur Valide.");
         }
+    $('form#updateitems').trigger("reset");
+    $('#myModal3').modal('hide');
+    return false;
     });
+
+function updateitem(alt) {
+        $("#tableData #stock-" + alt.idInput).children(".invData").each(function () {
+            var attr = $(this).attr("name");
+            if (attr == "Nombre_de_Bac") {
+                $(this).text(alt.Nb_bacs);
+            } 
+        });
+    }
+
+
 </script>
 {% endblock javascript %}

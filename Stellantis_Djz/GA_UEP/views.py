@@ -3,7 +3,7 @@ from typing import List
 #from typing_extensions import Annotated
 from django import template
 from django.contrib.auth import authenticate, login, logout
-from django.db.models.aggregates import Max
+from django.db.models.aggregates import Max ,Sum
 from django.db.models.base import Model
 from django.db.models.expressions import When
 from . models import Alertes, Inventaire, Map, MapStock, Membership, Stock
@@ -631,6 +631,14 @@ class CrudStock(ListView):
     queryset = Stock.objects.all().order_by('-Date_heure')
 
 
+    def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            context['invs'] = Stock.objects.aggregate(Sum('Nb_bacs'))
+
+            return context
+   
+
+
 def search_items(request):
     if request.method == 'POST':
         search_str=json.loads(request.body).get('searchText')
@@ -683,11 +691,24 @@ class updateitems(View):
         id1 = request.GET.get('idInput', None)
         Nb_bacs = request.GET.get('Nb_bacs', None)
         obj = Stock.objects.get(id=id1)
-        obj.Nb_bacs = Nb_bacs
-        obj.save()
+        nbac=int(Nb_bacs)
+        if obj.Nb_bacs >= nbac:
+            obj.Nb_bacs = obj.Nb_bacs - nbac
+            obj.save()
+            if obj.Nb_bacs==0:
+                Stock.objects.get(id=id1).delete()
+        elif obj.Nb_bacs < nbac:
+            impossible = "le Nombre de bac est superieure a la quantité dans le stock"
+            data={'impossible':impossible}
+            return JsonResponse(data)
 
-        alt = {'idInput': obj.id, 'Nb_bacs': obj.Nb_bacs}
+        alt = {'idInput': obj.id, 'Nb_bacs': obj.Nb_bacs,
+        'Emplacement_SM': obj.Emplacement_SM, 'Reference': obj.Reference
+        ,'Date_heure': obj.Date_heure,'Travee_debord': obj.Travee_debord,'Conditionnement_UC': obj.Conditionnement_UC,
+        'Qt_pieces_UC': obj.Qt_pieces_UC,'Appro': obj.Appro, 'Fournisseur': obj.Fournisseur,'CMJ': obj.CMJ, 'FDS': obj.FDS}
+      
         data = {
             'alt': alt
         }
         return JsonResponse(data)
+
