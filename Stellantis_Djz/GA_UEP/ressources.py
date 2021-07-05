@@ -1,5 +1,5 @@
 from import_export import resources
-from . models import Alertes, Membership, Inventaire, Map, Stock, MapStock
+from . models import Alertes, Membership, Inventaire, Map, Stock, MapStock,ESStock
 class MembershipResource(resources.ModelResource):
     class Meta:
         model=Membership
@@ -19,6 +19,11 @@ class StockResource(resources.ModelResource):
 class MapStockResource(resources.ModelResource):
     class Meta:
         model = MapStock
+
+
+class ESStockResource(resources.ModelResource):
+    class Meta:
+        model = ESStock
 
 
       

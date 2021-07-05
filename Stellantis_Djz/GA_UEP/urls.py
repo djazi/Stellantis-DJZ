@@ -42,8 +42,15 @@ urlpatterns = [
     path("ajouteritem/", ajouteritem.as_view(), name='ajouteritem'),
 
     path("updateitems/", updateitems.as_view(), name='updateitems'),
+
+    path("ESStockdébord/", ESStockdébord.as_view(), name='ESStockdébord'),
     
     path("api/get_réfS/", views.get_réfS, name='get_réfS'),
     path("api/get_réfT/", views.get_réfT, name='get_réfT'),
+    path("exportstockdebord/", views.exportstockdebord, name='exportstockdebord'),
+    
+    
+    path("exporterEE/", views.exporterEE, name='exporterEE'),
+    path("exporterSS/", views.exporterSS, name='exporterSS'),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

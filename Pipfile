@@ -14,6 +14,7 @@ pydotplus = "*"
 graphviz = "*"
 django-datatables-view = "*"
 django-serverside-datatable = "*"
+xlwt = "*"
 
 [dev-packages]
 

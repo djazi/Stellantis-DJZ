@@ -13,8 +13,9 @@
             <div class="btn-group" role="group" aria-label="Basic example">
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal1"  >Ajouter</button>
                 
-                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal2" >Vider travée</button>
-                <button type="button" class="btn btn-info">E/S</button>
+                <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#myModal2"  >Vider travée</button>
+                <a class="btn btn-info" role="button" href="{% url 'GA_UEP:ESStockdébord' %}">E/S</a>
+                    
             </div>
         </div>
         <div class="col-6">
@@ -26,7 +27,7 @@
         </div>
         <div class="col">
             <div class="btn-group" role="group" aria-label="Basic example">
-                <a class="btn btn-primary  d-none d-sm-inline-block" role="button" href="" onclick="exporter()" ><i
+                <a class="btn btn-primary  d-none d-sm-inline-block" role="button" href="{% url 'GA_UEP:exportstockdebord' %}"  ><i
                             class="fas fa-file-download fa-sm text-white-50"></i>&nbsp;Exporter</a>
 
                 <a class="btn btn-primary  d-none d-sm-inline-block" role="button" href="" onclick="imprimer()"><i
@@ -373,12 +374,6 @@ $(document).ready(function () {
     });
 //chercher  
 
-
-     
-//exporter excel 
-function exporter(){
-    $('#tableData').excelExport();
-}
 //imprimer
 function imprimer(){
     var printme = document.getElementById('tableData');
@@ -441,18 +436,31 @@ $("form#ajouteritem").submit(function () {
                 },
                 dataType: 'json',
                 success: function (data) {
-                    if (data.msgy) {
-                        alert("La réference est ajoutée");
-                    }else if (data.msg){
-                        alert("La réference non valide ")
+                    if(data.ajitem){
+                        appendToitemTable(data.ajitem);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Référence ajoutée au stock avec succès',
+                            showConfirmButton: false,
+                            timer: 2000
+                        })
+
+                    } else if (data.msg){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Merci de saisir une Réference Valide !',
+                           
+                        })
                     }
                 },
             });
         } else {
             alert("Tous Les champs doivent avoir une valeur Valide.");
         }
-        // $('form#updateAlertes').trigger("reset");
-        //return false;
+         $('form#ajouteritem').trigger("reset");
+         $('#myModal1').modal('hide');
+         return false;
     });
 
 function editUser(id) {
@@ -508,6 +516,25 @@ function updateitem(alt) {
             } 
         });
     }
+function appendToitemTable(ajitem){
+     $("#tableData > tbody").prepend(`
+      <tr id="stock-${ajitem.idInput}">
+                    <td class="ms-vb2 invData" style="text-align: center;" ><button id="btn1" class="btn btn-danger" onClick="editUser(${ajitem.idInput})" type="button" data-toggle="modal" data-target="#myModal3"></button></td>
+                    <td class="réf invData" name="Emplacement_SM" style="text-align: center;">${ajitem.Emplacement_SM}</td>
+                    <td class="réf invData" name="Réference" style="text-align: center;">${ajitem.Reference}</td>
+                    <td class="réf invData" name="Nombre_de_Bac" id="nc" style="text-align: center;">${ajitem.Nb_bacs}</td>
+                    <td class="réf invData" name="Date" style="text-align: center;">${ajitem.Date_heure}</td>
+                    <td class="réf invData" name="Travée débord" style="text-align: center;">${ajitem.Travee_debord}</td>
+                    <td class="réf invData" name="code_condi" style="text-align: center;">${ajitem.Conditionnement_UC}</td>
+                    <td class="réf invData" name="piéce/UC" style="text-align: center;">${ajitem.Qt_pieces_UC}</td>
+                    <td class="réf invData" name="Appro" style="text-align: center;">${ajitem.Appro}</td>
+                    <td class="réf invData" name="Fournisseur" style="text-align: center;">${ajitem.Fournisseur}</td>
+                    <td class="réf invData" name="CMJ" style="text-align: center;">${ajitem.CMJ}</td>
+                    <td class="réf invData" name="FDS" style="text-align: center;">${ajitem.FDS}</td>
+                </tr>
+       
+    `);
+}
 
 
 </script>

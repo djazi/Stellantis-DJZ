@@ -72,6 +72,7 @@ class Stock(models.Model):
     CMJ = models.CharField(max_length=50, null=True, blank=True)
     FDS = models.CharField(max_length=50, null=True, blank=True)
     
+    
 
 class MapStock(models.Model):
     M_Emplacement_SM = models.CharField(max_length=50, null=True, blank=True)
@@ -82,3 +83,18 @@ class MapStock(models.Model):
     M_Fournisseur = models.CharField(max_length=50, null=True, blank=True)
     M_CMJ = models.CharField(max_length=50, null=True, blank=True)
     M_FDS = models.CharField(max_length=50, null=True, blank=True)
+
+
+class ESStock(models.Model):
+    Emplacement_SM = models.CharField(max_length=50, null=True, blank=True)
+    Reference = models.CharField(max_length=50, null=True, blank=True)
+    Nb_bacs = models.IntegerField(null=True, blank=True)
+    Date_heure_entrée = models.CharField(max_length=50, null=True, blank=True)
+    Travee_debord = models.CharField(max_length=50, null=True, blank=True)
+    Conditionnement_UC = models.CharField(max_length=50, null=True, blank=True)
+    Qt_pieces_UC = models.CharField(max_length=50, null=True, blank=True)
+    Appro = models.CharField(max_length=50, null=True, blank=True)
+    Fournisseur = models.CharField(max_length=50, null=True, blank=True)
+    CMJ = models.CharField(max_length=50, null=True, blank=True)
+    FDS = models.CharField(max_length=50, null=True, blank=True)
+    Date_heure_sortie = models.CharField(max_length=50, null=True, blank=True)

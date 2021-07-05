@@ -1,0 +1,182 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block body %}
+<div class="text-center mt-1">
+    <h3 class="display-6">Historique Mgasin Débord </h3>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="btn-group" role="group" aria-label="Basic example">
+
+                <a class="btn btn-info" role="button" href="{% url 'GA_UEP:Gestion_SDB' %}"><i
+                        class="fas fa-store fa-sm text-white-50"></i>&nbsp;Magasin débord</a>
+
+            </div>
+        </div>
+        
+        <div class="col-3">
+            <div class="row justify-content-md-center">
+                <div class="alert alert-success fas fa-arrow-left fa-store" role="alert">
+                   {{entr.Nb_bacs__sum}}  : bacs/J
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row justify-content-md-center">
+                <div class="alert alert-danger fas fa-arrow-right " role="alert">
+                   {{sort.Nb_bacs__sum}} : bacs/J
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <a class="btn btn-success  d-none d-sm-inline-block" role="button" href="{% url 'GA_UEP:exporterEE' %}" ><i
+                        class="fas fa-file-download fa-sm text-white-40"></i>&nbsp; les entrées</a>
+
+                <a class="btn btn-danger  d-none d-sm-inline-block" role="button" href="{% url 'GA_UEP:exporterSS' %}" ><i
+                        class="fas fa-file-download fa-sm text-white-40"></i>&nbsp; les sorties</a>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!--  table magasin débord-->
+
+
+<div class="card">
+    <div id="result" class="card-body">
+        <div class="form-group">
+            <input type="text" class="form-control" id="searchField" placeholder=" Rechercher...">
+        </div>
+        <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
+
+            <div class="app-table">
+                <table class="table table-sm table-hover" id="histotableData" style="color: #33313b;">
+                    <thead>
+                        <tr>
+                            
+                            <th>Emplacement SM</th>
+                            <th>Réference</th>
+                            <th>Nombre de Bac</th>
+                            <th>Date d'éntrée</th>
+                            <th>Travée débord</th>
+                            <th>code condi</th>
+                            <th>Qt piéce/UC</th>
+                            <th>Appro</th>
+                            <th>Fournisseur</th>
+                            <th>CMJ</th>
+                            <th>FDS</th>
+                            <th>Date de sortie</th>
+                        </tr>
+                    </thead>
+                    {% if essstocks %}
+                    {% for stock in essstocks %}
+                    <tbody id="myTable">
+                        <tr id="stock-{{stock.id}}">
+                            
+                            <td class="réf invData" name="Emplacement_SM" style="text-align: center;">
+                                {{stock.Emplacement_SM}}</td>
+                            <td class="réf invData" name="Réference" style="text-align: center;">{{stock.Reference}}
+                            </td>
+                            <td class="réf invData" name="Nombre_de_Bac" id="nc" style="text-align: center;">
+                                {{stock.Nb_bacs}}</td>
+                            <td class="réf invData" name="Date" style="text-align: center;">{{stock.Date_heure_entrée}}</td>
+                            <td class="réf invData" name="Travée débord" style="text-align: center;">
+                                {{stock.Travee_debord}}</td>
+                            <td class="réf invData" name="code_condi" style="text-align: center;">
+                                {{stock.Conditionnement_UC}}</td>
+                            <td class="réf invData" name="piéce/UC" style="text-align: center;">{{stock.Qt_pieces_UC}}
+                            </td>
+                            <td class="réf invData" name="Appro" style="text-align: center;">{{stock.Appro}}</td>
+                            <td class="réf invData" name="Fournisseur" style="text-align: center;">{{stock.Fournisseur}}
+                            </td>
+                            <td class="réf invData" name="CMJ" style="text-align: center;">{{stock.CMJ}}</td>
+                            <td class="réf invData" name="FDS" style="text-align: center;">{{stock.FDS}}</td>
+                            <td class="réf invData" name="FDS" style="text-align: center;">{{stock.Date_heure_sortie}}</td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                    {% else %}
+                    <h3 style="color: crimson; text-align: center; "> Stock Débord Vide </h3>
+                    {% endif %}
+
+
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    <!--paination______________________________________________________-->
+
+    <div class="container">
+        {% if is_paginated %}
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+                </li>
+                {% else %}
+                <li class="disabled"><span class="page-link">&laquo;</span></li>
+                {% endif %}
+                {% for i in paginator.page_range %}
+                {% if page_obj.number == i %}
+                <li class="page-item" class="active"><span class="page-link">{{ i }} <span
+                            class="sr-only">(current)</span></span></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                <li class="disabled">
+                    <spa class="page-link">&raquo;</span>
+                </li>
+                {% endif %}
+
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+    <!--end paination______________________________________________________-->
+
+</div>
+
+
+
+
+
+
+{% endblock %}
+{% block javascript %}
+
+<script type="text/javascript">
+    
+    
+
+    //imprimer
+function imprimeres() {
+        var printme = document.getElementById('histotableData');
+        var wme = window.open("", ",width=900,height=700");
+        wme.document.write(printme.outerHTML);
+        wme.document.close;
+        wme.focus();
+        wme.print();
+        wme.close();
+}
+
+</script>
+{% endblock javascript %}

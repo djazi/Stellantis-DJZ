@@ -6,13 +6,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.db.models.aggregates import Max ,Sum
 from django.db.models.base import Model
 from django.db.models.expressions import When
-from . models import Alertes, Inventaire, Map, MapStock, Membership, Stock
+from django.http import response
+from . models import Alertes, Inventaire, Map, MapStock, Membership, Stock, ESStock
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, Http404, request, HttpResponse
 from django.urls import reverse
 from django.db.models import Count, query
 from django.core import serializers
 from django.http.response import HttpResponse, JsonResponse
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, time
 from django.http import JsonResponse
 from django.contrib import messages
 import json
@@ -30,8 +31,7 @@ import statistics
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import StockForm
 from django.shortcuts import render, redirect
-
-
+import xlwt
 #----------------------------------------------------
 # Create your views here.----------------------------------------
 # data we use ------------------------------------------------------------------------------------
@@ -610,7 +610,8 @@ def get_réfS(request):
 def get_réfT(request):
   if request.is_ajax():
     q = request.GET.get('term', '')
-    réfs = Stock.objects.filter(Travee_debord__icontains=q)
+    réfs = Stock.objects.filter(
+        Travee_debord__icontains=q).distinct("Travee_debord")
     results = []
     for pl in réfs:
       réfs_json = {}
@@ -667,8 +668,8 @@ class ajouteritem(View):
                 M_Fournisseurc = i.M_Fournisseur
                 M_CMJ = i.M_CMJ
                 M_FDS = i.M_FDS
-                #add data to Stock
-            Stock.objects.create(
+            #add data to Stock
+            obj=Stock.objects.create(
             Emplacement_SM=M_Emplacement_SM,
             Reference=ajréf,
             Nb_bacs=ajBac,
@@ -680,8 +681,27 @@ class ajouteritem(View):
             Fournisseur=M_Fournisseurc,
             CMJ=M_CMJ,
             FDS=M_FDS,)
-            msgy = "Réference ajoutée"
-            data = {'msgy': msgy}
+            #historique
+            ESStock.objects.create(
+            Emplacement_SM=M_Emplacement_SM,
+            Reference=ajréf,
+            Nb_bacs=ajBac,
+                Date_heure_entrée=datetime.now().strftime("%d/%m/%Y, %H:%M:%S"),
+            Travee_debord=ajT,
+            Conditionnement_UC=M_Conditionnement_UC,
+            Qt_pieces_UC=M_Qt_pieces_UC,
+            Appro=M_Appro,
+            Fournisseur=M_Fournisseurc,
+            CMJ=M_CMJ,
+            FDS=M_FDS,)
+            #fin historique 
+            ajitem = {'idInput': obj.id, 'Nb_bacs': obj.Nb_bacs,
+                      'Emplacement_SM': obj.Emplacement_SM, 'Reference': obj.Reference, 'Date_heure': obj.Date_heure, 'Travee_debord': obj.Travee_debord,
+                       'Conditionnement_UC': obj.Conditionnement_UC,
+                      'Qt_pieces_UC': obj.Qt_pieces_UC, 'Appro': obj.Appro, 'Fournisseur': obj.Fournisseur, 'CMJ': obj.CMJ, 'FDS': obj.FDS}
+
+            
+            data = {"ajitem": ajitem}
           
         return JsonResponse(data)
         
@@ -701,6 +721,21 @@ class updateitems(View):
             impossible = "le Nombre de bac est superieure a la quantité dans le stock"
             data={'impossible':impossible}
             return JsonResponse(data)
+        #historique
+        ESStock.objects.create(
+            Emplacement_SM=obj.Emplacement_SM,
+            Reference=obj.Reference,
+            Nb_bacs=Nb_bacs,
+            Date_heure_entrée=obj.Date_heure,
+            Travee_debord=obj.Travee_debord,
+            Conditionnement_UC=obj.Conditionnement_UC,
+            Qt_pieces_UC=obj.Qt_pieces_UC,
+            Appro=obj.Appro,
+            Fournisseur=obj.Fournisseur,
+            CMJ=obj.CMJ,
+            FDS=obj.FDS,
+            Date_heure_sortie=datetime.now().strftime("%d/%m/%Y, %H:%M:%S"),)
+        #fin historique
 
         alt = {'idInput': obj.id, 'Nb_bacs': obj.Nb_bacs,
         'Emplacement_SM': obj.Emplacement_SM, 'Reference': obj.Reference
@@ -712,3 +747,101 @@ class updateitems(View):
         }
         return JsonResponse(data)
 
+
+
+
+class ESStockdébord(ListView): 
+    model = Stock
+    template_name = 'ESStockdébord.html'
+    context_object_name = 'essstocks'
+    paginate_by = 10
+    queryset = ESStock.objects.all().order_by('-Date_heure_entrée')
+    def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            context['entr'] = ESStock.objects.filter(Date_heure_sortie__isnull=True, Date_heure_entrée__startswith=datetime.now(
+            ).strftime("%d/%m/%Y")).aggregate(Sum('Nb_bacs'))
+
+            context['sort'] = ESStock.objects.filter(Date_heure_sortie__isnull=False, Date_heure_sortie__startswith=datetime.now(
+            ).strftime("%d/%m/%Y")).aggregate(Sum('Nb_bacs'))
+
+            return context
+   
+
+def exportstockdebord(request):
+    response= HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition']='attachment; filename=Réf_Magasin débord ' + \
+    str(datetime.now().strftime("%d/%m/%Y"))+ '.xls'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws=wb.add_sheet('Réferences Magasin Débord')
+    row_num=0
+    font_style=xlwt.XFStyle()
+    font_style.font.bold=True
+    columns = ["Emplacement_SM", "Reference", "Nb_bacs", "Date_heure", "Travee_debord", 
+            "Conditionnement_UC", "Qt_pieces_UC", "Appro", "Fournisseur",
+               "CMJ", "FDS"]
+    for col_num in range (len(columns)):
+        ws.write(row_num,col_num,columns[col_num],font_style)
+    font_style=xlwt.XFStyle()
+    rows = Stock.objects.values_list("Emplacement_SM", "Reference", "Nb_bacs", "Date_heure", "Travee_debord",
+                                     "Conditionnement_UC", "Qt_pieces_UC", "Appro", "Fournisseur",
+                                     "CMJ", "FDS")
+    for row in rows :
+        row_num += 1
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, str(row[col_num]), font_style)
+    wb.save(response)
+    return response
+            
+
+def exporterEE(request):
+    response= HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition']='attachment; filename=EN_Magasin débord ' + \
+    str(datetime.now().strftime("%d/%m/%Y"))+ '.xls'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('les entrées Magasin Débord')
+    row_num=0
+    font_style=xlwt.XFStyle()
+    font_style.font.bold=True
+    columns = ["Emplacement_SM", "Reference", "Nb_bacs", "Date_heure_entrée", "Travee_debord",
+            "Conditionnement_UC", "Qt_pieces_UC", "Appro", "Fournisseur",
+               "CMJ", "FDS"]
+    for col_num in range (len(columns)):
+        ws.write(row_num,col_num,columns[col_num],font_style)
+    font_style=xlwt.XFStyle()
+    rows = ESStock.objects.filter(Date_heure_sortie__isnull=True).values_list("Emplacement_SM", "Reference", "Nb_bacs", "Date_heure_entrée", "Travee_debord",
+                                     "Conditionnement_UC", "Qt_pieces_UC", "Appro", "Fournisseur",
+                                     "CMJ", "FDS")
+    for row in rows :
+        row_num += 1
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, str(row[col_num]), font_style)
+    wb.save(response)
+    return response
+            
+    
+def exporterSS(request):
+    response= HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition']='attachment; filename=SO_Magasin débord ' + \
+    str(datetime.now().strftime("%d/%m/%Y"))+ '.xls'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('les Sorties Magasin Débord')
+    row_num=0
+    font_style=xlwt.XFStyle()
+    font_style.font.bold=True
+    columns = ["Emplacement_SM", "Reference", "Nb_bacs", "Date_heure_entrée", "Travee_debord",
+            "Conditionnement_UC", "Qt_pieces_UC", "Appro", "Fournisseur",
+               "CMJ", "FDS","Date_heure_sortie"]
+    for col_num in range (len(columns)):
+        ws.write(row_num,col_num,columns[col_num],font_style)
+    font_style=xlwt.XFStyle()
+    rows = ESStock.objects.filter(Date_heure_sortie__isnull=False).values_list("Emplacement_SM", "Reference", "Nb_bacs", "Date_heure_entrée", "Travee_debord",
+                                     "Conditionnement_UC", "Qt_pieces_UC", "Appro", "Fournisseur",
+                                                                               "CMJ", "FDS", "Date_heure_sortie")
+    for row in rows :
+        row_num += 1
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, str(row[col_num]), font_style)
+    wb.save(response)
+    return response
+            
+    

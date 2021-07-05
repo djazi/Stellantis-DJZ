@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import Alertes, Membership, Inventaire, Map, Stock, MapStock
+from . models import Alertes, Membership, Inventaire, Map, Stock, MapStock, ESStock
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
 from rangefilter.filters import DateRangeFilter, DateTimeRangeFilter
 from datetime import date, datetime
@@ -19,6 +19,13 @@ class StockAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin):
     list_display = ("Emplacement_SM", "Reference", "Nb_bacs", "Date_heure",
                     "Travee_debord", "Conditionnement_UC",  "Qt_pieces_UC", "Appro",
                      "Fournisseur", "CMJ","FDS" )
+
+
+@admin.register(ESStock)
+class ESStockAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin):
+    list_display = ("Emplacement_SM", "Reference", "Nb_bacs", "Date_heure_entrée",
+                    "Travee_debord", "Conditionnement_UC",  "Qt_pieces_UC", "Appro",
+                    "Fournisseur", "CMJ", "FDS", "Date_heure_sortie")
 
 
 @admin.register(MapStock)
