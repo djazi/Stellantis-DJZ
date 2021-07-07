@@ -99,7 +99,7 @@
 <!--KPI Magasin Débord -->
 
 <div class="row">
-    <div class="col-12 col-md-8">
+    <div class="col-12 col-md-12">
         <div class="card shadow mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="text-primary font-weight-bold m-0">Entrées/Sorties Magasin Débord</h6>
@@ -110,37 +110,7 @@
         </div>
 
     </div>
-    <div class="col-6 col-md-4">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="text-primary font-weight-bold m-0">Magasin Débord</h6>
-                </div>
-                <div class="card-body">
-                    <h4 class="small font-weight-bold">LES ENTRÉES /J<span class="float-right">20</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-success" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"
-                            style="width: 20%;"><span class="sr-only">20</span></div>
-                    </div>
-                    <h4 class="small font-weight-bold">LES SORTIES /J<span class="float-right">40</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-danger" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
-                            style="width: 40%;"><span class="sr-only">40%</span></div>
-                    </div>
-                    <h4 class="small font-weight-bold">Nombre de Bac<span class="float-right">11209</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-primary" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100000"
-                            style="width: 60%;"><span class="sr-only">60</span></div>
-                    </div>
-
-                    <h4 class="small font-weight-bold">Respect De FIFO<span class="float-right">90%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-warning" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100000"
-                            style="width: 90%;"><span class="sr-only">90</span></div>
-                    </div>
-        
-                </div>
-            </div>
-    </div>
+ 
 </div>
 <!-- BAR CHART nombre de bac/j-->
 <div class="row">
@@ -202,6 +172,16 @@
 
   <script  type="text/javascript">
 // les entrées et les sorties magasin Débord
+    $(function () {
+        $.ajax({
+            url: '{% url "GA_UEP:ESdebord" %}',
+            success: function (data) {
+                 fill3(data.form, data.EN, data.SO)
+
+            }
+        });
+    });
+function fill3(form, EN, SO){
     var chartDom = document.getElementById('ES7');
     var myChart = echarts.init(chartDom);
     var option;
@@ -226,7 +206,7 @@
         xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: ['05/05/2021', '06/05/2021', '07/05/2021', '08/05/2021', '09/05/2021', '10/05/2021', '11/05/2021']
+            data: form,
         },
         yAxis: {
             type: 'value'
@@ -236,19 +216,36 @@
                 name: 'Entrée',
                 color:"lawngreen",
                 type: 'line',
-                data: [120, 132, 101, 134, 90, 330, 210]
+                data: EN,
             },
             {
                 name: 'Sortie',
                 color: "crimson",
                 type: 'line',
-                data: [220, 182, 191, 234, 290, 330, 410]
+                data: SO,
             },
         ]
     };
+    myChart.setOption(option);
+    window.addEventListener('resize', function () {
+        myChart.resize();
+
+    });
+
+};
 
 
 //top5 entrees
+    
+    $(function () {
+            $.ajax({
+                url: '{% url "GA_UEP:Top5entree" %}',
+                success: function (data) {
+                    fill6(data.réfe, data.fhze)
+                }
+            });
+        });
+    function fill6(réfe, fhze) { 
     var chartDom2 = document.getElementById('top5E');
     var myChart2 = echarts.init(chartDom2);
     var option2;
@@ -274,7 +271,7 @@
         yAxis: [
             {
                 type: 'category',
-                data: ['9823196780', '96343100XX', '98029783VL', '9659224180', '98262055SM'],
+                data: réfe,
 
 
                 axisTick: {
@@ -293,14 +290,29 @@
                     focus: 'series'
                 },
                 color: 'lawngreen',
-                name: 'Alertes',
+                name: 'Fréquence',
                 type: 'bar',
                 barWidth: '60%',
-                data: [10, 52, 200, 334, 390]
+                data: fhze
             }
         ]
-    };
+    }; myChart2.setOption(option2);
+            window.addEventListener('resize', function () {
+                myChart2.resize();
+
+            });
+};
+    
 //top5 sorties
+    $(function () {
+        $.ajax({
+            url: '{% url "GA_UEP:Top5sortie" %}',
+            success: function (data) {
+                fill5(data.réfs, data.fhzs)
+            }
+        });
+    });
+    function fill5(réfs, fhzs) {
     var chartDom3 = document.getElementById('top5S');
     var myChart3 = echarts.init(chartDom3);
     var option3;
@@ -326,7 +338,7 @@
         yAxis: [
             {
                 type: 'category',
-                data: ['9823196780', '96343100XX', '98029783VL', '9659224180', '98262055SM'],
+                data: réfs,
 
 
                 axisTick: {
@@ -344,12 +356,17 @@
                     focus: 'series'
                 },
                 color: '#ef5350',
-                name: 'Alertes',
+                name: 'Fréquence',
                 type: 'bar',
                 barWidth: '60%',
-                data: [10, 52, 200, 334, 390]
+                data: fhzs 
             }
         ]
+    }; myChart3.setOption(option3);
+            window.addEventListener('resize', function () {
+                myChart3.resize();
+
+            });
     };
 //les gauges
 function createGauje(divId, datai,name,colorf,max, formatter) {
@@ -420,6 +437,17 @@ createGauje('gauge2', ['{{RAlertes}}'], "Remontée d'Alerte", [ [0.8, '#e74a3b']
 
 
 //Nombre de Bac journaliere 
+    $(function () {
+        $.ajax({
+            url: '{% url "GA_UEP:NBJdebord" %}',
+            success: function (data) {
+                fill4(data.dates, data.NBJ)
+
+            }
+        });
+    });
+function fill4(dates, NBJ) {
+
     var chartNBJ = document.getElementById('BACJ');
     var myChartNB = echarts.init(chartNBJ);
     var option;
@@ -444,18 +472,24 @@ createGauje('gauge2', ['{{RAlertes}}'], "Remontée d'Alerte", [ [0.8, '#e74a3b']
         },
         xAxis: {
             type: 'category',
-            data: ['05/05/2021', '06/05/2021', '07/05/2021', '08/05/2021', '09/05/2021', '10/05/2021', '11/05/2021', '12/05/2021', '13/05/2021', '14/05/2021', '15/05/2021', '16/05/2021', '17/05/2021', '18/05/2021']
+            data: dates
         },
         yAxis: {
             type: 'value'
         },
         series: [{
             color:'orange',
-            data: [120, 200, 150, 80, 70, 110, 130,120, 200, 150, 80, 70, 110, 130],
+            data: NBJ,
             type: 'line'
         }]
     };
+    
+    myChartNB.setOption(optionNBJ);
+    window.addEventListener('resize', function () {
+        myChartNB.resize();
 
+    });
+};
 //Doughnut Alertes 
     var chartDoun = document.getElementById('DOA');
     var myChartDoun = echarts.init(chartDoun);
@@ -800,21 +834,14 @@ function fill(dates, vals) {
 
             
 myChartDoun.setOption(optionDOU);
-myChartNB.setOption(optionNBJ);
-myChart2.setOption(option2);    
-myChart3.setOption(option3);    
-myChart.setOption(option);
+
+
+  
+
 myChartRoze.setOption(optionRose);
-window.addEventListener('resize', function () {
-   
-        myChart.resize();
-        myChart2.resize();
-        myChart3.resize();       
+window.addEventListener('resize', function () { 
         myChartDoun.resize();
-        myChartNB.resize();
         myChartRoze.resize();
-        
-        
         
     });
 

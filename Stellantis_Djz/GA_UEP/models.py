@@ -71,9 +71,9 @@ class Stock(models.Model):
     Fournisseur = models.CharField(max_length=50, null=True, blank=True)
     CMJ = models.CharField(max_length=50, null=True, blank=True)
     FDS = models.CharField(max_length=50, null=True, blank=True)
+    StDate = models.DateField(null=True, blank=True)
     
     
-
 class MapStock(models.Model):
     M_Emplacement_SM = models.CharField(max_length=50, null=True, blank=True)
     M_Reference = models.CharField(max_length=50, null=True, blank=True)
@@ -98,3 +98,4 @@ class ESStock(models.Model):
     CMJ = models.CharField(max_length=50, null=True, blank=True)
     FDS = models.CharField(max_length=50, null=True, blank=True)
     Date_heure_sortie = models.CharField(max_length=50, null=True, blank=True)
+    ESDate = models.DateField(auto_now_add=True,null=True, blank=True)

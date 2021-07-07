@@ -18,14 +18,14 @@ class MapAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin):
 class StockAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin):
     list_display = ("Emplacement_SM", "Reference", "Nb_bacs", "Date_heure",
                     "Travee_debord", "Conditionnement_UC",  "Qt_pieces_UC", "Appro",
-                     "Fournisseur", "CMJ","FDS" )
+                    "Fournisseur", "CMJ", "FDS", "StDate")
 
 
 @admin.register(ESStock)
 class ESStockAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin):
     list_display = ("Emplacement_SM", "Reference", "Nb_bacs", "Date_heure_entrée",
                     "Travee_debord", "Conditionnement_UC",  "Qt_pieces_UC", "Appro",
-                    "Fournisseur", "CMJ", "FDS", "Date_heure_sortie")
+                    "Fournisseur", "CMJ", "FDS", "Date_heure_sortie", "ESDate")
 
 
 @admin.register(MapStock)

@@ -10,7 +10,7 @@ from django.http import response
 from . models import Alertes, Inventaire, Map, MapStock, Membership, Stock, ESStock
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, Http404, request, HttpResponse
 from django.urls import reverse
-from django.db.models import Count, query
+from django.db.models import Count, query, Func, CharField,Value
 from django.core import serializers
 from django.http.response import HttpResponse, JsonResponse
 from datetime import date, datetime, timedelta, time
@@ -680,7 +680,8 @@ class ajouteritem(View):
             Appro=M_Appro,
             Fournisseur=M_Fournisseurc,
             CMJ=M_CMJ,
-            FDS=M_FDS,)
+            FDS=M_FDS,
+            StDate=date.today(),)
             #historique
             ESStock.objects.create(
             Emplacement_SM=M_Emplacement_SM,
@@ -844,4 +845,77 @@ def exporterSS(request):
     wb.save(response)
     return response
             
-    
+#dashboard débord ---------------------------------------------------------------
+
+
+def ESdebord(request):
+    EN = []
+    SO = []
+    form=[]
+    queryset = ESStock.objects.filter(ESDate__gte=datetime.now()-timedelta(days=15)
+                                      ).annotate(Dates=TruncDate('ESDate')).values('ESDate').annotate(
+        formatted_date=Func(F('ESDate'),Value('DD/MM/YYYY'),function='to_char',output_field=CharField()),                        
+        entr=Sum('Nb_bacs', filter=Q(Date_heure_sortie__isnull=True)),
+        sort=Sum('Nb_bacs', filter=Q(Date_heure_sortie__isnull=False)),
+    ).values('ESDate', 'entr', 'sort','formatted_date').order_by('ESDate')
+    for i in queryset:
+        EN.append(i['entr'])
+        SO.append(i['sort'])
+        form.append(i['formatted_date'])
+    return JsonResponse(data={
+        'EN': EN,
+        'SO': SO,
+        'form':form,
+    })
+
+
+
+def NBJdebord(request):
+    NBJ = []
+    dates=[]
+    NBJ2 = []
+    dates2=[]
+    queryset = Stock.objects.filter(StDate__gte=datetime.today()-timedelta(days=15)
+                                      ).annotate(Dates=TruncDate('StDate')).values('StDate').annotate(
+        formatted_date=Func(F('StDate'), Value('DD/MM/YYYY'),
+                            function='to_char', output_field=CharField()),
+        nbj=Sum('Nb_bacs') ,
+    ).values('StDate', 'nbj', 'formatted_date').order_by('StDate')
+    for i in queryset:
+        NBJ.append(i['nbj'])
+        dates.append(i['formatted_date'])
+
+    return JsonResponse(data={
+        'NBJ': NBJ,
+        'dates':dates,
+    })
+
+
+def Top5sortie(request):
+    réfs=[]
+    fhzs=[]
+    queryset = ESStock.objects.filter(ESDate__gte=datetime.now()-timedelta(days=7)).values(
+        'Reference').annotate(fhzs=Count('Reference', filter=Q(Date_heure_sortie__isnull=False))).order_by('-fhzs')[:5]
+    for i in queryset:
+        réfs.insert(0,i['Reference'])
+        fhzs.insert(0,i['fhzs'])
+       
+    return JsonResponse(data={
+        'réfs': réfs,
+        'fhzs': fhzs,
+    })
+
+
+def Top5entree(request):
+    réfe=[]
+    fhze=[]
+    queryset = ESStock.objects.filter(ESDate__gte=datetime.now()-timedelta(days=7)).values(
+        'Reference').annotate(fhze=Count('Reference', filter=Q(Date_heure_sortie__isnull=True))).order_by('-fhze')[:5]
+    for i in queryset:
+        réfe.insert(0,i['Reference'])
+        fhze.insert(0,i['fhze'])
+ 
+    return JsonResponse(data={
+        'réfe': réfe,
+        'fhze': fhze,
+    })

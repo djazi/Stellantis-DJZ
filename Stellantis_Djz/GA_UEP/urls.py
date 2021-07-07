@@ -28,12 +28,18 @@ urlpatterns = [
     path("Dashboard", views.Dashboard, name="Dashboard"),
     path("Error", views.Error, name="Error"),
 
-    #Dashboards url
+    #Dashboards des alertes url
     path("Dashboard/KPIS", KPIS.as_view(), name="KPIS"),
     path("Dashboard/SUIVIAL", views.suiviAlertes, name="suiviAlertes"),
 
     path("Dashboard/EVALAL", views.evolutionAlertes, name="evolutionAlertes"),
     path("Dashboard/TOP10", views.Top10Alertes, name="Top10Alertes"),
+    #Dashboards stock déébord url
+    path("Dashboard/ESdebord", views.ESdebord, name="ESdebord"),
+    path("Dashboard/NBJdebord", views.NBJdebord, name="NBJdebord"),
+    path("Dashboard/Top5sortie", views.Top5sortie, name="Top5sortie"),
+    path("Dashboard/Top5entree", views.Top5entree, name="Top5entree"),
+
 #gestion de stock ---------------------------------------------
     path("Magdebord/stcokDebord", CrudStock.as_view(), name='Gestion_SDB'),
 
