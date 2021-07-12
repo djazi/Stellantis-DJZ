@@ -32,9 +32,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import StockForm
 from django.shortcuts import render, redirect
 import xlwt
-#----------------------------------------------------
-# Create your views here.----------------------------------------
-# data we use ------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------------------
+# Create your views here.-----------------------------------------------------------------------------
+# data we use ----------------------------------------------------------------------------------------
 today = date.today()
 now = datetime.now()
 map_all = Map.objects.all() # all columns from Map
@@ -407,7 +407,7 @@ class UpdateAlerFLC(View):
         }
         return JsonResponse(data)
 
-#login functions-------------------------------------------------------------------------------
+#login functions---------------------------------------------------------------------------------------
 def index(request):
     if not request.user.is_authenticated:
         return render(request, 'login.html')
@@ -588,7 +588,7 @@ def Average(lst):
         return 0
     return sum(lst) / len(lst)
 
-#gestion stock débord---------------------------------------------------------
+#gestion stock débord-------------------------------------------------------------------------------
 
 #autocomplete
 def get_réfS(request):
@@ -845,7 +845,7 @@ def exporterSS(request):
     wb.save(response)
     return response
             
-#dashboard débord ---------------------------------------------------------------
+#dashboard débord ---------------------------------------------------------------------------------
 
 
 def ESdebord(request):

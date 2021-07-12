@@ -176,6 +176,7 @@
                 success: function (data) {
                     if (data.alt) {
                         alert("L'Alerte est traitée");
+                        location.reload(true);
 
                     }
                 },
@@ -185,7 +186,8 @@
         }
         $('form#updateAlertes').trigger("reset");
         $('#myModal').modal('hide');
-        //return false;
+        return false;
+        location.reload(true);
     });
 var k;
     function editUser(id) {

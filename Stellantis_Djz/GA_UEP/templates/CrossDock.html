@@ -294,15 +294,17 @@ $("form#updateAlertes").submit(function () {
                 success: function (data) {
                     if(data.alt){
                         alert("L'Alerte est traitée");
+                        location.reload(true);
                     }
                     },
             });
         } else {
             alert("Tous Les champs doivent avoir une valeur Valide.");
         }
-       // $('form#updateAlertes').trigger("reset");
-        //$('#myModal').modal('hide');
-        //return false;
+       $('form#updateAlertes').trigger("reset");
+        $('#myModal').modal('hide');
+        return false;
+        location.reload(true);
     });
 
     
