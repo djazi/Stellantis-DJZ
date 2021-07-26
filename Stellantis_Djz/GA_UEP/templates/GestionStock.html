@@ -235,7 +235,7 @@
                     
                     <label for="statut">Vider une travée: </label>
 
-                    <input class="form-control" id="VidT" type="text" name="formComment" />
+                    <input class="form-control" id="VidT" type="text" name="VidT" />
 
 
                 </div>
@@ -303,8 +303,6 @@
 {% block javascript %}
 
 <script type="text/javascript" >
-   
-
     const searchField = document.querySelector("#searchField");
     const tableoutput= document.querySelector(".table-output");
     const apptable= document.querySelector(".app-table");
@@ -345,29 +343,27 @@
                     <td class="réf invData" name="FDS" style="text-align: center;">${item.FDS}</td>  
 </tr>  `     
                 });
+
+
             }
+                $(".table-output tbody tr").slice(1).find('input,select,button').prop('disabled', true);
             });
         }else{
             tableoutput.style.display = "none";
             apptable.style.display = "block";
         }
+        
     });
 
 
 $(document).ready(function () {
         var supername = $("#supername").text();
-
-
         if (supername === 'Youssef' || supername === 'khalid') {
             console.log(supername)
-
         }
         else {
             $('#dasha').addClass('disabled');
-
         }
-
-
     });
 //chercher  
 
@@ -533,6 +529,39 @@ function appendToitemTable(ajitem){
     `);
 }
 
+
+//--------------------------------------------------------------------------------------
+$("form#vidertravée").submit(function () {
+        var travé = $('input[name="VidT"]').val().trim();
+        if (ajréf) {
+            $.ajax({
+                url: '{% url "GA_UEP:vidertravée" %}',
+                data: {
+                    'travé': travé,
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Travée supprimée au stock avec succès',
+                            showConfirmButton: true,
+                        })
+                        
+
+                    } 
+                    
+                },
+            });
+        } else {
+            alert("Tous Les champs doivent avoir une valeur Valide.");
+        }
+        $('form#ajouteritem').trigger("reset");
+        $('#myModal2').modal('hide');
+        return false;
+        
+        
+    });
 
 </script>
 {% endblock javascript %}

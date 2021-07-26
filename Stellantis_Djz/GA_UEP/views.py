@@ -335,6 +335,16 @@ class CrudMagDebord(TemplateView):
         context = super().get_context_data(**kwargs)
         context['alertesD'] = Alertes.objects.filter(
             Q(Date=today.strftime("%d/%m/%Y"), statut__in=('Alerte_DEB', 'A_Débord')) | Q(statut__in=('Alerte_DEB', 'A_Débord'))).order_by('-heure')
+        z = []
+        for i in context['alertesD']:
+            a=Stock.objects.filter(Reference=i.Reference)
+            k = a.aggregate(Sum('Nb_bacs')).values()
+            if k:
+                for e in k:
+                    z.append(e)
+        context['alertesbac'] = z
+        zippedlist = zip(context['alertesD'], context['alertesbac'])
+        context['all'] = zippedlist
         return context
 
 
@@ -644,7 +654,7 @@ def search_items(request):
     if request.method == 'POST':
         search_str=json.loads(request.body).get('searchText')
         items = Stock.objects.filter(Emplacement_SM__istartswith=search_str) | Stock.objects.filter(
-            Reference__istartswith=search_str)
+            Reference__istartswith=search_str).order_by('id')
         data = items.values() 
         return JsonResponse(list(data),safe=False)
         
@@ -749,6 +759,31 @@ class updateitems(View):
         return JsonResponse(data)
 
 
+class vidertravée(View):
+    def get(self, request):
+        travé = request.GET.get('travé', None)
+        #historique
+        obj = Stock.objects.all().filter(Travee_debord=travé).distinct('Reference')
+        for i in obj:
+            ESStock.objects.create(
+                Emplacement_SM=i.Emplacement_SM,
+                Reference=i.Reference,
+                Nb_bacs=i.Nb_bacs,
+                Date_heure_entrée=i.Date_heure,
+                Travee_debord=i.Travee_debord,
+                Conditionnement_UC=i.Conditionnement_UC,
+                Qt_pieces_UC=i.Qt_pieces_UC,
+                Appro=i.Appro,
+                Fournisseur=i.Fournisseur,
+                CMJ=i.CMJ,
+                FDS=i.FDS,
+                Date_heure_sortie=datetime.now().strftime("%d/%m/%Y, %H:%M:%S"),)
+        #fin historique
+        Stock.objects.filter(Travee_debord=travé).delete()
+        data = {
+            'deleted': True
+        }
+        return JsonResponse(data)
 
 
 class ESStockdébord(ListView): 
@@ -756,7 +791,7 @@ class ESStockdébord(ListView):
     template_name = 'ESStockdébord.html'
     context_object_name = 'essstocks'
     paginate_by = 10
-    queryset = ESStock.objects.all().order_by('-Date_heure_entrée')
+    queryset = ESStock.objects.all().order_by('-id')
     def get_context_data(self, **kwargs):
             context = super().get_context_data(**kwargs)
             context['entr'] = ESStock.objects.filter(Date_heure_sortie__isnull=True, Date_heure_entrée__startswith=datetime.now(

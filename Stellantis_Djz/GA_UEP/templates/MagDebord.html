@@ -40,10 +40,14 @@
                                                 <th style="text-align: center;">Moniteur</th>
                                                 <th style="text-align: center;">HFA</th>
                                                 <th style="text-align: center;">Commenataire</th>
+                                                <th style="text-align: center;">Nb bacs Débord</th>
                                             </tr>
                                         </thead>
                                         {% if alertesD %}
-                                        {% for alert in alertesD %}
+                                        
+                                        {% for alert,j in all %}
+                                        
+                                        
                     
                                         <tr id="alert-{{alert.id}}">
                     
@@ -69,12 +73,12 @@
                                                 
                                             <td class="moniteur invData ms-vb2 " id="Commenataire" name="Commenataire" style="text-align: center;">{{alert.Commenataire}}</td>
 
-                    
-                    
-                    
-                                            <!--<td><button class="btn btn-primary" onClick="deleteUser({{inv.id}})" style="background: rgb(252,2,2);">Supprimer</button></td> -->
-                    
+                                            
+                                            <td class="moniteur invData ms-vb2 " id="Nb_bacs_Débord" name="Nb_bacs_Débord" style="text-align: center;">{{j}}</td>
+                                            
                                         </tr>
+                                        
+                                        
                                         {% endfor %}
                                         {% else %}
                                         <h3 style="color: crimson; text-align: center; "> Aucune Alertes Trouvé </h3>

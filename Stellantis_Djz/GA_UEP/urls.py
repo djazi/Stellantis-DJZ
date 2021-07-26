@@ -48,6 +48,8 @@ urlpatterns = [
     path("ajouteritem/", ajouteritem.as_view(), name='ajouteritem'),
 
     path("updateitems/", updateitems.as_view(), name='updateitems'),
+    
+    path("vidertravée/", vidertravée.as_view(), name='vidertravée'),
 
     path("ESStockdébord/", ESStockdébord.as_view(), name='ESStockdébord'),
     
