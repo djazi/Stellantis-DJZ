@@ -654,7 +654,8 @@ def search_items(request):
     if request.method == 'POST':
         search_str=json.loads(request.body).get('searchText')
         items = Stock.objects.filter(Emplacement_SM__istartswith=search_str) | Stock.objects.filter(
-            Reference__istartswith=search_str).order_by('id')
+            Reference__istartswith=search_str).order_by('id') | Stock.objects.filter(
+            Travee_debord__istartswith=search_str)
         data = items.values() 
         return JsonResponse(list(data),safe=False)
         
@@ -721,6 +722,7 @@ class updateitems(View):
     def get(self, request):
         id1 = request.GET.get('idInput', None)
         Nb_bacs = request.GET.get('Nb_bacs', None)
+        Statutinp = request.GET.get('Statutinp', None)
         obj = Stock.objects.get(id=id1)
         nbac=int(Nb_bacs)
         if obj.Nb_bacs >= nbac:
@@ -732,6 +734,22 @@ class updateitems(View):
             impossible = "le Nombre de bac est superieure a la quantité dans le stock"
             data={'impossible':impossible}
             return JsonResponse(data)
+        #update alerte 
+        if Statutinp =='Livré' or Statutinp =='A_Débord':
+            obj3 = Stock.objects.get(id=id1)
+            Réf= obj3.Reference
+            obj4 = Alertes.objects.all().filter(Reference=Réf, statut='Alerte_DEB',  HFA='....')
+            if(Statutinp =='Livré'):
+                for i in obj4:
+                    i.statut = Statutinp
+                    i.HFA = datetime.now().strftime("%H:%M:%S")
+                    i.save()
+            if(Statutinp =='A_Débord'):
+                for i in obj4:
+                    i.statut = Statutinp
+                    i.save()
+
+            
         #historique
         ESStock.objects.create(
             Emplacement_SM=obj.Emplacement_SM,

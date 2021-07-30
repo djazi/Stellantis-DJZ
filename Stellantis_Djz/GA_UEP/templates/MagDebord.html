@@ -115,14 +115,15 @@
                                             
                                             <optgroup label="">
                     
-                                                <option value=""></option>
-                                                <!--
-                                                <option value="Train">Sortie Train</option>
-                                                <option value="Alerte">Alerte</option>
-                                                <option value="A_Tranche">Anticipation par Tranche</option>
-                                                <option value="A_Remorque">Anticipation par Remorque</option>
-                                                <option value="FLC">FLC</option>
-                                                -->
+                                                <option disabled selected value ></option>
+                                                <option hidden value="FLC_T">FLC_T</option>
+                                                <option hidden value="Train">Sortie Train</option>
+                                                <option hidden  value="Alerte">Alerte</option>
+                                                <option hidden value="A_Tranche">Anticipation par Tranche</option>
+                                                <option hidden value="A_Remorque">Anticipation par Remorque</option>
+                                                <option hidden value="FLC">FLC</option>
+                                                <option hidden value="Alerte_DEB">Alerte_DEB</option>
+                                           
                                                 <option value="Livré">Livré</option>
                                                 <option value="Alerte_CK">Alerte_CK</option>
                                                 <option value="A_Débord">A_Débord</option>
@@ -200,22 +201,39 @@ function editUser(id) {
             $('#form-id').val(id);
 
         }
-   /* var rowId = event.target.parentNode.parentNode.id;
+   var rowId = event.target.parentNode.parentNode.id;
     var data = document.getElementById(rowId).querySelectorAll(".ms-vb2");
-
     var k = data[1].innerHTML;
-    if (k === 'Alerte_DEB') {
-        $('#form-statut option[value="Livré"]').attr('disabled', 'disabled');
-        $('#form-statut option[value="Non_T"]').attr('disabled', false);
-        $('#form-statut option[value="A_Débord"]').attr('disabled', false);
+
+
+    if (k === 'Train') {
+        $('#form-statut').val('Train');
     }
-        
+    if (k === 'Alerte_DEB') {
+        $('#form-statut').val('Alerte_DEB');
+    }
+    if (k === 'A_Tranche') {
+        $('#form-statut').val('A_Tranche');
+    }
+    if (k === 'A_Remorque') {
+        $('#form-statut').val('A_Remorque');
+    }
+    if (k === 'FLC') {
+        $('#form-statut').val('FLC');
+    }
+    if (k === 'Livré') {
+        $('#form-statut').val('Livré');
+    }
+    if (k === 'Alerte_CK') {
+        $('#form-statut').val('Alerte_CK');
+    }
     if (k === 'A_Débord') {
-        
-        $('#form-statut option[value="Livré"]').attr('disabled', false);
-        $('#form-statut option[value="Non_T"]').attr('disabled', false);
-        $('#form-statut option[value="A_Débord"]').attr('disabled', false);
-    }*/
+        $('#form-statut').val('A_Débord');
+    }
+    if (k === 'FLC_T') {
+        $('#form-statut').val('FLC_T');
+    }
+
     
     
 }
